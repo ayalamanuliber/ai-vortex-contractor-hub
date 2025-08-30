@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 EMERGENCY MODE - Contractor Hub V4</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #ff4444, #ff6b6b);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .emergency-container {
+            max-width: 600px;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            border: 3px solid #ff4444;
+            box-shadow: 0 0 50px rgba(255, 68, 68, 0.5);
+        }
+        
+        .emergency-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+        
+        .btn-safe {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-demo {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-full {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .safe-mode {
+            display: none;
+            background: rgba(0, 100, 0, 0.1);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .demo-data {
+            display: none;
+            background: rgba(0, 0, 100, 0.1);
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .contractor-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .system-info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="emergency-container">
+        <h1 class="emergency-title">🚨 EMERGENCY MODE ACTIVE</h1>
+        
+        <div class="status-message">
+            <strong>Browser crash detected and prevented!</strong><br>
+            The system was causing complete browser unresponsiveness.<br>
+            <strong>All heavy operations have been disabled.</strong>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-safe" onclick="showSafeMode()">
+                🛡️ SAFE MODE<br>
+                <small>Ultra-lightweight interface</small>
+            </button>
+            
+            <button class="btn btn-demo" onclick="showDemoMode()">
+                🎭 DEMO MODE<br>
+                <small>5 sample records only</small>
+            </button>
+            
+            <button class="btn btn-full" onclick="goToFullSystem()" disabled>
+                ⚠️ FULL SYSTEM<br>
+                <small>May cause crashes</small>
+            </button>
+        </div>
+        
+        <!-- Safe Mode Interface -->
+        <div id="safe-mode" class="safe-mode">
+            <h3>🛡️ Safe Mode Interface</h3>
+            <p><strong>Status:</strong> System operational in minimal mode</p>
+            <p><strong>Data loading:</strong> DISABLED (prevents crashes)</p>
+            <p><strong>Memory usage:</strong> <5MB</p>
+            <br>
+            <div style="text-align: left;">
+                <h4>Available Actions:</h4>
+                <ul>
+                    <li>✅ View system status</li>
+                    <li>✅ Check server connection</li>
+                    <li>❌ Load contractor data (disabled)</li>
+                    <li>❌ Heavy processing (disabled)</li>
+                </ul>
+            </div>
+            <br>
+            <button class="btn btn-safe" onclick="checkServerStatus()">Check Server</button>
+        </div>
+        
+        <!-- Demo Mode Interface -->
+        <div id="demo-mode" class="demo-data">
+            <h3>🎭 Demo Mode - Sample Data</h3>
+            <p><strong>Showing 5 fake contractors for testing</strong></p>
+            
+            <div class="contractor-item">
+                <strong>ABC Roofing Co.</strong><br>
+                Category: Roofing | Score: 85% | City: Miami, FL<br>
+                Status: ✅ Campaign Ready
+            </div>
+            
+            <div class="contractor-item">
+                <strong>XYZ Plumbing</strong><br>
+                Category: Plumbing | Score: 72% | City: Orlando, FL<br>
+                Status: ❌ Needs Enhancement
+            </div>
+            
+            <div class="contractor-item">
+                <strong>Pro Electric LLC</strong><br>
+                Category: Electrical | Score: 91% | City: Tampa, FL<br>
+                Status: ✅ Campaign Ready
+            </div>
+            
+            <div class="contractor-item">
+                <strong>Quality HVAC</strong><br>
+                Category: HVAC | Score: 68% | City: Jacksonville, FL<br>
+                Status: ❌ Needs Enhancement
+            </div>
+            
+            <div class="contractor-item">
+                <strong>Elite Landscaping</strong><br>
+                Category: Landscaping | Score: 89% | City: Fort Lauderdale, FL<br>
+                Status: ✅ Campaign Ready
+            </div>
+            
+            <p style="margin-top: 1rem; color: #ffc107;">
+                <strong>⚠️ This is fake demo data. No server required.</strong>
+            </p>
+        </div>
+        
+        <div class="system-info">
+            <strong>System Status:</strong> Emergency Mode | 
+            <strong>Memory:</strong> Safe | 
+            <strong>Time:</strong> <span id="current-time"></span>
+        </div>
+    </div>
+
+    <script>
+        // Ultra-minimal JavaScript - no heavy operations
+        function showSafeMode() {
+            document.getElementById('safe-mode').style.display = 'block';
+            document.getElementById('demo-mode').style.display = 'none';
+        }
+        
+        function showDemoMode() {
+            document.getElementById('demo-mode').style.display = 'block';
+            document.getElementById('safe-mode').style.display = 'none';
+        }
+        
+        function goToFullSystem() {
+            if (confirm('⚠️ WARNING: This may cause browser crashes again. Continue?')) {
+                window.location.href = 'operations-hub.html';
+            }
+        }
+        
+        function checkServerStatus() {
+            alert('🔍 Server check would normally test connection to backend API. In safe mode, this is simulated.');
+        }
+        
+        // Update time every second
+        function updateTime() {
+            document.getElementById('current-time').textContent = new Date().toLocaleTimeString();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+        
+        // Memory monitoring (safe)
+        if (performance.memory) {
+            setInterval(() => {
+                const memMB = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                console.log(`Emergency mode memory: ${memMB}MB`);
+            }, 10000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Intelligence Hub V4 - Operations Center</title>
+    <link rel="stylesheet" href="assets/adaptive-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <meta name="description" content="Adaptive operations center for managing contractor campaigns with glassmorphism UI">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo"><i data-lucide="building-2"></i></div>
+            <div class="loading-title">Contractor Intelligence Hub V4</div>
+            <div class="loading-subtitle">Initializing adaptive operations center...</div>
+            <div class="loading-progress">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app-container" style="display: none;">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="header-title">
+                        <i data-lucide="building-2" class="icon-lg"></i> <span class="title-main">Contractor Operations Hub</span>
+                        <span class="title-version">V4</span>
+                    </h1>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-stats" id="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total</span>
+                            <span class="stat-value" id="total-contractors">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Ready</span>
+                            <span class="stat-value" id="ready-campaigns">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Score 80+</span>
+                            <span class="stat-value" id="completion-80">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="refresh-data" title="Refresh Data">
+                            <i data-lucide="refresh-cw" class="icon-sm"></i> <span class="btn-text">Refresh</span>
+                        </button>
+                        <button class="btn btn-secondary" id="export-data" title="Export CSV">
+                            <i data-lucide="upload" class="icon-sm"></i> <span class="btn-text">Export</span>
+                        </button>
+                        <button class="btn btn-primary" id="sync-data" title="Sync Data">
+                            <i data-lucide="zap" class="icon-sm"></i> <span class="btn-text">Sync</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Dashboard Overview -->
+            <section class="dashboard-section">
+                <div class="dashboard-grid">
+                    
+                    <!-- Calendar View -->
+                    <div class="dashboard-card calendar-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i data-lucide="calendar" class="icon-md"></i> Calendar View</h3>
+                            <div class="card-actions">
+                                <button class="btn-icon" id="calendar-prev">‹</button>
+                                <span class="calendar-month" id="calendar-month">September 2025</span>
+                                <button class="btn-icon" id="calendar-next">›</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid">
+                            <!-- Calendar will be generated here -->
+                        </div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-color email-1"></span>
+                                <span>Email 1</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color email-2"></span>
+                                <span>Email 2</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color email-3"></span>
+                                <span>Email 3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Actions -->
+                    <div class="dashboard-card actions-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i data-lucide="target" class="icon-md"></i> Today's Actions</h3>
+                        </div>
+                        <div class="actions-list" id="today-actions">
+                            <div class="action-item">
+                                <div class="action-icon"><i data-lucide="mail" class="icon-md"></i></div>
+                                <div class="action-content">
+                                    <div class="action-title">Ready to Send</div>
+                                    <div class="action-count" id="ready-to-send-count">-</div>
+                                </div>
+                                <button class="action-btn" id="view-ready-campaigns">View</button>
+                            </div>
+                            
+                            <div class="action-item">
+                                <div class="action-icon"><i data-lucide="edit" class="icon-md"></i></div>
+                                <div class="action-content">
+                                    <div class="action-title">Enrich Data</div>
+                                    <div class="action-count" id="enrich-data-count">-</div>
+                                </div>
+                                <button class="action-btn" id="view-enhancement-queue">View</button>
+                            </div>
+                            
+                            <div class="action-item">
+                                <div class="action-icon"><i data-lucide="clock" class="icon-md"></i></div>
+                                <div class="action-content">
+                                    <div class="action-title">Follow-ups Due</div>
+                                    <div class="action-count" id="followup-count">-</div>
+                                </div>
+                                <button class="action-btn" id="view-followups">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Status -->
+                    <div class="dashboard-card pipeline-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i data-lucide="rocket" class="icon-md"></i> Campaign Pipeline</h3>
+                        </div>
+                        <div class="pipeline-flow" id="pipeline-flow">
+                            <div class="pipeline-stage">
+                                <div class="stage-icon"><i data-lucide="clipboard" class="icon-md"></i></div>
+                                <div class="stage-label">Queue</div>
+                                <div class="stage-count" id="pipeline-queue">-</div>
+                            </div>
+                            <div class="pipeline-arrow">→</div>
+                            <div class="pipeline-stage">
+                                <div class="stage-icon"><i data-lucide="mail" class="icon-md"></i></div>
+                                <div class="stage-label">Ready</div>
+                                <div class="stage-count" id="pipeline-ready">-</div>
+                            </div>
+                            <div class="pipeline-arrow">→</div>
+                            <div class="pipeline-stage">
+                                <div class="stage-icon"><i data-lucide="clock" class="icon-md"></i></div>
+                                <div class="stage-label">Sent</div>
+                                <div class="stage-count" id="pipeline-sent">-</div>
+                            </div>
+                            <div class="pipeline-arrow">→</div>
+                            <div class="pipeline-stage">
+                                <div class="stage-icon"><i data-lucide="check-circle" class="icon-md"></i></div>
+                                <div class="stage-label">Complete</div>
+                                <div class="stage-count" id="pipeline-complete">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Filters Section -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="filters-left">
+                        <div class="filter-group">
+                            <label class="filter-label">Trade</label>
+                            <select class="filter-select" id="filter-category">
+                                <option value="">All Trades</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Completion</label>
+                            <select class="filter-select" id="filter-completion">
+                                <option value="">All Scores</option>
+                                <option value="90">90-100% (Premium)</option>
+                                <option value="80">80-89% (Ready)</option>
+                                <option value="70">70-79% (Good)</option>
+                                <option value="50">50-69% (Needs Work)</option>
+                                <option value="0">0-49% (Poor)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Campaign</label>
+                            <select class="filter-select" id="filter-campaign">
+                                <option value="">All Status</option>
+                                <option value="has_campaign">Has Campaign</option>
+                                <option value="no_campaign">No Campaign</option>
+                                <option value="in_progress">In Progress</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Location</label>
+                            <select class="filter-select" id="filter-state">
+                                <option value="">All States</option>
+                                <!-- Options will be populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-right">
+                        <div class="search-group">
+                            <input type="text" class="search-input" id="search-input" 
+                                   placeholder="Search company, email, business ID...">
+                            <button class="search-btn" id="search-btn"><i data-lucide="search" class="icon-sm"></i></button>
+                        </div>
+                        
+                        <div class="view-controls">
+                            <button class="view-btn active" id="grid-view" title="Grid View">⊞</button>
+                            <button class="view-btn" id="list-view" title="List View">☰</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contractors Grid -->
+            <section class="contractors-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <h2 class="contractors-count" id="contractors-count">Loading contractors...</h2>
+                        <div class="section-subtitle" id="section-subtitle">Adaptive display optimized for your data volume</div>
+                    </div>
+                    
+                    <div class="section-actions">
+                        <div class="sort-group">
+                            <label class="sort-label">Sort by:</label>
+                            <select class="sort-select" id="sort-select">
+                                <option value="data_completion_score">Completion Score</option>
+                                <option value="company_name">Company Name</option>
+                                <option value="google_rating">Google Rating</option>
+                                <option value="updated_at">Last Updated</option>
+                            </select>
+                            <button class="sort-order" id="sort-order" title="Sort Direction">↓</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="contractors-loading" class="contractors-loading">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Loading contractors...</div>
+                </div>
+
+                <!-- Empty State -->
+                <div id="contractors-empty" class="contractors-empty" style="display: none;">
+                    <div class="empty-icon"><i data-lucide="search" class="icon-lg"></i></div>
+                    <div class="empty-title">No contractors found</div>
+                    <div class="empty-subtitle">Try adjusting your filters or search criteria</div>
+                    <button class="btn btn-primary" id="clear-filters">Clear Filters</button>
+                </div>
+
+                <!-- Contractors Grid/List -->
+                <div id="contractors-container" class="contractors-grid" style="display: none;">
+                    <!-- Contractor cards will be populated here -->
+                </div>
+
+                <!-- Pagination -->
+                <div id="pagination" class="pagination" style="display: none;">
+                    <button class="pagination-btn" id="prev-page" disabled>← Previous</button>
+                    <div class="pagination-info" id="pagination-info">Page 1 of 1</div>
+                    <button class="pagination-btn" id="next-page" disabled>Next →</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Campaign Modal -->
+    <div id="campaign-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Campaign Details</h3>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Campaign content will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Contractor Data</h3>
+                <button class="modal-close" id="edit-modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form">
+                    <!-- Form fields will be populated here -->
+                </form>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="cancel-edit">Cancel</button>
+                    <button class="btn btn-primary" id="save-edit">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/components/calendar.js"></script>
+    <script src="assets/components/dashboard.js"></script>
+    <script src="assets/components/adaptive-grid.js"></script>
+    <script src="assets/components/visual-cards.js"></script>
+    <script src="assets/components/smart-filters.js"></script>
+    <script src="assets/components/data-enrichment.js"></script>
+    <script src="assets/components/campaign-management.js"></script>
+    <script src="assets/operations.js"></script>
+    <script>
+        // Initialize Lucide icons and OperationsManager after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+                
+                // Re-initialize icons after any dynamic content updates
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length > 0) {
+                            lucide.createIcons();
+                        }
+                    });
+                });
+                
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+            
+            // Initialize the main operations manager
+            window.operationsManager = new OperationsManager();
+        });
+    </script>
+</body>
+</html>

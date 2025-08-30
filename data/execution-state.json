@@ -1,0 +1,15 @@
+{
+  "generated_at": "2025-08-30T16:37:00.995Z",
+  "pipeline_status": {
+    "queue": 1701,
+    "ready": 48,
+    "sent": 0,
+    "complete": 0
+  },
+  "today_actions": {
+    "ready_to_send": 48,
+    "needs_enrichment": 2618,
+    "follow_ups_due": 0
+  },
+  "last_sync": "2025-08-30T16:37:00.996Z"
+}

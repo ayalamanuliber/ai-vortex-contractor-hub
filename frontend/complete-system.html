@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Intelligence Hub V4 - Complete System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Dark theme glassmorphism */
+        body {
+            background: hsl(240, 10%, 4%);
+            background-image: radial-gradient(at 20% 10%, hsla(220, 50%, 30%, 0.15) 0px, transparent 50%);
+            color: hsl(0, 0%, 97%);
+        }
+        
+        .glass-surface {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.9) 0%,
+                hsla(220, 13%, 15%, 0.95) 100%
+            );
+            backdrop-filter: blur(20px);
+            border: 1px solid hsla(220, 13%, 30%, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .glass-button {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 20%, 0.8) 0%,
+                hsla(220, 13%, 18%, 0.9) 100%
+            );
+            backdrop-filter: blur(12px);
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-button:hover {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 25%, 0.9) 0%,
+                hsla(220, 13%, 22%, 0.95) 100%
+            );
+            border-color: hsla(199, 89%, 48%, 0.5);
+        }
+        
+        .contractor-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .contractor-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .calendar-day {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .calendar-day:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.optimal {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .calendar-day.moderate {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .calendar-day.low {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .completion-circle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: transparent;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.6s ease-in-out;
+        }
+
+        .filter-badge {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+
+        .email-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="glass-surface">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i data-lucide="building-2" class="w-8 h-8 text-blue-400"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Contractor Intelligence Hub V4</h1>
+                        <p class="text-sm text-gray-400">Complete Operations Center</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right text-sm">
+                        <div class="text-gray-300">Active Contractors</div>
+                        <div class="font-bold text-blue-400" id="total-contractors">0</div>
+                    </div>
+                    <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2" onclick="toggleView()">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                        <span id="view-toggle-text">Grid View</span>
+                    </button>
+                    <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2" onclick="exportData()">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Export</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-8">
+        <!-- Dashboard Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Contractors</p>
+                        <p class="text-2xl font-bold" id="dash-total">0</p>
+                        <p class="text-xs text-gray-500 mt-1" id="dash-total-change">+12 this week</p>
+                    </div>
+                    <i data-lucide="building-2" class="w-8 h-8 text-blue-400"></i>
+                </div>
+            </div>
+            
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Ready Campaigns</p>
+                        <p class="text-2xl font-bold text-green-400" id="dash-ready">0</p>
+                        <p class="text-xs text-gray-500 mt-1" id="dash-ready-change">+5 today</p>
+                    </div>
+                    <i data-lucide="mail" class="w-8 h-8 text-green-400"></i>
+                </div>
+            </div>
+            
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">High Completion</p>
+                        <p class="text-2xl font-bold text-amber-400" id="dash-high-completion">0</p>
+                        <p class="text-xs text-gray-500 mt-1">90%+ scores</p>
+                    </div>
+                    <i data-lucide="target" class="w-8 h-8 text-amber-400"></i>
+                </div>
+            </div>
+            
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Sent This Week</p>
+                        <p class="text-2xl font-bold text-red-400" id="dash-sent">0</p>
+                        <p class="text-xs text-gray-500 mt-1" id="dash-sent-change">+23 vs last week</p>
+                    </div>
+                    <i data-lucide="trending-up" class="w-8 h-8 text-red-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar and Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Calendar -->
+            <div class="lg:col-span-2 glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold flex items-center space-x-2">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                        <span>Optimal Timing Calendar</span>
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button class="glass-button p-2 rounded" onclick="previousMonth()">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <span class="px-4 py-2 text-sm" id="current-month">September 2025</span>
+                        <button class="glass-button p-2 rounded" onclick="nextMonth()">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Calendar Legend -->
+                <div class="flex items-center space-x-4 mb-4 text-xs">
+                    <div class="flex items-center space-x-1">
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span>Optimal (15+ ready)</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <div class="w-3 h-3 bg-amber-500 rounded-full"></div>
+                        <span>Moderate (5-14)</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span>Low (1-4)</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-1 text-sm" id="calendar-grid">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </div>
+            
+            <!-- Today's Actions -->
+            <div class="glass-surface p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+                    <i data-lucide="target" class="w-5 h-5"></i>
+                    <span>Today's Actions</span>
+                </h3>
+                <div class="space-y-3">
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between" onclick="filterByStatus('ready')">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="mail" class="w-4 h-4 text-blue-400"></i>
+                            <span>Ready to Send (<span id="action-ready">0</span>)</span>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between" onclick="filterByStatus('enhance')">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="edit" class="w-4 h-4 text-amber-400"></i>
+                            <span>Enrich Data (<span id="action-enhance">0</span>)</span>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between" onclick="filterByStatus('progress')">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="clock" class="w-4 h-4 text-green-400"></i>
+                            <span>In Progress (<span id="action-progress">0</span>)</span>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between" onclick="showSyncOptions()">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="sync" class="w-4 h-4 text-purple-400"></i>
+                            <span>Sync Data</span>
+                        </div>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Filters -->
+        <div class="glass-surface p-6 rounded-2xl mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Smart Filters</h3>
+                <button class="glass-button px-4 py-2 rounded-lg text-sm" onclick="clearAllFilters()">
+                    <i data-lucide="x" class="w-4 h-4 inline mr-1"></i>
+                    Clear All
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">Search</label>
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="search-input" placeholder="Search contractors..." 
+                               class="bg-transparent border border-gray-600 rounded-lg pl-10 pr-4 py-2 w-full"
+                               oninput="applyFilters()">
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">Trade Category</label>
+                    <select id="trade-filter" class="glass-button w-full px-3 py-2 rounded-lg" onchange="applyFilters()">
+                        <option value="">All Trades</option>
+                        <option value="Roofing">Roofing</option>
+                        <option value="Plumbing">Plumbing</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="HVAC">HVAC</option>
+                        <option value="Flooring">Flooring</option>
+                        <option value="Painting">Painting</option>
+                        <option value="Landscaping">Landscaping</option>
+                        <option value="General">General Contractor</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">Completion Score</label>
+                    <select id="completion-filter" class="glass-button w-full px-3 py-2 rounded-lg" onchange="applyFilters()">
+                        <option value="">All Scores</option>
+                        <option value="90-100">90-100% (Excellent)</option>
+                        <option value="80-89">80-89% (Good)</option>
+                        <option value="70-79">70-79% (Fair)</option>
+                        <option value="60-69">60-69% (Needs Work)</option>
+                        <option value="0-59">Under 60% (Critical)</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">Campaign Status</label>
+                    <select id="status-filter" class="glass-button w-full px-3 py-2 rounded-lg" onchange="applyFilters()">
+                        <option value="">All Status</option>
+                        <option value="ready">Has Campaign</option>
+                        <option value="no-campaign">No Campaign</option>
+                        <option value="progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm text-gray-400">Geographic Area</label>
+                    <select id="location-filter" class="glass-button w-full px-3 py-2 rounded-lg" onchange="applyFilters()">
+                        <option value="">All Locations</option>
+                        <option value="CA">California</option>
+                        <option value="TX">Texas</option>
+                        <option value="FL">Florida</option>
+                        <option value="NY">New York</option>
+                        <option value="CO">Colorado</option>
+                        <option value="AZ">Arizona</option>
+                        <option value="WA">Washington</option>
+                        <option value="OR">Oregon</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Active Filters -->
+            <div id="active-filters" class="flex flex-wrap gap-2 mt-4 hidden">
+                <!-- Active filter badges will appear here -->
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="text-sm text-gray-400">
+                Showing <span id="results-count" class="text-white font-semibold">0</span> of <span id="total-count" class="text-white font-semibold">0</span> contractors
+            </div>
+            <div class="flex items-center space-x-2">
+                <label class="text-sm text-gray-400">Sort by:</label>
+                <select id="sort-filter" class="glass-button px-3 py-2 rounded-lg text-sm" onchange="applyFilters()">
+                    <option value="completion-desc">Completion Score (High)</option>
+                    <option value="completion-asc">Completion Score (Low)</option>
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="location-asc">Location</option>
+                    <option value="recent">Recently Added</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Contractor Cards Container -->
+        <div id="contractors-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-center mt-8 space-x-4" id="pagination">
+            <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2" onclick="previousPage()">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                <span>Previous</span>
+            </button>
+            <span class="px-4 py-2" id="page-info">Page 1 of 1</span>
+            <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2" onclick="nextPage()">
+                <span>Next</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Email Campaign Modal -->
+    <div id="email-modal" class="fixed inset-0 modal-overlay hidden flex items-center justify-center z-50">
+        <div class="glass-surface p-6 rounded-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Email Campaign</h3>
+                <button class="glass-button p-2 rounded" onclick="closeModal()">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div id="email-content">
+                <!-- Email content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhancement Modal -->
+    <div id="enhancement-modal" class="fixed inset-0 modal-overlay hidden flex items-center justify-center z-50">
+        <div class="glass-surface p-6 rounded-2xl max-w-xl w-full mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Data Enhancement</h3>
+                <button class="glass-button p-2 rounded" onclick="closeModal()">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div id="enhancement-content">
+                <!-- Enhancement content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sync Options Modal -->
+    <div id="sync-modal" class="fixed inset-0 modal-overlay hidden flex items-center justify-center z-50">
+        <div class="glass-surface p-6 rounded-2xl max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Sync Options</h3>
+                <button class="glass-button p-2 rounded" onclick="closeModal()">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <button class="w-full glass-button p-3 rounded-lg text-left flex items-center space-x-3">
+                    <i data-lucide="upload" class="w-5 h-5 text-blue-400"></i>
+                    <div>
+                        <div class="font-medium">Export All Data</div>
+                        <div class="text-sm text-gray-400">Download complete database</div>
+                    </div>
+                </button>
+                <button class="w-full glass-button p-3 rounded-lg text-left flex items-center space-x-3">
+                    <i data-lucide="download" class="w-5 h-5 text-green-400"></i>
+                    <div>
+                        <div class="font-medium">Import Updates</div>
+                        <div class="text-sm text-gray-400">Upload CSV or JSON file</div>
+                    </div>
+                </button>
+                <button class="w-full glass-button p-3 rounded-lg text-left flex items-center space-x-3">
+                    <i data-lucide="refresh-cw" class="w-5 h-5 text-purple-400"></i>
+                    <div>
+                        <div class="font-medium">Sync with CRM</div>
+                        <div class="text-sm text-gray-400">Bidirectional sync</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state management
+        let allContractors = [];
+        let filteredContractors = [];
+        let currentPage = 1;
+        const contractorsPerPage = 9;
+        let currentView = 'grid';
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        // Mock data generation
+        const tradeTypes = ['Roofing', 'Plumbing', 'Electrical', 'HVAC', 'Flooring', 'Painting', 'Landscaping', 'General'];
+        const states = ['CA', 'TX', 'FL', 'NY', 'CO', 'AZ', 'WA', 'OR'];
+        const cities = {
+            'CA': ['Los Angeles', 'San Francisco', 'San Diego', 'Sacramento'],
+            'TX': ['Houston', 'Dallas', 'Austin', 'San Antonio'],
+            'FL': ['Miami', 'Orlando', 'Tampa', 'Jacksonville'],
+            'NY': ['New York', 'Albany', 'Buffalo', 'Rochester'],
+            'CO': ['Denver', 'Colorado Springs', 'Boulder', 'Fort Collins'],
+            'AZ': ['Phoenix', 'Tucson', 'Flagstaff', 'Scottsdale'],
+            'WA': ['Seattle', 'Spokane', 'Tacoma', 'Vancouver'],
+            'OR': ['Portland', 'Eugene', 'Salem', 'Bend']
+        };
+
+        const emailSequences = {
+            'Roofing': {
+                subjects: [
+                    'Your roofing business caught our attention',
+                    'Following up on roofing opportunities',
+                    'Last chance - roofing partnership'
+                ],
+                preview: 'Your Denver roofing business has impressive reviews...'
+            },
+            'Plumbing': {
+                subjects: [
+                    'Plumbing services expansion opportunity',
+                    'Quick follow-up on plumbing partnership',
+                    'Final notice - plumbing opportunity'
+                ],
+                preview: 'We noticed your plumbing services in Austin...'
+            },
+            'Electrical': {
+                subjects: [
+                    'Electrical contractor partnership available',
+                    'Following up on electrical opportunities',
+                    'Time-sensitive electrical partnership'
+                ],
+                preview: 'Your electrical services in Miami have caught...'
+            }
+        };
+
+        const optimalTimes = [
+            { day: 2, time: 'Tue 6:30 AM' },
+            { day: 3, time: 'Wed 10:15 AM' },
+            { day: 4, time: 'Thu 7:45 PM' },
+            { day: 9, time: 'Tue 8:00 AM' },
+            { day: 10, time: 'Wed 2:30 PM' },
+            { day: 11, time: 'Thu 6:00 PM' },
+            { day: 16, time: 'Tue 9:30 AM' },
+            { day: 17, time: 'Wed 1:15 PM' },
+            { day: 18, time: 'Thu 4:45 PM' }
+        ];
+
+        // Generate mock contractor data
+        function generateMockData() {
+            const contractors = [];
+            const companyNames = [
+                'Summit Roofing', 'Elite Plumbing LLC', 'Spark Electric', 'Superior HVAC', 'Premium Floors',
+                'ProPaint Solutions', 'GreenScape Landscaping', 'BuildRight Contractors', 'Apex Roofing Co',
+                'FlowMaster Plumbing', 'PowerLine Electric', 'CoolAir HVAC', 'FloorCraft Specialists',
+                'ColorPro Painting', 'Nature\'s Best Landscaping', 'Reliable General Contractors',
+                'Skyline Roofing', 'AquaFix Plumbing', 'Voltage Electric', 'Climate Control HVAC',
+                'Surface Solutions Flooring', 'Brush & Roll Painting', 'EverGreen Landscaping',
+                'Complete Construction', 'Rooftech Solutions', 'Drain Masters', 'Circuit Electric',
+                'TempControl HVAC', 'Wood & Stone Flooring', 'Fresh Coat Painting', 'Lawn Perfection',
+                'Build Pro Contractors', 'Weather Shield Roofing', 'Pipe Dream Plumbing', 'Amp Electric',
+                'Air Excellence HVAC', 'Designer Floors', 'Paint Perfect', 'Outdoor Oasis Landscaping',
+                'Quality Build Contractors', 'Fortress Roofing', 'H2O Solutions', 'ElectroMax',
+                'Comfort Zone HVAC', 'Luxury Flooring Co'
+            ];
+
+            for (let i = 0; i < 45; i++) {
+                const trade = tradeTypes[Math.floor(Math.random() * tradeTypes.length)];
+                const state = states[Math.floor(Math.random() * states.length)];
+                const city = cities[state][Math.floor(Math.random() * cities[state].length)];
+                const completion = Math.floor(Math.random() * 40) + 60; // 60-99%
+                
+                // Determine campaign status based on completion score
+                let campaignStatus;
+                let emailsent = 0;
+                if (completion >= 85) {
+                    campaignStatus = Math.random() > 0.3 ? 'ready' : (Math.random() > 0.5 ? 'progress' : 'no-campaign');
+                } else if (completion >= 75) {
+                    campaignStatus = Math.random() > 0.5 ? 'progress' : (Math.random() > 0.7 ? 'ready' : 'no-campaign');
+                } else {
+                    campaignStatus = Math.random() > 0.7 ? 'no-campaign' : (Math.random() > 0.5 ? 'progress' : 'ready');
+                }
+
+                if (campaignStatus === 'progress') {
+                    emailsent = Math.floor(Math.random() * 2) + 1; // 1 or 2 emails sent
+                }
+
+                const contractor = {
+                    id: i + 1,
+                    name: companyNames[i] || `${trade} Pro ${i + 1}`,
+                    trade: trade,
+                    location: `${city}, ${state}`,
+                    state: state,
+                    completion: completion,
+                    campaignStatus: campaignStatus,
+                    emailsSent: emailsent,
+                    optimalTime: optimalTimes[Math.floor(Math.random() * optimalTimes.length)],
+                    phone: `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+                    email: `contact@${companyNames[i] ? companyNames[i].toLowerCase().replace(/[^a-z]/g, '') : 'contractor' + i}.com`,
+                    website: `www.${companyNames[i] ? companyNames[i].toLowerCase().replace(/[^a-z]/g, '') : 'contractor' + i}.com`,
+                    lastContact: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+                    nextAction: getNextAction(campaignStatus, emailsent)
+                };
+
+                contractors.push(contractor);
+            }
+
+            return contractors;
+        }
+
+        function getNextAction(status, emailsSent) {
+            if (status === 'ready') return 'Send Email 1';
+            if (status === 'progress') return `Send Email ${emailsSent + 1}`;
+            if (status === 'no-campaign') return 'Enhance Data';
+            return 'Review';
+        }
+
+        // Initialize the application
+        function initializeApp() {
+            allContractors = generateMockData();
+            filteredContractors = [...allContractors];
+            updateDashboard();
+            renderCalendar();
+            applyFilters();
+            lucide.createIcons();
+        }
+
+        // Update dashboard metrics
+        function updateDashboard() {
+            const total = allContractors.length;
+            const ready = allContractors.filter(c => c.campaignStatus === 'ready').length;
+            const highCompletion = allContractors.filter(c => c.completion >= 90).length;
+            const sent = allContractors.filter(c => c.campaignStatus === 'progress').reduce((sum, c) => sum + c.emailsSent, 0);
+
+            document.getElementById('total-contractors').textContent = total;
+            document.getElementById('dash-total').textContent = total;
+            document.getElementById('dash-ready').textContent = ready;
+            document.getElementById('dash-high-completion').textContent = highCompletion;
+            document.getElementById('dash-sent').textContent = sent;
+
+            // Update action counts
+            document.getElementById('action-ready').textContent = ready;
+            document.getElementById('action-enhance').textContent = allContractors.filter(c => c.campaignStatus === 'no-campaign').length;
+            document.getElementById('action-progress').textContent = allContractors.filter(c => c.campaignStatus === 'progress').length;
+        }
+
+        // Calendar functionality
+        function renderCalendar() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            document.getElementById('current-month').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            let calendarHTML = '';
+            
+            // Day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                calendarHTML += `<div class="p-2 font-semibold text-center text-gray-400">${day}</div>`;
+            });
+
+            // Empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                calendarHTML += `<div class="p-2"></div>`;
+            }
+
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const readyCount = getReadyCountForDay(day);
+                let dayClass = 'calendar-day p-2 text-center rounded cursor-pointer';
+                let indicator = '';
+
+                if (readyCount >= 15) {
+                    dayClass += ' optimal';
+                    indicator = `<div class="text-xs">📧${readyCount}</div>`;
+                } else if (readyCount >= 5) {
+                    dayClass += ' moderate';
+                    indicator = `<div class="text-xs">⏰${readyCount}</div>`;
+                } else if (readyCount > 0) {
+                    dayClass += ' low';
+                    indicator = `<div class="text-xs">✅${readyCount}</div>`;
+                }
+
+                calendarHTML += `
+                    <div class="${dayClass}" onclick="showDayDetails(${day})">
+                        <div class="font-medium">${day}</div>
+                        ${indicator}
+                    </div>
+                `;
+            }
+
+            document.getElementById('calendar-grid').innerHTML = calendarHTML;
+        }
+
+        function getReadyCountForDay(day) {
+            // Simulate optimal timing data
+            return Math.floor(Math.random() * 25);
+        }
+
+        function previousMonth() {
+            if (currentMonth === 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            if (currentMonth === 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else {
+                currentMonth++;
+            }
+            renderCalendar();
+        }
+
+        function showDayDetails(day) {
+            alert(`Calendar details for ${currentMonth + 1}/${day}/${currentYear}\n\nThis would show:\n• Contractors ready to contact\n• Optimal timing recommendations\n• Scheduling options`);
+        }
+
+        // Filtering functionality
+        function applyFilters() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const tradeFilter = document.getElementById('trade-filter').value;
+            const completionFilter = document.getElementById('completion-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const locationFilter = document.getElementById('location-filter').value;
+            const sortFilter = document.getElementById('sort-filter').value;
+
+            filteredContractors = allContractors.filter(contractor => {
+                // Search filter
+                if (searchTerm && !contractor.name.toLowerCase().includes(searchTerm) && 
+                    !contractor.location.toLowerCase().includes(searchTerm)) {
+                    return false;
+                }
+
+                // Trade filter
+                if (tradeFilter && contractor.trade !== tradeFilter) {
+                    return false;
+                }
+
+                // Completion filter
+                if (completionFilter) {
+                    const completion = contractor.completion;
+                    const range = completionFilter.split('-');
+                    const min = parseInt(range[0]);
+                    const max = parseInt(range[1]) || 100;
+                    if (completion < min || completion > max) {
+                        return false;
+                    }
+                }
+
+                // Status filter
+                if (statusFilter && contractor.campaignStatus !== statusFilter) {
+                    return false;
+                }
+
+                // Location filter
+                if (locationFilter && contractor.state !== locationFilter) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            // Sort filtered results
+            sortContractors(sortFilter);
+
+            // Update active filters display
+            updateActiveFilters();
+
+            // Reset to first page and render
+            currentPage = 1;
+            renderContractors();
+            updatePagination();
+            updateResultsCount();
+        }
+
+        function sortContractors(sortBy) {
+            switch (sortBy) {
+                case 'completion-desc':
+                    filteredContractors.sort((a, b) => b.completion - a.completion);
+                    break;
+                case 'completion-asc':
+                    filteredContractors.sort((a, b) => a.completion - b.completion);
+                    break;
+                case 'name-asc':
+                    filteredContractors.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'location-asc':
+                    filteredContractors.sort((a, b) => a.location.localeCompare(b.location));
+                    break;
+                case 'recent':
+                    filteredContractors.sort((a, b) => b.lastContact - a.lastContact);
+                    break;
+            }
+        }
+
+        function updateActiveFilters() {
+            const activeFiltersContainer = document.getElementById('active-filters');
+            const filters = [];
+
+            // Collect active filters
+            const searchTerm = document.getElementById('search-input').value;
+            const tradeFilter = document.getElementById('trade-filter').value;
+            const completionFilter = document.getElementById('completion-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            const locationFilter = document.getElementById('location-filter').value;
+
+            if (searchTerm) filters.push({ type: 'search', value: searchTerm, label: `Search: "${searchTerm}"` });
+            if (tradeFilter) filters.push({ type: 'trade', value: tradeFilter, label: `Trade: ${tradeFilter}` });
+            if (completionFilter) filters.push({ type: 'completion', value: completionFilter, label: `Completion: ${completionFilter}%` });
+            if (statusFilter) filters.push({ type: 'status', value: statusFilter, label: `Status: ${getStatusLabel(statusFilter)}` });
+            if (locationFilter) filters.push({ type: 'location', value: locationFilter, label: `Location: ${locationFilter}` });
+
+            if (filters.length > 0) {
+                activeFiltersContainer.classList.remove('hidden');
+                activeFiltersContainer.innerHTML = filters.map(filter => 
+                    `<span class="filter-badge">
+                        ${filter.label}
+                        <button onclick="removeFilter('${filter.type}')" class="ml-2">
+                            <i data-lucide="x" class="w-3 h-3"></i>
+                        </button>
+                    </span>`
+                ).join('');
+            } else {
+                activeFiltersContainer.classList.add('hidden');
+            }
+
+            lucide.createIcons();
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'ready': 'Has Campaign',
+                'no-campaign': 'No Campaign',
+                'progress': 'In Progress',
+                'completed': 'Completed'
+            };
+            return labels[status] || status;
+        }
+
+        function removeFilter(type) {
+            switch (type) {
+                case 'search':
+                    document.getElementById('search-input').value = '';
+                    break;
+                case 'trade':
+                    document.getElementById('trade-filter').value = '';
+                    break;
+                case 'completion':
+                    document.getElementById('completion-filter').value = '';
+                    break;
+                case 'status':
+                    document.getElementById('status-filter').value = '';
+                    break;
+                case 'location':
+                    document.getElementById('location-filter').value = '';
+                    break;
+            }
+            applyFilters();
+        }
+
+        function clearAllFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('trade-filter').value = '';
+            document.getElementById('completion-filter').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('location-filter').value = '';
+            applyFilters();
+        }
+
+        function filterByStatus(status) {
+            document.getElementById('status-filter').value = status;
+            applyFilters();
+        }
+
+        // Contractor card rendering
+        function renderContractors() {
+            const container = document.getElementById('contractors-container');
+            const startIndex = (currentPage - 1) * contractorsPerPage;
+            const endIndex = startIndex + contractorsPerPage;
+            const contractorsToShow = filteredContractors.slice(startIndex, endIndex);
+
+            container.innerHTML = contractorsToShow.map(contractor => createContractorCard(contractor)).join('');
+            lucide.createIcons();
+        }
+
+        function createContractorCard(contractor) {
+            const statusConfig = getStatusConfig(contractor.campaignStatus);
+            const completionColor = getCompletionColor(contractor.completion);
+            
+            return `
+                <div class="contractor-card p-6 rounded-2xl">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            ${createCompletionCircle(contractor.completion, completionColor)}
+                            <div>
+                                <h3 class="font-semibold">${contractor.name}</h3>
+                                <p class="text-sm text-gray-400">${contractor.location}</p>
+                                <p class="text-xs text-gray-500">${contractor.trade}</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 ${statusConfig.bgColor} text-xs rounded-full flex items-center space-x-1">
+                            <i data-lucide="${statusConfig.icon}" class="w-3 h-3"></i>
+                            <span>${statusConfig.label}</span>
+                        </span>
+                    </div>
+                    
+                    ${createCardContent(contractor)}
+                    
+                    <div class="flex space-x-2 mt-4">
+                        ${createCardActions(contractor)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createCompletionCircle(completion, color) {
+            const radius = 20;
+            const circumference = 2 * Math.PI * radius;
+            const strokeDasharray = circumference;
+            const strokeDashoffset = circumference - (completion / 100) * circumference;
+
+            return `
+                <div class="completion-circle w-12 h-12">
+                    <svg class="w-12 h-12 progress-ring" viewBox="0 0 44 44">
+                        <circle class="progress-ring-circle" cx="22" cy="22" r="20"
+                                stroke="rgba(255,255,255,0.2)" stroke-width="3"
+                                fill="transparent"></circle>
+                        <circle class="progress-ring-circle" cx="22" cy="22" r="20"
+                                stroke="${color}" stroke-width="3"
+                                fill="transparent"
+                                stroke-dasharray="${strokeDasharray}"
+                                stroke-dashoffset="${strokeDashoffset}"></circle>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                        ${completion}%
+                    </div>
+                </div>
+            `;
+        }
+
+        function createCardContent(contractor) {
+            switch (contractor.campaignStatus) {
+                case 'ready':
+                    const sequence = emailSequences[contractor.trade] || emailSequences['Roofing'];
+                    return `
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm"><i data-lucide="mail" class="w-4 h-4 inline mr-2"></i> 3-Email Sequence Ready</p>
+                            <p class="text-sm"><i data-lucide="clock" class="w-4 h-4 inline mr-2"></i> Best: ${contractor.optimalTime.time}</p>
+                            <p class="text-sm text-gray-300">"${sequence.preview}"</p>
+                        </div>
+                    `;
+                
+                case 'progress':
+                    return `
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm"><i data-lucide="check-circle" class="w-4 h-4 inline mr-2 text-green-400"></i> ${contractor.emailsSent} Email${contractor.emailsSent > 1 ? 's' : ''} Sent</p>
+                            <p class="text-sm"><i data-lucide="clock" class="w-4 h-4 inline mr-2 text-amber-400"></i> Email ${contractor.emailsSent + 1}: Due ${contractor.optimalTime.time}</p>
+                            <p class="text-sm text-gray-300">Following up on previous contact...</p>
+                        </div>
+                    `;
+                
+                case 'no-campaign':
+                    return `
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm"><i data-lucide="target" class="w-4 h-4 inline mr-2"></i> Enhancement Needed</p>
+                            <p class="text-sm text-gray-400">• Missing: Owner contact details</p>
+                            <p class="text-sm text-gray-400">• Phone verification required</p>
+                        </div>
+                    `;
+                
+                default:
+                    return `
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-400">Campaign completed</p>
+                            <p class="text-sm text-gray-400">Last contact: ${contractor.lastContact.toLocaleDateString()}</p>
+                        </div>
+                    `;
+            }
+        }
+
+        function createCardActions(contractor) {
+            switch (contractor.campaignStatus) {
+                case 'ready':
+                case 'progress':
+                    return `
+                        <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2"
+                                onclick="showEmailCampaign(${contractor.id})">
+                            <i data-lucide="clipboard" class="w-4 h-4"></i>
+                            <span>Copy Email</span>
+                        </button>
+                        <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2"
+                                onclick="markAsSent(${contractor.id})">
+                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            <span>Mark Sent</span>
+                        </button>
+                    `;
+                
+                case 'no-campaign':
+                    return `
+                        <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2"
+                                onclick="showEnhancement(${contractor.id})">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                            <span>Enhance</span>
+                        </button>
+                        <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2"
+                                onclick="generateCampaign(${contractor.id})">
+                            <i data-lucide="rocket" class="w-4 h-4"></i>
+                            <span>Generate</span>
+                        </button>
+                    `;
+                
+                default:
+                    return `
+                        <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                            <span>View Details</span>
+                        </button>
+                    `;
+            }
+        }
+
+        function getStatusConfig(status) {
+            const configs = {
+                'ready': { bgColor: 'bg-green-500', icon: 'check-circle', label: 'Campaign Ready' },
+                'progress': { bgColor: 'bg-amber-500', icon: 'refresh-cw', label: 'In Progress' },
+                'no-campaign': { bgColor: 'bg-red-500', icon: 'x-circle', label: 'No Campaign' },
+                'completed': { bgColor: 'bg-blue-500', icon: 'check-circle-2', label: 'Completed' }
+            };
+            return configs[status] || configs['no-campaign'];
+        }
+
+        function getCompletionColor(completion) {
+            if (completion >= 90) return '#10b981'; // green
+            if (completion >= 80) return '#3b82f6'; // blue
+            if (completion >= 70) return '#f59e0b'; // amber
+            return '#ef4444'; // red
+        }
+
+        // Modal functions
+        function showEmailCampaign(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            const sequence = emailSequences[contractor.trade] || emailSequences['Roofing'];
+            const emailNumber = contractor.campaignStatus === 'progress' ? contractor.emailsSent + 1 : 1;
+
+            const content = `
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                            ${contractor.completion}%
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">${contractor.name}</h4>
+                            <p class="text-sm text-gray-400">${contractor.location} • ${contractor.trade}</p>
+                        </div>
+                    </div>
+
+                    <div class="email-preview">
+                        <div class="flex items-center justify-between mb-3">
+                            <h5 class="font-semibold">Email ${emailNumber}</h5>
+                            <span class="text-sm text-gray-400">Optimal: ${contractor.optimalTime.time}</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-sm text-gray-400">Subject:</label>
+                                <p class="font-medium">${sequence.subjects[emailNumber - 1]}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400">Preview:</label>
+                                <p class="text-sm">${sequence.preview}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button class="flex-1 glass-button px-4 py-3 rounded-lg flex items-center justify-center space-x-2"
+                                onclick="copyEmail(${contractorId})">
+                            <i data-lucide="clipboard" class="w-4 h-4"></i>
+                            <span>Copy Email</span>
+                        </button>
+                        <button class="flex-1 bg-blue-600 px-4 py-3 rounded-lg flex items-center justify-center space-x-2"
+                                onclick="markAsSent(${contractorId}); closeModal();">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Mark as Sent</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('email-content').innerHTML = content;
+            document.getElementById('email-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function showEnhancement(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+
+            const content = `
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-white font-bold">
+                            ${contractor.completion}%
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">${contractor.name}</h4>
+                            <p class="text-sm text-gray-400">${contractor.location} • ${contractor.trade}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Owner Name</label>
+                            <input type="text" class="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-2" 
+                                   placeholder="Enter owner name">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Phone Number</label>
+                            <input type="text" class="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-2" 
+                                   value="${contractor.phone}">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Email Address</label>
+                            <input type="email" class="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-2" 
+                                   value="${contractor.email}">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Website</label>
+                            <input type="url" class="w-full bg-transparent border border-gray-600 rounded-lg px-4 py-2" 
+                                   value="${contractor.website}">
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button class="flex-1 glass-button px-4 py-3 rounded-lg" onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button class="flex-1 bg-green-600 px-4 py-3 rounded-lg" onclick="saveEnhancements(${contractorId})">
+                            Save & Generate Campaign
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('enhancement-content').innerHTML = content;
+            document.getElementById('enhancement-modal').classList.remove('hidden');
+        }
+
+        function showSyncOptions() {
+            document.getElementById('sync-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('email-modal').classList.add('hidden');
+            document.getElementById('enhancement-modal').classList.add('hidden');
+            document.getElementById('sync-modal').classList.add('hidden');
+        }
+
+        // Action functions
+        function copyEmail(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            const sequence = emailSequences[contractor.trade] || emailSequences['Roofing'];
+            const emailNumber = contractor.campaignStatus === 'progress' ? contractor.emailsSent + 1 : 1;
+            
+            const emailContent = `Subject: ${sequence.subjects[emailNumber - 1]}\n\n${sequence.preview}\n\nBest time to contact: ${contractor.optimalTime.time}`;
+            
+            navigator.clipboard.writeText(emailContent).then(() => {
+                alert('Email content copied to clipboard!');
+            });
+        }
+
+        function markAsSent(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            
+            if (contractor.campaignStatus === 'ready') {
+                contractor.campaignStatus = 'progress';
+                contractor.emailsSent = 1;
+            } else if (contractor.campaignStatus === 'progress') {
+                contractor.emailsSent++;
+                if (contractor.emailsSent >= 3) {
+                    contractor.campaignStatus = 'completed';
+                }
+            }
+
+            updateDashboard();
+            applyFilters(); // Re-render with updated data
+            alert('Email marked as sent!');
+        }
+
+        function generateCampaign(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            contractor.campaignStatus = 'ready';
+            contractor.completion = Math.min(contractor.completion + 10, 99);
+            
+            updateDashboard();
+            applyFilters();
+            alert('Campaign generated successfully!');
+        }
+
+        function saveEnhancements(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            contractor.completion = Math.min(contractor.completion + 15, 99);
+            contractor.campaignStatus = 'ready';
+            
+            updateDashboard();
+            applyFilters();
+            closeModal();
+            alert('Enhancements saved and campaign generated!');
+        }
+
+        // Pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredContractors.length / contractorsPerPage);
+            document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            // Update button states
+            const prevButton = document.querySelector('#pagination button:first-child');
+            const nextButton = document.querySelector('#pagination button:last-child');
+            
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
+        }
+
+        function updateResultsCount() {
+            document.getElementById('results-count').textContent = filteredContractors.length;
+            document.getElementById('total-count').textContent = allContractors.length;
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderContractors();
+                updatePagination();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredContractors.length / contractorsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderContractors();
+                updatePagination();
+            }
+        }
+
+        // Utility functions
+        function toggleView() {
+            currentView = currentView === 'grid' ? 'list' : 'grid';
+            document.getElementById('view-toggle-text').textContent = currentView === 'grid' ? 'List View' : 'Grid View';
+            
+            const container = document.getElementById('contractors-container');
+            if (currentView === 'list') {
+                container.className = 'grid grid-cols-1 gap-4';
+            } else {
+                container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+            }
+            
+            renderContractors();
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(filteredContractors, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'contractors-export.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            alert(`Exported ${filteredContractors.length} contractors to ${exportFileDefaultName}`);
+        }
+
+        // Initialize the application when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+    </script>
+</body>
+</html>

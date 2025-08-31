@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Intelligence Hub V4 - AI Vortex Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(240, 10%, 4%)',
+                        foreground: 'hsl(0, 0%, 97%)',
+                        muted: 'hsl(240, 3.7%, 15.9%)',
+                        'muted-foreground': 'hsl(240, 5%, 64%)',
+                        popover: 'hsla(220, 13%, 18%, 0.5)',
+                        'popover-foreground': 'hsl(0, 0%, 97%)',
+                        card: 'hsla(220, 13%, 18%, 0.5)',
+                        'card-foreground': 'hsl(0, 0%, 97%)',
+                        border: 'hsla(220, 13%, 40%, 0.5)',
+                        input: 'hsla(220, 13%, 18%, 0.5)',
+                        primary: 'hsl(199, 89%, 48%)',
+                        'primary-foreground': 'hsl(240, 10%, 4%)',
+                        secondary: 'hsla(220, 13%, 18%, 0.5)',
+                        'secondary-foreground': 'hsl(0, 0%, 97%)',
+                        accent: 'hsla(220, 13%, 18%, 0.5)',
+                        'accent-foreground': 'hsl(0, 0%, 97%)',
+                        destructive: 'hsl(346, 87%, 43%)',
+                        'destructive-foreground': 'hsl(0, 0%, 97%)',
+                        ring: 'hsl(199, 89%, 48%)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* AI Vortex Dark Theme */
+        body {
+            background: hsl(240, 10%, 4%);
+            background-image: radial-gradient(at 20% 10%, hsla(220, 50%, 30%, 0.15) 0px, transparent 50%), 
+                              radial-gradient(at 80% 90%, hsla(280, 50%, 30%, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: hsl(0, 0%, 97%);
+        }
+        
+        /* Glass morphism components matching the app */
+        .glass-surface {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.9) 0%,
+                hsla(220, 13%, 15%, 0.95) 100%
+            );
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid hsla(220, 13%, 30%, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .intelligence-card {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.85) 0%,
+                hsla(220, 13%, 15%, 0.9) 100%
+            );
+            backdrop-filter: blur(20px);
+            border: 1px solid hsla(220, 13%, 30%, 0.4);
+            transition: all 0.4s ease;
+            border-radius: 1rem;
+        }
+        
+        .intelligence-card:hover {
+            transform: translateY(-4px);
+            border-color: hsla(199, 89%, 48%, 0.6);
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 22%, 0.9) 0%,
+                hsla(220, 13%, 18%, 0.95) 100%
+            );
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Completion score circles */
+        .completion-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 11px;
+            background: conic-gradient(hsl(142, 76%, 36%) 0deg, hsl(142, 76%, 36%) 360deg, hsl(240, 3.7%, 15.9%) 360deg);
+        }
+        
+        .tab-button {
+            background: transparent;
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            color: hsl(240, 5%, 64%);
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button:hover {
+            color: hsl(0, 0%, 97%);
+            border-color: hsla(220, 13%, 30%, 0.5);
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, hsl(199, 89%, 48%), hsl(199, 89%, 40%));
+            color: hsl(240, 10%, 4%);
+            border-color: hsl(199, 89%, 48%);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Calendar specific styles */
+        .calendar-widget {
+            min-width: 200px;
+            max-width: 250px;
+        }
+        
+        .quick-actions {
+            min-width: 400px;
+        }
+
+        /* Mode specific visibility */
+        .intelligence-only { display: block; }
+        .execution-only { display: none; }
+        
+        body.execution-mode .intelligence-only { display: none; }
+        body.execution-mode .execution-only { display: block; }
+    </style>
+</head>
+<body class="dark">
+    
+    <!-- Top Navigation -->
+    <nav class="h-16 glass-surface border-b border-border/50 flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-50">
+        <!-- Left: Logo + Navigation -->
+        <div class="flex items-center space-x-8">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <i data-lucide="zap" class="w-5 h-5 text-primary-foreground"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-foreground">AI Vortex</h1>
+                    <p class="text-xs text-muted-foreground -mt-1">Premium Intelligence Hub</p>
+                </div>
+            </div>
+            
+            <!-- Mode Toggle -->
+            <div class="flex items-center space-x-2 bg-muted/30 rounded-lg p-1">
+                <button id="intelligence-mode" class="px-4 py-2 rounded-md text-sm font-medium transition-all tab-button active">
+                    <i data-lucide="brain" class="w-4 h-4 mr-2"></i>
+                    Intelligence
+                </button>
+                <button id="execution-mode" class="px-4 py-2 rounded-md text-sm font-medium transition-all tab-button">
+                    <i data-lucide="send" class="w-4 h-4 mr-2"></i>
+                    Execution
+                </button>
+            </div>
+        </div>
+
+        <!-- Right: Stats + Profile -->
+        <div class="flex items-center space-x-6">
+            <div class="flex items-center space-x-6 text-sm">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="users" class="w-4 h-4 text-muted-foreground"></i>
+                    <span class="text-foreground font-medium">5 contractors</span>
+                    <span class="text-muted-foreground">• Premium data • 100% completion</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">M</span>
+                </div>
+                <span class="text-sm text-foreground">Manu</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16">
+        <!-- Header Section -->
+        <div class="px-6 py-8 border-b border-border/30">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-foreground mb-2">Premium Contractor Intelligence</h2>
+                        <p class="text-muted-foreground text-sm">Visualization + Campaign Tracking • Real completion data • Focus Intel integration</p>
+                    </div>
+                    
+                    <!-- Calendar & Quick Actions - Fixed Layout -->
+                    <div class="flex space-x-6">
+                        <!-- Calendar Widget -->
+                        <div class="calendar-widget bg-gradient-to-br from-blue-600/10 to-purple-600/10 border border-blue-500/30 rounded-lg p-4">
+                            <h4 class="font-medium text-blue-300 mb-3 flex items-center">
+                                <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
+                                Campaign Calendar
+                            </h4>
+                            <div class="text-xs text-blue-200/80 space-y-1">
+                                <div class="flex justify-between">
+                                    <span>Today:</span>
+                                    <span class="text-blue-300 font-medium">3 scheduled</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Tomorrow:</span>
+                                    <span class="text-yellow-300">2 follow-ups</span>
+                                </div>
+                                <div class="flex justify-between border-t border-blue-500/20 pt-2">
+                                    <span>This week:</span>
+                                    <span class="text-purple-300 font-medium">8 campaigns</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="quick-actions bg-gradient-to-br from-emerald-600/10 to-teal-600/10 border border-emerald-500/30 rounded-lg p-4">
+                            <h4 class="font-medium text-emerald-300 mb-3 flex items-center">
+                                <i data-lucide="zap" class="w-4 h-4 mr-2"></i>
+                                Quick Actions
+                            </h4>
+                            <div class="grid grid-cols-3 gap-2 text-xs">
+                                <button class="bg-emerald-500/20 text-emerald-300 px-3 py-2 rounded flex items-center justify-center">
+                                    <i data-lucide="check" class="w-3 h-3 mr-1"></i>
+                                    Mark Sent
+                                </button>
+                                <button class="bg-blue-500/20 text-blue-300 px-3 py-2 rounded flex items-center justify-center">
+                                    <i data-lucide="clock" class="w-3 h-3 mr-1"></i>
+                                    Schedule
+                                </button>
+                                <button class="bg-purple-500/20 text-purple-300 px-3 py-2 rounded flex items-center justify-center">
+                                    <i data-lucide="copy" class="w-3 h-3 mr-1"></i>
+                                    Copy All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intelligence Cards Grid -->
+        <div class="px-6 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div id="contractors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Contractors will be rendered here by JavaScript -->
+                </div>
+                
+                <!-- Stats Footer -->
+                <div class="mt-8 text-center">
+                    <p class="text-muted-foreground mb-4">Showing 5 premium contractors with complete intelligence data</p>
+                    <div class="flex items-center justify-center space-x-8 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-muted-foreground">100% Completion Scores</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="text-muted-foreground">Campaign Data Integrated</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                            <span class="text-muted-foreground">5-Layer Intelligence</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced contractor data with multiple email sequences
+        const contractors = [
+            {
+                id: '1052',
+                businessName: 'CTX Roofing LLC',
+                category: 'Roofing',
+                email: 'alan@ctxroofing.net',
+                phone: '(208) 589-9500',
+                website: 'https://www.ctxroofing.net/',
+                address: 'Southern Idaho, ID',
+                completionScore: 100,
+                googleRating: 5.0,
+                reviewsCount: 3,
+                businessHealth: 'EMERGING',
+                trustScore: 75,
+                sophisticationTier: 'Growing',
+                emailQuality: 'PROFESSIONAL_DOMAIN',
+                hasCampaign: true,
+                painPoints: ['Only 3 reviews', 'No recent feedback', 'Competitors advancing'],
+                opportunities: ['Review management', 'Trust building', 'Online visibility'],
+                conversionScore: 78,
+                campaignData: {
+                    emailSequences: [
+                        {
+                            emailNumber: 1,
+                            subject: 'CTX Roofing: Your Google reviews',
+                            sendDay: 'Tuesday',
+                            sendTime: '07:00 AM',
+                            body: 'Manu here. I noticed CTX Roofing only has 3 Google reviews, and they haven\'t been active. This is a real problem, as new customers often check reviews first. Without more recent feedback, you\'re missing out on potential leads and trust. I can fix this for you quickly. Want to hear how? Reply to this email.'
+                        },
+                        {
+                            emailNumber: 2,
+                            subject: 'Re: CTX Roofing reviews - Quick follow up',
+                            sendDay: 'Thursday',
+                            sendTime: '06:30 PM',
+                            body: 'Hi again. I sent a note about your review situation yesterday. Here\'s the thing - every day without fresh reviews is a day competitors gain ground. I\'ve helped 200+ contractors in exactly your position. Takes about 2 weeks to see results. Still interested in hearing the approach?'
+                        }
+                    ]
+                }
+            },
+            {
+                id: '1062',
+                businessName: 'Two State Roofing',
+                category: 'Roofing',
+                email: 'andrew@twostateroofs.com',
+                phone: '(208) 523-8406',
+                website: 'https://www.twostateroofs.com/',
+                address: 'Idaho, ID',
+                completionScore: 100,
+                googleRating: 4.8,
+                reviewsCount: 24,
+                businessHealth: 'HEALTHY',
+                trustScore: 85,
+                sophisticationTier: 'Growing',
+                emailQuality: 'PROFESSIONAL_DOMAIN',
+                hasCampaign: false,
+                painPoints: ['Website optimization', 'Lead generation', 'Market expansion'],
+                opportunities: ['Digital marketing', 'SEO improvement', 'Lead funnel'],
+                conversionScore: 65,
+                campaignData: null
+            },
+            {
+                id: '1217',
+                businessName: 'Elias Roofing Remodel & Repair LLC',
+                category: 'Roofing',
+                email: 'rebekah.eliasllc@gmail.com',
+                phone: '(208) 906-7693',
+                website: 'http://www.eliasroofingllc.com/',
+                address: '2816 Raccoon Ct, Nampa, ID 83687',
+                completionScore: 100,
+                googleRating: 4.1,
+                reviewsCount: 14,
+                businessHealth: 'HEALTHY',
+                trustScore: 55,
+                sophisticationTier: 'Amateur',
+                emailQuality: 'PERSONAL_DOMAIN',
+                hasCampaign: true,
+                painPoints: ['Online reputation', 'Professional image', 'Bid competitiveness'],
+                opportunities: ['Reputation management', 'Professional branding', 'Review optimization'],
+                conversionScore: 82,
+                campaignData: {
+                    emailSequences: [
+                        {
+                            emailNumber: 1,
+                            subject: 'Your online reviews are costing you jobs, Elias.',
+                            sendDay: 'Tuesday',
+                            sendTime: '6:30 AM',
+                            body: 'Elias, I\'ve been looking at roofing contractors in your area, and I noticed your online reviews and overall reputation could be stronger. When potential clients search for a roofer, what they find online often decides if they even call you. My data shows this directly impacts your ability to win bids. I can show you exactly what\'s happening and how to fix it without a big team or overhead.'
+                        },
+                        {
+                            emailNumber: 2,
+                            subject: 'Elias - Your competitors are pulling ahead',
+                            sendDay: 'Thursday',
+                            sendTime: '06:30 PM',
+                            body: 'Quick follow up on my message about your online presence. I ran some numbers - contractors in Nampa with better online reputations are getting 40% more calls. That\'s real money leaving the table. I have a simple system that fixes this in 30-60 days. Worth a 10-minute conversation?'
+                        }
+                    ]
+                }
+            },
+            {
+                id: '1331',
+                businessName: 'NW Peak Roofing LLC',
+                category: 'Roofing',
+                email: 'info@nwpeakroofing.com',
+                phone: '(509) 251-9435',
+                website: 'https://www.nwpeakroofing.com/',
+                address: '5183 W Palmwood, Post Falls, ID 83854',
+                completionScore: 100,
+                googleRating: 5.0,
+                reviewsCount: 11,
+                businessHealth: 'HEALTHY',
+                trustScore: 80,
+                sophisticationTier: 'Growing',
+                emailQuality: 'PROFESSIONAL_DOMAIN',
+                hasCampaign: true,
+                painPoints: ['Limited online feedback', 'Market visibility', 'Growth potential'],
+                opportunities: ['Review amplification', 'Market expansion', 'Brand authority'],
+                conversionScore: 75,
+                campaignData: {
+                    emailSequences: [
+                        {
+                            emailNumber: 1,
+                            subject: 'Are bad reviews costing NW Peak Roofing bids?',
+                            sendDay: 'Tuesday',
+                            sendTime: '6:30 AM',
+                            body: 'Manu here. I noticed some online feedback for NW Peak Roofing that might be costing you jobs. Many contractors struggle with this, losing bids even when their work is solid. My data from 5,500+ contractors shows exactly how this happens and how to fix it fast. No team, no overhead, just direct solutions. Want to quickly see if this applies to you? Reply to this email.'
+                        }
+                    ]
+                }
+            },
+            {
+                id: '1531',
+                businessName: 'Dodd Roofing and Exteriors',
+                category: 'Roofing',
+                email: 'info@doddroofs.com',
+                phone: '(208) 295-9421',
+                website: 'https://www.doddroofs.com/',
+                address: '850 E Franklin Rd #411, Meridian, ID 83642',
+                completionScore: 100,
+                googleRating: 5.0,
+                reviewsCount: 256,
+                businessHealth: 'HEALTHY',
+                trustScore: 85,
+                sophisticationTier: 'Growing',
+                emailQuality: 'PROFESSIONAL_DOMAIN',
+                hasCampaign: false,
+                painPoints: ['Scaling challenges', 'Market saturation', 'Premium positioning'],
+                opportunities: ['Premium services', 'Market leadership', 'Business expansion'],
+                conversionScore: 58,
+                campaignData: null
+            }
+        ];
+
+        // Enhanced render function with rich intelligence data
+        function renderContractors() {
+            const grid = document.getElementById('contractors-grid');
+            grid.innerHTML = '';
+            
+            contractors.forEach(contractor => {
+                const card = document.createElement('div');
+                card.className = 'intelligence-card p-5 cursor-pointer';
+                card.onclick = () => openProfile(contractor.id);
+                
+                const healthColorMap = {
+                    'HEALTHY': 'text-green-400',
+                    'EMERGING': 'text-yellow-400',
+                    'STRUGGLING': 'text-red-400'
+                };
+
+                const campaignStatus = contractor.hasCampaign ? 
+                    '<span class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">Campaign Ready</span>' :
+                    '<span class="bg-gray-500/20 text-gray-400 px-2 py-1 rounded text-xs">No Campaign</span>';
+
+                // Intelligence mode card (rich data)
+                const intelligenceCard = `
+                    <div class="intelligence-only">
+                        <!-- Header with Completion Score -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="completion-circle">100%</div>
+                                <div>
+                                    <h3 class="font-semibold text-foreground text-sm mb-1">${contractor.businessName}</h3>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-xs ${healthColorMap[contractor.businessHealth]} font-medium">${contractor.businessHealth}</span>
+                                        <span class="text-xs text-muted-foreground">•</span>
+                                        <span class="text-xs text-muted-foreground">${contractor.sophisticationTier}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-right">
+                                <div class="text-primary font-bold">${contractor.conversionScore}%</div>
+                                <div class="text-muted-foreground">Conv. Score</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reviews & Trust -->
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="star" class="w-4 h-4 text-yellow-400"></i>
+                                <span class="text-sm text-foreground font-medium">${contractor.googleRating}</span>
+                                <span class="text-xs text-muted-foreground">(${contractor.reviewsCount})</span>
+                            </div>
+                            <div class="text-xs">
+                                <span class="text-muted-foreground">Trust: </span>
+                                <span class="text-green-400 font-medium">${contractor.trustScore}%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Pain Points -->
+                        <div class="mb-4">
+                            <div class="text-xs text-red-300 font-medium mb-2 flex items-center">
+                                <i data-lucide="alert-triangle" class="w-3 h-3 mr-1"></i>
+                                Top Pain Points
+                            </div>
+                            <div class="space-y-1">
+                                ${contractor.painPoints.slice(0, 2).map(pain => 
+                                    `<div class="text-xs text-red-200/80 bg-red-500/10 px-2 py-1 rounded border border-red-500/20">• ${pain}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <!-- Opportunities -->
+                        <div class="mb-4">
+                            <div class="text-xs text-emerald-300 font-medium mb-2 flex items-center">
+                                <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i>
+                                Key Opportunities
+                            </div>
+                            <div class="space-y-1">
+                                ${contractor.opportunities.slice(0, 2).map(opp => 
+                                    `<div class="text-xs text-emerald-200/80 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">• ${opp}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Info (Collapsed) -->
+                        <div class="text-xs text-muted-foreground space-y-1 mb-3">
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="mail" class="w-3 h-3"></i>
+                                <span class="truncate">${contractor.email}</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i data-lucide="phone" class="w-3 h-3"></i>
+                                <span>${contractor.phone}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="flex items-center justify-between pt-3 border-t border-border/30">
+                            ${campaignStatus}
+                            <button class="text-xs text-primary hover:text-primary/80 transition-colors flex items-center">
+                                <span>View Details</span>
+                                <i data-lucide="chevron-right" class="w-3 h-3 ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Execution mode card (campaign focused)
+                const executionCard = `
+                    <div class="execution-only">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-semibold text-foreground text-sm">${contractor.businessName}</h3>
+                                <div class="text-xs text-muted-foreground mt-1">${contractor.address}</div>
+                            </div>
+                            ${campaignStatus}
+                        </div>
+                        
+                        ${contractor.hasCampaign ? `
+                            <div class="space-y-3">
+                                <div class="bg-blue-500/10 border border-blue-500/30 p-3 rounded">
+                                    <div class="text-xs text-blue-300 font-medium mb-1">Campaign Status</div>
+                                    <div class="text-xs text-blue-200/80">${contractor.campaignData.emailSequences.length} emails ready</div>
+                                    <div class="text-xs text-blue-200/60">Next: ${contractor.campaignData.emailSequences[0].sendDay} ${contractor.campaignData.emailSequences[0].sendTime}</div>
+                                </div>
+                                
+                                <div class="space-y-2">
+                                    ${contractor.campaignData.emailSequences.map((email, index) => `
+                                        <div class="bg-gray-500/10 border border-gray-500/20 p-2 rounded">
+                                            <div class="flex items-center justify-between mb-1">
+                                                <span class="text-xs font-medium text-gray-300">Email ${email.emailNumber}</span>
+                                                <span class="text-xs text-gray-400">${email.sendDay}</span>
+                                            </div>
+                                            <div class="text-xs text-gray-200 mb-2 font-medium">${email.subject}</div>
+                                            <div class="flex space-x-2">
+                                                <button onclick="copyToClipboard('${email.body.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', event)" class="bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs">Copy</button>
+                                                <button class="bg-green-500/20 text-green-300 px-2 py-1 rounded text-xs">Mark Sent</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="bg-gray-500/10 border border-gray-500/30 p-4 rounded text-center">
+                                <div class="text-sm text-gray-400 mb-2">No Campaign Available</div>
+                                <button class="bg-primary/20 text-primary px-3 py-1 rounded text-xs">Create Campaign</button>
+                            </div>
+                        `}
+                        
+                        <div class="mt-4 pt-3 border-t border-border/30 flex justify-between text-xs">
+                            <span class="text-muted-foreground">${contractor.email}</span>
+                            <span class="text-muted-foreground">${contractor.phone}</span>
+                        </div>
+                    </div>
+                `;
+                
+                card.innerHTML = intelligenceCard + executionCard;
+                grid.appendChild(card);
+            });
+        }
+
+        // Enhanced profile modal
+        function openProfile(contractorId) {
+            const contractor = contractors.find(c => c.id === contractorId);
+            if (!contractor) return;
+
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4';
+            
+            const healthColorMap = {
+                'HEALTHY': 'text-green-400',
+                'EMERGING': 'text-yellow-400',
+                'STRUGGLING': 'text-red-400'
+            };
+            
+            const campaignSection = contractor.hasCampaign ? `
+                <div class="bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg">
+                    <h4 class="font-medium text-blue-300 mb-4 flex items-center">
+                        <i data-lucide="send" class="w-4 h-4 mr-2"></i>
+                        Complete Email Sequence (${contractor.campaignData.emailSequences.length} emails)
+                    </h4>
+                    <div class="space-y-4">
+                        ${contractor.campaignData.emailSequences.map((email, index) => `
+                            <div class="bg-blue-500/5 border border-blue-500/20 p-4 rounded">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="font-medium text-blue-200">Email ${email.emailNumber}</h5>
+                                    <span class="text-xs text-blue-300 bg-blue-500/20 px-2 py-1 rounded">${email.sendDay} at ${email.sendTime}</span>
+                                </div>
+                                <div class="text-sm text-blue-100 mb-3 font-medium">${email.subject}</div>
+                                <div class="bg-blue-500/10 p-3 rounded text-xs text-blue-200/90 mb-3 leading-relaxed">${email.body}</div>
+                                <div class="flex space-x-2">
+                                    <button onclick="copyToClipboard('${email.subject}', event)" class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Copy Subject</button>
+                                    <button onclick="copyToClipboard('${email.body.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', event)" class="bg-blue-500/20 text-blue-300 px-3 py-1 rounded text-xs">Copy Body</button>
+                                    <button class="bg-green-500/20 text-green-300 px-3 py-1 rounded text-xs">Mark as Sent</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : `
+                <div class="bg-gray-500/10 border border-gray-500/30 p-4 rounded-lg">
+                    <h4 class="font-medium text-gray-300 mb-3">No Campaign Data</h4>
+                    <p class="text-sm text-gray-400">This contractor doesn't have campaign data available yet.</p>
+                    <button class="mt-3 bg-primary/20 text-primary px-4 py-2 rounded text-sm">Generate Campaign</button>
+                </div>
+            `;
+
+            modal.innerHTML = `
+                <div class="bg-background border border-border rounded-lg p-6 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">${contractor.businessName}</h3>
+                            <div class="flex items-center space-x-4 text-sm">
+                                <span class="${healthColorMap[contractor.businessHealth]}">${contractor.businessHealth}</span>
+                                <span class="text-muted-foreground">•</span>
+                                <span class="text-muted-foreground">${contractor.sophisticationTier}</span>
+                                <span class="text-muted-foreground">•</span>
+                                <span class="text-primary">Conversion Score: ${contractor.conversionScore}%</span>
+                            </div>
+                        </div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Intelligence Overview -->
+                        <div class="space-y-4">
+                            <div class="bg-green-500/10 border border-green-500/30 p-4 rounded-lg">
+                                <h4 class="font-medium text-green-300 mb-3">Data Completion Score</h4>
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-green-400 mb-2">100%</div>
+                                    <div class="text-sm text-green-300">Complete Coverage • 5 Layers</div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-card border border-border p-4 rounded-lg">
+                                <h4 class="font-medium text-foreground mb-3">Business Intelligence</h4>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div><strong>Rating:</strong> ⭐ ${contractor.googleRating} (${contractor.reviewsCount} reviews)</div>
+                                    <div><strong>Trust Score:</strong> <span class="text-green-400">${contractor.trustScore}%</span></div>
+                                    <div><strong>Email:</strong> ${contractor.emailQuality.replace('_', ' ')}</div>
+                                    <div><strong>Website:</strong> <a href="${contractor.website}" target="_blank" class="text-primary hover:underline">Visit Site</a></div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-red-500/10 border border-red-500/30 p-4 rounded-lg">
+                                <h4 class="font-medium text-red-300 mb-3">Pain Points</h4>
+                                <div class="space-y-2">
+                                    ${contractor.painPoints.map(pain => 
+                                        `<div class="text-sm text-red-200/80">• ${pain}</div>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-lg">
+                                <h4 class="font-medium text-emerald-300 mb-3">Opportunities</h4>
+                                <div class="space-y-2">
+                                    ${contractor.opportunities.map(opp => 
+                                        `<div class="text-sm text-emerald-200/80">• ${opp}</div>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Campaign Data -->
+                        <div>
+                            ${campaignSection}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            lucide.createIcons();
+        }
+
+        // Copy to clipboard function with better feedback
+        function copyToClipboard(text, event) {
+            event.stopPropagation();
+            navigator.clipboard.writeText(text).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                const originalClass = button.className;
+                button.textContent = '✓ Copied!';
+                button.className = button.className.replace(/bg-blue-500\/20 text-blue-300/g, 'bg-green-500/20 text-green-300');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.className = originalClass;
+                }, 2000);
+            });
+        }
+
+        // Mode switching with visual feedback
+        document.getElementById('intelligence-mode').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('execution-mode').classList.remove('active');
+            document.body.classList.remove('execution-mode');
+            document.body.classList.add('intelligence-mode');
+        });
+
+        document.getElementById('execution-mode').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('intelligence-mode').classList.remove('active');
+            document.body.classList.remove('intelligence-mode');
+            document.body.classList.add('execution-mode');
+        });
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            renderContractors();
+            lucide.createIcons();
+            // Start in intelligence mode
+            document.body.classList.add('intelligence-mode');
+        });
+    </script>
+
+</body>
+</html>

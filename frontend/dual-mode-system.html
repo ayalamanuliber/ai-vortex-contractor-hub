@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Intelligence Hub V4 - Dual Mode System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* AI Vortex Dark Palette */
+        :root {
+            --background: hsl(240, 10%, 4%);
+            --foreground: hsl(0, 0%, 97%);
+            --primary: hsl(199, 89%, 48%);
+            --secondary: hsla(220, 13%, 18%, 0.5);
+            --accent: hsl(142, 76%, 36%);
+            --warning: hsl(45, 93%, 47%);
+            --destructive: hsl(346, 87%, 43%);
+            --muted: hsl(240, 3.7%, 15.9%);
+            --border: hsla(220, 13%, 40%, 0.5);
+        }
+
+        body {
+            background: var(--background);
+            background-image: radial-gradient(at 20% 10%, hsla(220, 50%, 30%, 0.15) 0px, transparent 50%), 
+                              radial-gradient(at 80% 90%, hsla(280, 50%, 30%, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--foreground);
+        }
+        
+        /* Glassmorphism Base */
+        .glass-surface {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.9) 0%,
+                hsla(220, 13%, 15%, 0.95) 100%
+            );
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .glass-button {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 20%, 0.8) 0%,
+                hsla(220, 13%, 18%, 0.9) 100%
+            );
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-button:hover {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 25%, 0.9) 0%,
+                hsla(220, 13%, 22%, 0.95) 100%
+            );
+            border-color: var(--primary);
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 15%, 0.95) 0%,
+                hsla(220, 13%, 12%, 0.98) 100%
+            );
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 6px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .mode-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mode-button.active {
+            background: linear-gradient(135deg, var(--primary) 0%, hsl(199, 89%, 40%) 100%);
+            color: var(--background);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .mode-button:not(.active):hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--border);
+        }
+        
+        /* Card Styles */
+        .contractor-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+        
+        .contractor-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Visualization Mode Specific */
+        .health-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .health-excellent { 
+            background: conic-gradient(var(--accent) 0deg, var(--accent) calc(var(--score) * 3.6deg), #374151 calc(var(--score) * 3.6deg)); 
+        }
+        .health-good { 
+            background: conic-gradient(var(--warning) 0deg, var(--warning) calc(var(--score) * 3.6deg), #374151 calc(var(--score) * 3.6deg)); 
+        }
+        .health-poor { 
+            background: conic-gradient(var(--destructive) 0deg, var(--destructive) calc(var(--score) * 3.6deg), #374151 calc(var(--score) * 3.6deg)); 
+        }
+
+        /* Execution Mode Specific */
+        .campaign-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-ready { 
+            background: linear-gradient(135deg, var(--accent) 0%, hsl(142, 76%, 30%) 100%); 
+            color: white; 
+        }
+        .status-progress { 
+            background: linear-gradient(135deg, var(--warning) 0%, hsl(45, 93%, 40%) 100%); 
+            color: hsl(240, 10%, 4%); 
+        }
+        .status-no-campaign { 
+            background: linear-gradient(135deg, var(--destructive) 0%, hsl(346, 87%, 36%) 100%); 
+            color: white; 
+        }
+
+        /* Email Sequence Styles */
+        .email-preview {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 6px 0;
+            transition: all 0.3s ease;
+        }
+
+        .email-preview:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.95) 0%,
+                hsla(220, 13%, 15%, 0.98) 100%
+            );
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .badge-success { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge-info { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+        /* Copy Button Animation */
+        .copy-success {
+            animation: copyPulse 0.5s ease;
+        }
+
+        @keyframes copyPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* View Transitions */
+        .view-container {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .view-container.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        /* Analytics Panel */
+        .analytics-panel {
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.05) 0%, 
+                rgba(147, 51, 234, 0.05) 100%
+            );
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.1) 25%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.1) 75%
+            );
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 8px;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mode-toggle {
+                width: 100%;
+                margin-bottom: 16px;
+            }
+            
+            .contractor-card {
+                margin-bottom: 16px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header with Mode Toggle -->
+    <header class="glass-surface sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                <!-- Logo and Title -->
+                <div class="flex items-center space-x-4">
+                    <i data-lucide="building-2" class="w-8 h-8 text-blue-400"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Contractor Intelligence Hub V4</h1>
+                        <p class="text-sm text-gray-400">Dual-Mode Operations Center</p>
+                    </div>
+                </div>
+
+                <!-- Mode Toggle -->
+                <div class="mode-toggle">
+                    <div class="mode-button active" id="viz-mode-btn" onclick="switchMode('visualization')">
+                        <i data-lucide="brain" class="w-4 h-4"></i>
+                        <span>Intelligence</span>
+                    </div>
+                    <div class="mode-button" id="exec-mode-btn" onclick="switchMode('execution')">
+                        <i data-lucide="zap" class="w-4 h-4"></i>
+                        <span>Campaigns</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-4">
+                    <div class="text-right text-sm">
+                        <div class="text-gray-300">Active Contractors</div>
+                        <div class="font-bold text-blue-400" id="total-contractors">0</div>
+                    </div>
+                    <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2" onclick="toggleAnalytics()">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                        <span>Analytics</span>
+                    </button>
+                    <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2" onclick="exportData()">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>Export</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Analytics Panel -->
+    <div id="analytics-panel" class="analytics-panel hidden">
+        <div class="container mx-auto px-6 py-6">
+            <h2 class="text-lg font-bold text-blue-400 mb-4">📊 Analytics & Intelligence Dashboard</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- Total Contractors -->
+                <div class="glass-surface rounded-lg p-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-2">Total Contractors</h3>
+                    <div class="text-2xl font-bold text-blue-400" id="analytics-total">0</div>
+                </div>
+
+                <!-- Health Distribution -->
+                <div class="glass-surface rounded-lg p-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-2">Health Distribution</h3>
+                    <div class="text-xs space-y-1" id="health-distribution">
+                        <div class="flex justify-between"><span>Excellent:</span> <span class="text-green-400" id="health-excellent">0</span></div>
+                        <div class="flex justify-between"><span>Good:</span> <span class="text-yellow-400" id="health-good">0</span></div>
+                        <div class="flex justify-between"><span>Poor:</span> <span class="text-red-400" id="health-poor">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Campaign Status -->
+                <div class="glass-surface rounded-lg p-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-2">Campaign Status</h3>
+                    <div class="text-xs space-y-1" id="campaign-distribution">
+                        <div class="flex justify-between"><span>Ready:</span> <span class="text-green-400" id="campaigns-ready">0</span></div>
+                        <div class="flex justify-between"><span>In Progress:</span> <span class="text-yellow-400" id="campaigns-progress">0</span></div>
+                        <div class="flex justify-between"><span>Need Setup:</span> <span class="text-red-400" id="campaigns-none">0</span></div>
+                    </div>
+                </div>
+
+                <!-- Today's Actions -->
+                <div class="glass-surface rounded-lg p-4">
+                    <h3 class="text-sm font-semibold text-gray-300 mb-2">Today's Actions</h3>
+                    <div class="text-xs space-y-1" id="action-items">
+                        <div class="flex justify-between"><span>Send Email:</span> <span class="text-blue-400" id="action-send">0</span></div>
+                        <div class="flex justify-between"><span>Follow Up:</span> <span class="text-yellow-400" id="action-followup">0</span></div>
+                        <div class="flex justify-between"><span>Enhance Data:</span> <span class="text-orange-400" id="action-enhance">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-6 py-6">
+        <!-- Search and Filters -->
+        <div class="glass-surface rounded-lg p-4 mb-6">
+            <div class="flex flex-col lg:flex-row gap-4 items-center">
+                <!-- Search -->
+                <div class="flex-1 relative">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Search contractors by name, location, trade, or business ID..." 
+                        class="w-full pl-10 pr-4 py-2 bg-transparent border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-100 placeholder-gray-400"
+                        oninput="handleSearch()"
+                    >
+                </div>
+
+                <!-- Quick Filters -->
+                <div class="flex flex-wrap gap-2">
+                    <select id="status-filter" class="glass-button px-3 py-2 rounded-lg text-sm" onchange="handleFilter()">
+                        <option value="">All Status</option>
+                        <option value="ready">Ready</option>
+                        <option value="progress">In Progress</option>
+                        <option value="no-campaign">No Campaign</option>
+                    </select>
+                    
+                    <select id="health-filter" class="glass-button px-3 py-2 rounded-lg text-sm" onchange="handleFilter()">
+                        <option value="">All Health</option>
+                        <option value="excellent">Excellent (85+)</option>
+                        <option value="good">Good (70-84)</option>
+                        <option value="poor">Poor (<70)</option>
+                    </select>
+                    
+                    <button class="glass-button px-3 py-2 rounded-lg text-sm" onclick="clearFilters()">
+                        <i data-lucide="x" class="w-4 h-4 mr-1"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="skeleton h-64"></div>
+            <div class="skeleton h-64"></div>
+            <div class="skeleton h-64"></div>
+            <div class="skeleton h-64"></div>
+            <div class="skeleton h-64"></div>
+            <div class="skeleton h-64"></div>
+        </div>
+
+        <!-- Visualization Mode -->
+        <div id="visualization-mode" class="view-container">
+            <div id="contractors-viz-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Intelligence cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Execution Mode -->
+        <div id="execution-mode" class="view-container hidden">
+            <div id="contractors-exec-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Campaign cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- No Results -->
+        <div id="no-results" class="text-center py-12 hidden">
+            <i data-lucide="search-x" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-100 mb-2">No contractors found</h3>
+            <p class="text-gray-400">Try adjusting your filters or search terms</p>
+        </div>
+    </main>
+
+    <!-- Detailed Card Modal -->
+    <div id="card-modal" class="modal-overlay hidden" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="p-6">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div id="modal-health-circle" class="health-circle">
+                            <span id="modal-health-score">0%</span>
+                        </div>
+                        <div>
+                            <h2 id="modal-company-name" class="text-2xl font-bold text-gray-100"></h2>
+                            <p id="modal-trade" class="text-gray-400"></p>
+                            <p id="modal-location" class="text-gray-400"></p>
+                        </div>
+                    </div>
+                    <button class="glass-button p-2 rounded-lg" onclick="closeModal()">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Tabs -->
+                <div class="flex space-x-1 mb-6">
+                    <button class="modal-tab active" data-tab="intelligence" onclick="switchModalTab(this, 'intelligence')">
+                        <i data-lucide="brain" class="w-4 h-4 mr-2"></i>
+                        Intelligence
+                    </button>
+                    <button class="modal-tab" data-tab="campaigns" onclick="switchModalTab(this, 'campaigns')">
+                        <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
+                        Campaigns
+                    </button>
+                    <button class="modal-tab" data-tab="data" onclick="switchModalTab(this, 'data')">
+                        <i data-lucide="database" class="w-4 h-4 mr-2"></i>
+                        Raw Data
+                    </button>
+                </div>
+
+                <!-- Modal Tab Content -->
+                <div id="modal-intelligence-tab" class="modal-tab-content">
+                    <!-- Intelligence analysis content -->
+                </div>
+
+                <div id="modal-campaigns-tab" class="modal-tab-content hidden">
+                    <!-- Campaign management content -->
+                </div>
+
+                <div id="modal-data-tab" class="modal-tab-content hidden">
+                    <!-- Raw data display -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State Management
+        let currentMode = 'visualization';
+        let allContractors = [];
+        let filteredContractors = [];
+        let currentFilters = {
+            search: '',
+            status: '',
+            health: ''
+        };
+
+        // Mock Data Generator
+        function generateMockData() {
+            const companies = [
+                "Summit Roofing", "Elite Plumbing LLC", "Spark Electric", "Perfect Floors Inc",
+                "Crystal Clear Windows", "Granite Countertops Plus", "Pro HVAC Solutions",
+                "Reliable Handyman Co", "First Choice Painting", "Master Tile Works",
+                "Advanced Security Systems", "Quality Concrete", "Premier Landscaping",
+                "Trusted Home Repairs", "Excellence Remodeling"
+            ];
+
+            const trades = [
+                "Roofing contractor", "Plumbing contractor", "Electrical contractor",
+                "Flooring contractor", "Window contractor", "Countertop contractor",
+                "HVAC contractor", "General contractor", "Painting contractor",
+                "Tile contractor", "Security systems", "Concrete contractor",
+                "Landscaping contractor", "Handyman services", "Remodeling contractor"
+            ];
+
+            const locations = [
+                "Denver, CO", "Austin, TX", "Miami, FL", "Portland, OR", "Atlanta, GA",
+                "Phoenix, AZ", "Seattle, WA", "Charlotte, NC", "Tampa, FL", "Las Vegas, NV",
+                "Nashville, TN", "Raleigh, NC", "Orlando, FL", "San Diego, CA", "Kansas City, MO"
+            ];
+
+            const contractors = [];
+            for (let i = 0; i < 105; i++) {
+                const completionScore = Math.floor(Math.random() * 40) + 60; // 60-100
+                const healthLevel = completionScore >= 85 ? 'excellent' : 
+                                 completionScore >= 70 ? 'good' : 'poor';
+                
+                // Campaign status based on completion score
+                let campaignStatus;
+                if (completionScore >= 85) {
+                    campaignStatus = Math.random() > 0.3 ? 'ready' : (Math.random() > 0.5 ? 'progress' : 'no-campaign');
+                } else if (completionScore >= 70) {
+                    campaignStatus = Math.random() > 0.5 ? 'progress' : (Math.random() > 0.7 ? 'ready' : 'no-campaign');
+                } else {
+                    campaignStatus = Math.random() > 0.7 ? 'no-campaign' : (Math.random() > 0.5 ? 'progress' : 'ready');
+                }
+
+                const emailsSent = campaignStatus === 'progress' ? Math.floor(Math.random() * 3) + 1 : 0;
+
+                contractors.push({
+                    id: i + 1,
+                    businessId: `${i + 1}_COM`,
+                    companyName: companies[i % companies.length],
+                    trade: trades[i % trades.length],
+                    location: locations[i % locations.length],
+                    completionScore: completionScore,
+                    healthLevel: healthLevel,
+                    campaignStatus: campaignStatus,
+                    emailsSent: emailsSent,
+                    rating: Math.round((Math.random() * 2 + 3) * 10) / 10, // 3.0-5.0
+                    reviewCount: Math.floor(Math.random() * 200) + 10,
+                    website: `https://${companies[i % companies.length].toLowerCase().replace(/\s+/g, '')}.com`,
+                    email: `info@${companies[i % companies.length].toLowerCase().replace(/\s+/g, '')}.com`,
+                    phone: `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+                    lastUpdated: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    
+                    // Intelligence data
+                    intelligence: {
+                        emailQuality: Math.random() > 0.5 ? 'professional' : 'generic',
+                        sophistication: Math.random() > 0.4 ? 'professional' : Math.random() > 0.5 ? 'growing' : 'amateur',
+                        pricingFocus: Math.random() > 0.4 ? 'premium' : Math.random() > 0.5 ? 'value' : 'budget',
+                        conversionProbability: Math.random() > 0.3 ? 'high' : 'medium',
+                        websitePlatform: Math.random() > 0.5 ? 'WordPress' : Math.random() > 0.5 ? 'Custom' : 'Squarespace',
+                        websiteSpeed: Math.floor(Math.random() * 40) + 60,
+                        trustScore: Math.round((Math.random() * 0.5 + 0.5) * 100) / 100,
+                        opportunities: generateOpportunities(),
+                        insights: generateInsights()
+                    },
+
+                    // Campaign data
+                    campaigns: campaignStatus !== 'no-campaign' ? generateCampaignData(campaignStatus, emailsSent) : null
+                });
+            }
+            return contractors;
+        }
+
+        function generateOpportunities() {
+            const opportunities = [
+                "Website modernization", "SEO optimization", "Review management",
+                "Lead tracking system", "Online booking system", "Social media presence",
+                "Email marketing setup", "Google My Business optimization", "Professional photography",
+                "Customer testimonial system", "Mobile-responsive design", "Local SEO improvement"
+            ];
+            return opportunities.slice(0, Math.floor(Math.random() * 4) + 1);
+        }
+
+        function generateInsights() {
+            const insights = [
+                "Strong local reputation with consistent 5-star reviews",
+                "Website needs mobile optimization for better conversion",
+                "Missing Google My Business optimization",
+                "Strong brand recognition in local market",
+                "Opportunity for premium service positioning",
+                "Email marketing could increase repeat business",
+                "Social proof needs improvement",
+                "Fast website performance advantage over competitors"
+            ];
+            return insights.slice(0, Math.floor(Math.random() * 3) + 1);
+        }
+
+        function generateCampaignData(status, emailsSent) {
+            const emailTemplates = [
+                {
+                    number: 1,
+                    subject: "Your {COMPANY} domain expires in 34 days",
+                    timing: "Tuesday 6:30 AM",
+                    preview: "Critical domain issue that can impact your leads and reputation...",
+                    status: emailsSent >= 1 ? 'sent' : 'ready'
+                },
+                {
+                    number: 2,
+                    subject: "Re: Your {COMPANY} domain expires - Lead impact",
+                    timing: "Thursday 6:30 AM", 
+                    preview: "Following up on domain expiry. This impacts lead generation...",
+                    status: emailsSent >= 2 ? 'sent' : emailsSent >= 1 ? 'queued' : 'pending'
+                },
+                {
+                    number: 3,
+                    subject: "Re: {COMPANY} domain - Final notice",
+                    timing: "Monday 8:30 PM",
+                    preview: "Still monitoring your domain situation. Beyond this fix...",
+                    status: emailsSent >= 3 ? 'sent' : 'queued'
+                }
+            ];
+
+            return {
+                sequence: emailTemplates,
+                nextAction: getNextAction(status, emailsSent),
+                bestTiming: {
+                    days: ["Tuesday", "Thursday", "Monday"],
+                    windows: ["6:30 AM", "8:30 PM"]
+                }
+            };
+        }
+
+        function getNextAction(status, emailsSent) {
+            if (status === 'ready') return 'Send Email 1';
+            if (status === 'progress') {
+                if (emailsSent === 1) return 'Send Email 2';
+                if (emailsSent === 2) return 'Send Email 3';
+                return 'Monitor Response';
+            }
+            if (status === 'no-campaign') return 'Enhance Data';
+            return 'Review Campaign';
+        }
+
+        // Mode Switching
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update buttons
+            document.querySelectorAll('.mode-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(mode === 'visualization' ? 'viz-mode-btn' : 'exec-mode-btn').classList.add('active');
+            
+            // Show/hide containers
+            const vizContainer = document.getElementById('visualization-mode');
+            const execContainer = document.getElementById('execution-mode');
+            
+            if (mode === 'visualization') {
+                vizContainer.classList.remove('hidden');
+                execContainer.classList.add('hidden');
+                renderVisualizationMode();
+            } else {
+                execContainer.classList.remove('hidden');
+                vizContainer.classList.add('hidden');
+                renderExecutionMode();
+            }
+            
+            updateAnalytics();
+        }
+
+        // Rendering Functions
+        function renderVisualizationMode() {
+            const container = document.getElementById('contractors-viz-grid');
+            container.innerHTML = filteredContractors.map(contractor => createVisualizationCard(contractor)).join('');
+        }
+
+        function renderExecutionMode() {
+            const container = document.getElementById('contractors-exec-grid');
+            container.innerHTML = filteredContractors.map(contractor => createExecutionCard(contractor)).join('');
+        }
+
+        function createVisualizationCard(contractor) {
+            const healthClass = `health-${contractor.healthLevel}`;
+            const badges = createIntelligenceBadges(contractor);
+            
+            return `
+                <div class="contractor-card p-6" onclick="openDetailModal(${contractor.id})">
+                    <!-- Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-gray-100 mb-1">${contractor.companyName}</h3>
+                            <p class="text-sm text-gray-400 mb-1">${contractor.trade}</p>
+                            <p class="text-sm text-gray-300 flex items-center">
+                                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i>
+                                ${contractor.location}
+                            </p>
+                        </div>
+                        <div class="health-circle ${healthClass}" style="--score: ${contractor.completionScore}">
+                            <span class="text-sm font-bold">${contractor.completionScore}%</span>
+                        </div>
+                    </div>
+
+                    <!-- Intelligence Insights -->
+                    <div class="mb-4">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Business Intelligence</h4>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            ${badges}
+                        </div>
+                        <div class="text-xs text-gray-400 space-y-1">
+                            ${contractor.intelligence.insights.slice(0, 2).map(insight => 
+                                `<div class="flex items-start">
+                                    <i data-lucide="lightbulb" class="w-3 h-3 mr-2 mt-0.5 text-blue-400"></i>
+                                    ${insight}
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Enhancement Opportunities -->
+                    <div class="mb-4">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Enhancement Opportunities</h4>
+                        <div class="text-xs text-gray-400 space-y-1">
+                            ${contractor.intelligence.opportunities.slice(0, 3).map(opp => 
+                                `<div class="flex items-center">
+                                    <i data-lucide="target" class="w-3 h-3 mr-2 text-orange-400"></i>
+                                    ${opp}
+                                </div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-between items-center pt-4 border-t border-gray-600">
+                        <div class="text-xs text-gray-400">
+                            <div>Rating: ${contractor.rating} ⭐ (${contractor.reviewCount} reviews)</div>
+                            <div>ID: ${contractor.businessId}</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); enhanceData(${contractor.id})">
+                                <i data-lucide="edit-3" class="w-3 h-3 mr-1"></i>
+                                Enhance
+                            </button>
+                            <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); generateCampaign(${contractor.id})">
+                                <i data-lucide="zap" class="w-3 h-3 mr-1"></i>
+                                Campaign
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createExecutionCard(contractor) {
+            const statusConfig = getStatusConfig(contractor.campaignStatus);
+            const campaigns = contractor.campaigns;
+            
+            return `
+                <div class="contractor-card p-6" onclick="openDetailModal(${contractor.id})">
+                    <!-- Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-xl text-gray-100 mb-1">${contractor.companyName}</h3>
+                            <p class="text-sm text-gray-400 mb-1">${contractor.trade}</p>
+                            <p class="text-sm text-gray-300 flex items-center">
+                                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i>
+                                ${contractor.location}
+                            </p>
+                        </div>
+                        <div class="campaign-status status-${contractor.campaignStatus}">
+                            <i data-lucide="${statusConfig.icon}" class="w-3 h-3"></i>
+                            ${statusConfig.label}
+                        </div>
+                    </div>
+
+                    <!-- Campaign Content -->
+                    <div class="mb-4">
+                        ${campaigns ? createCampaignPreview(campaigns) : createNoCampaignContent(contractor)}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-between items-center pt-4 border-t border-gray-600">
+                        <div class="text-xs text-gray-400">
+                            <div>Completion: ${contractor.completionScore}%</div>
+                            <div>ID: ${contractor.businessId}</div>
+                        </div>
+                        <div class="flex space-x-2">
+                            ${createActionButtons(contractor)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createIntelligenceBadges(contractor) {
+            const badges = [];
+            const intel = contractor.intelligence;
+            
+            if (intel.emailQuality === 'professional') {
+                badges.push('<span class="badge badge-success">Pro Email</span>');
+            }
+            
+            if (intel.sophistication === 'professional') {
+                badges.push('<span class="badge badge-info">Professional</span>');
+            }
+            
+            if (intel.conversionProbability === 'high') {
+                badges.push('<span class="badge badge-success">High Convert</span>');
+            }
+            
+            if (intel.trustScore > 0.8) {
+                badges.push('<span class="badge badge-success">High Trust</span>');
+            }
+            
+            return badges.join(' ');
+        }
+
+        function createCampaignPreview(campaigns) {
+            const sequence = campaigns.sequence;
+            const nextEmail = sequence.find(email => email.status === 'ready');
+            
+            if (nextEmail) {
+                return `
+                    <div class="mb-3">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Ready to Send</h4>
+                        <div class="email-preview">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="text-sm font-medium text-blue-400">Email ${nextEmail.number}</div>
+                                <div class="text-xs text-gray-400">${nextEmail.timing}</div>
+                            </div>
+                            <div class="text-sm text-gray-200 mb-2">${nextEmail.subject}</div>
+                            <div class="text-xs text-gray-400">${nextEmail.preview}</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Next Action: ${campaigns.nextAction}
+                    </div>
+                `;
+            } else {
+                const sentCount = sequence.filter(email => email.status === 'sent').length;
+                return `
+                    <div class="mb-3">
+                        <h4 class="text-sm font-semibold text-gray-300 mb-2">Campaign Progress</h4>
+                        <div class="flex space-x-2 mb-2">
+                            ${sequence.map((email, idx) => `
+                                <div class="flex-1 text-center">
+                                    <div class="w-8 h-8 mx-auto rounded-full flex items-center justify-center text-xs font-bold ${
+                                        email.status === 'sent' ? 'bg-green-500 text-white' : 
+                                        email.status === 'ready' ? 'bg-blue-500 text-white' : 
+                                        'bg-gray-600 text-gray-300'
+                                    }">
+                                        ${idx + 1}
+                                    </div>
+                                    <div class="text-xs mt-1 text-gray-400">${email.status}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                        Emails Sent: ${sentCount}/3 • Next: ${campaigns.nextAction}
+                    </div>
+                `;
+            }
+        }
+
+        function createNoCampaignContent(contractor) {
+            return `
+                <div class="text-center py-4">
+                    <i data-lucide="mail-x" class="w-8 h-8 text-gray-500 mx-auto mb-2"></i>
+                    <h4 class="text-sm font-semibold text-gray-300 mb-1">No Campaign Ready</h4>
+                    <p class="text-xs text-gray-400 mb-3">Completion Score: ${contractor.completionScore}%</p>
+                    <div class="text-xs text-gray-400">
+                        ${contractor.completionScore < 80 ? 
+                            'Enhance data quality to enable campaign generation' : 
+                            'Ready for Focus Intel campaign generation'
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        function getStatusConfig(status) {
+            const configs = {
+                'ready': { label: 'Ready', icon: 'check-circle', color: 'green' },
+                'progress': { label: 'In Progress', icon: 'clock', color: 'yellow' },
+                'no-campaign': { label: 'No Campaign', icon: 'x-circle', color: 'red' }
+            };
+            return configs[status] || configs['no-campaign'];
+        }
+
+        function createActionButtons(contractor) {
+            const buttons = [];
+            
+            if (contractor.campaignStatus === 'ready') {
+                buttons.push(`
+                    <button class="glass-button px-3 py-1 rounded text-xs bg-green-600 hover:bg-green-700" onclick="event.stopPropagation(); copyEmail(${contractor.id})">
+                        <i data-lucide="copy" class="w-3 h-3 mr-1"></i>
+                        Copy
+                    </button>
+                    <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); markSent(${contractor.id})">
+                        <i data-lucide="check" class="w-3 h-3 mr-1"></i>
+                        Mark Sent
+                    </button>
+                `);
+            } else if (contractor.campaignStatus === 'progress') {
+                buttons.push(`
+                    <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); copyEmail(${contractor.id})">
+                        <i data-lucide="copy" class="w-3 h-3 mr-1"></i>
+                        Copy Next
+                    </button>
+                    <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); markSent(${contractor.id})">
+                        <i data-lucide="check" class="w-3 h-3 mr-1"></i>
+                        Mark Sent
+                    </button>
+                `);
+            } else {
+                buttons.push(`
+                    <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); enhanceData(${contractor.id})">
+                        <i data-lucide="edit-3" class="w-3 h-3 mr-1"></i>
+                        Enhance
+                    </button>
+                    <button class="glass-button px-3 py-1 rounded text-xs" onclick="event.stopPropagation(); generateCampaign(${contractor.id})">
+                        <i data-lucide="zap" class="w-3 h-3 mr-1"></i>
+                        Generate
+                    </button>
+                `);
+            }
+            
+            return buttons.join('');
+        }
+
+        // Modal Functions
+        function openDetailModal(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            if (!contractor) return;
+
+            // Update modal header
+            document.getElementById('modal-company-name').textContent = contractor.companyName;
+            document.getElementById('modal-trade').textContent = contractor.trade;
+            document.getElementById('modal-location').textContent = contractor.location;
+            document.getElementById('modal-health-score').textContent = `${contractor.completionScore}%`;
+            
+            const healthCircle = document.getElementById('modal-health-circle');
+            healthCircle.className = `health-circle health-${contractor.healthLevel}`;
+            healthCircle.style.setProperty('--score', contractor.completionScore);
+
+            // Load intelligence tab by default
+            switchModalTab(document.querySelector('.modal-tab[data-tab="intelligence"]'), 'intelligence');
+            loadModalContent(contractor, 'intelligence');
+
+            // Show modal
+            document.getElementById('card-modal').classList.remove('hidden');
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('card-modal').classList.add('hidden');
+        }
+
+        function switchModalTab(button, tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.modal-tab').forEach(tab => tab.classList.remove('active'));
+            button.classList.add('active');
+
+            // Show/hide content
+            document.querySelectorAll('.modal-tab-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById(`modal-${tabName}-tab`).classList.remove('hidden');
+
+            // Load content if needed
+            const contractor = getCurrentModalContractor();
+            if (contractor) {
+                loadModalContent(contractor, tabName);
+            }
+        }
+
+        function getCurrentModalContractor() {
+            const companyName = document.getElementById('modal-company-name').textContent;
+            return allContractors.find(c => c.companyName === companyName);
+        }
+
+        function loadModalContent(contractor, tabName) {
+            const container = document.getElementById(`modal-${tabName}-tab`);
+            
+            switch (tabName) {
+                case 'intelligence':
+                    container.innerHTML = createIntelligenceContent(contractor);
+                    break;
+                case 'campaigns':
+                    container.innerHTML = createCampaignsContent(contractor);
+                    break;
+                case 'data':
+                    container.innerHTML = createDataContent(contractor);
+                    break;
+            }
+        }
+
+        function createIntelligenceContent(contractor) {
+            const intel = contractor.intelligence;
+            return `
+                <div class="space-y-6">
+                    <!-- Business Health Overview -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Business Health Analysis</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-sm text-gray-400">Email Quality</div>
+                                <div class="font-semibold text-gray-200">${intel.emailQuality}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Sophistication</div>
+                                <div class="font-semibold text-gray-200">${intel.sophistication}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Pricing Focus</div>
+                                <div class="font-semibold text-gray-200">${intel.pricingFocus}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Conversion Probability</div>
+                                <div class="font-semibold text-gray-200">${intel.conversionProbability}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Website Platform</div>
+                                <div class="font-semibold text-gray-200">${intel.websitePlatform}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Website Speed</div>
+                                <div class="font-semibold text-gray-200">${intel.websiteSpeed}/100</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Insights -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Key Insights</h3>
+                        <div class="space-y-2">
+                            ${intel.insights.map(insight => `
+                                <div class="flex items-start space-x-3">
+                                    <i data-lucide="lightbulb" class="w-4 h-4 text-blue-400 mt-1"></i>
+                                    <span class="text-sm text-gray-300">${insight}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Enhancement Opportunities -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Enhancement Opportunities</h3>
+                        <div class="space-y-2">
+                            ${intel.opportunities.map(opp => `
+                                <div class="flex items-start space-x-3">
+                                    <i data-lucide="target" class="w-4 h-4 text-orange-400 mt-1"></i>
+                                    <span class="text-sm text-gray-300">${opp}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createCampaignsContent(contractor) {
+            if (!contractor.campaigns) {
+                return `
+                    <div class="text-center py-8">
+                        <i data-lucide="mail-x" class="w-12 h-12 text-gray-500 mx-auto mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-200 mb-2">No Campaign Available</h3>
+                        <p class="text-gray-400 mb-4">This contractor needs data enhancement before campaign generation.</p>
+                        <button class="glass-button px-4 py-2 rounded-lg" onclick="generateCampaign(${contractor.id})">
+                            <i data-lucide="zap" class="w-4 h-4 mr-2"></i>
+                            Generate Campaign
+                        </button>
+                    </div>
+                `;
+            }
+
+            const campaigns = contractor.campaigns;
+            return `
+                <div class="space-y-6">
+                    <!-- Campaign Overview -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Campaign Overview</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-sm text-gray-400">Next Action</div>
+                                <div class="font-semibold text-gray-200">${campaigns.nextAction}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Emails Sent</div>
+                                <div class="font-semibold text-gray-200">${contractor.emailsSent}/3</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Best Days</div>
+                                <div class="font-semibold text-gray-200">${campaigns.bestTiming.days.join(', ')}</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Optimal Windows</div>
+                                <div class="font-semibold text-gray-200">${campaigns.bestTiming.windows.join(', ')}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Sequence -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Email Sequence</h3>
+                        <div class="space-y-4">
+                            ${campaigns.sequence.map((email, idx) => `
+                                <div class="border border-gray-600 rounded-lg p-4 ${email.status === 'ready' ? 'border-green-500' : ''}">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h4 class="font-semibold text-gray-200">Email ${email.number}</h4>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="campaign-status status-${email.status}">${email.status}</span>
+                                            <span class="text-xs text-gray-400">${email.timing}</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-sm text-gray-300 mb-2">${email.subject.replace('{COMPANY}', contractor.companyName)}</div>
+                                    <div class="text-xs text-gray-400 mb-3">${email.preview}</div>
+                                    ${email.status === 'ready' ? `
+                                        <div class="flex space-x-2">
+                                            <button class="glass-button px-3 py-1 rounded text-xs bg-green-600 hover:bg-green-700" onclick="copyEmailContent(${contractor.id}, ${email.number})">
+                                                <i data-lucide="copy" class="w-3 h-3 mr-1"></i>
+                                                Copy Email
+                                            </button>
+                                            <button class="glass-button px-3 py-1 rounded text-xs" onclick="markEmailSent(${contractor.id}, ${email.number})">
+                                                <i data-lucide="check" class="w-3 h-3 mr-1"></i>
+                                                Mark Sent
+                                            </button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createDataContent(contractor) {
+            return `
+                <div class="space-y-6">
+                    <!-- Contact Information -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Contact Information</h3>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Company Name:</span>
+                                <span class="text-gray-200 font-medium">${contractor.companyName}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Business ID:</span>
+                                <span class="text-gray-200 font-medium">${contractor.businessId}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Email:</span>
+                                <span class="text-gray-200 font-medium">${contractor.email}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Phone:</span>
+                                <span class="text-gray-200 font-medium">${contractor.phone}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Website:</span>
+                                <a href="${contractor.website}" target="_blank" class="text-blue-400 hover:text-blue-300">${contractor.website}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Performance Metrics</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-sm text-gray-400">Completion Score</div>
+                                <div class="text-2xl font-bold text-blue-400">${contractor.completionScore}%</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Trust Score</div>
+                                <div class="text-2xl font-bold text-green-400">${Math.round(contractor.intelligence.trustScore * 100)}%</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Rating</div>
+                                <div class="text-2xl font-bold text-yellow-400">${contractor.rating} ⭐</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-400">Reviews</div>
+                                <div class="text-2xl font-bold text-gray-300">${contractor.reviewCount}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Raw Data (JSON Preview) -->
+                    <div class="glass-surface rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4">Raw Data Preview</h3>
+                        <pre class="text-xs text-gray-400 bg-black bg-opacity-30 rounded p-3 overflow-x-auto">${JSON.stringify(contractor, null, 2)}</pre>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Action Handlers
+        function copyEmail(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            if (!contractor || !contractor.campaigns) return;
+            
+            const nextEmail = contractor.campaigns.sequence.find(email => email.status === 'ready');
+            if (nextEmail) {
+                const emailContent = `Subject: ${nextEmail.subject.replace('{COMPANY}', contractor.companyName)}
+
+${nextEmail.preview}
+
+Best time to send: ${nextEmail.timing}`;
+                
+                navigator.clipboard.writeText(emailContent).then(() => {
+                    showNotification('Email copied to clipboard!', 'success');
+                });
+            }
+        }
+
+        function copyEmailContent(contractorId, emailNumber) {
+            copyEmail(contractorId);
+        }
+
+        function markSent(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            if (!contractor || !contractor.campaigns) return;
+            
+            contractor.emailsSent++;
+            if (contractor.emailsSent >= 3) {
+                contractor.campaignStatus = 'completed';
+            }
+            
+            // Update campaign sequence
+            if (contractor.campaigns.sequence[contractor.emailsSent - 1]) {
+                contractor.campaigns.sequence[contractor.emailsSent - 1].status = 'sent';
+            }
+            
+            // Update next action
+            contractor.campaigns.nextAction = getNextAction(contractor.campaignStatus, contractor.emailsSent);
+            
+            showNotification('Email marked as sent!', 'success');
+            renderCurrentMode();
+            updateAnalytics();
+        }
+
+        function markEmailSent(contractorId, emailNumber) {
+            markSent(contractorId);
+            
+            // Refresh modal content if open
+            if (!document.getElementById('card-modal').classList.contains('hidden')) {
+                loadModalContent(getCurrentModalContractor(), 'campaigns');
+            }
+        }
+
+        function enhanceData(contractorId) {
+            showNotification('Data enhancement panel would open here', 'info');
+            // In a real implementation, this would open a data enhancement interface
+        }
+
+        function generateCampaign(contractorId) {
+            const contractor = allContractors.find(c => c.id === contractorId);
+            if (!contractor) return;
+            
+            // Simulate campaign generation
+            contractor.campaigns = generateCampaignData('ready', 0);
+            contractor.campaignStatus = 'ready';
+            
+            showNotification('Campaign generated successfully!', 'success');
+            renderCurrentMode();
+            updateAnalytics();
+            
+            // Refresh modal if open
+            if (!document.getElementById('card-modal').classList.contains('hidden')) {
+                loadModalContent(contractor, 'campaigns');
+            }
+        }
+
+        // Search and Filter Functions
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            currentFilters.search = searchTerm;
+            applyFilters();
+        }
+
+        function handleFilter() {
+            currentFilters.status = document.getElementById('status-filter').value;
+            currentFilters.health = document.getElementById('health-filter').value;
+            applyFilters();
+        }
+
+        function clearFilters() {
+            currentFilters = { search: '', status: '', health: '' };
+            document.getElementById('search-input').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('health-filter').value = '';
+            applyFilters();
+        }
+
+        function applyFilters() {
+            filteredContractors = allContractors.filter(contractor => {
+                // Search filter
+                if (currentFilters.search && !matchesSearch(contractor, currentFilters.search)) {
+                    return false;
+                }
+                
+                // Status filter
+                if (currentFilters.status && contractor.campaignStatus !== currentFilters.status) {
+                    return false;
+                }
+                
+                // Health filter
+                if (currentFilters.health && contractor.healthLevel !== currentFilters.health) {
+                    return false;
+                }
+                
+                return true;
+            });
+
+            renderCurrentMode();
+            updateNoResults();
+        }
+
+        function matchesSearch(contractor, searchTerm) {
+            const searchableFields = [
+                contractor.companyName,
+                contractor.trade,
+                contractor.location,
+                contractor.businessId,
+                contractor.email
+            ];
+            
+            return searchableFields.some(field => 
+                field && field.toLowerCase().includes(searchTerm)
+            );
+        }
+
+        function renderCurrentMode() {
+            if (currentMode === 'visualization') {
+                renderVisualizationMode();
+            } else {
+                renderExecutionMode();
+            }
+        }
+
+        function updateNoResults() {
+            const noResults = document.getElementById('no-results');
+            if (filteredContractors.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Analytics Functions
+        function toggleAnalytics() {
+            const panel = document.getElementById('analytics-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function updateAnalytics() {
+            // Update basic counts
+            document.getElementById('total-contractors').textContent = allContractors.length;
+            document.getElementById('analytics-total').textContent = allContractors.length;
+
+            // Health distribution
+            const healthCounts = {
+                excellent: allContractors.filter(c => c.healthLevel === 'excellent').length,
+                good: allContractors.filter(c => c.healthLevel === 'good').length,
+                poor: allContractors.filter(c => c.healthLevel === 'poor').length
+            };
+
+            document.getElementById('health-excellent').textContent = healthCounts.excellent;
+            document.getElementById('health-good').textContent = healthCounts.good;
+            document.getElementById('health-poor').textContent = healthCounts.poor;
+
+            // Campaign distribution
+            const campaignCounts = {
+                ready: allContractors.filter(c => c.campaignStatus === 'ready').length,
+                progress: allContractors.filter(c => c.campaignStatus === 'progress').length,
+                none: allContractors.filter(c => c.campaignStatus === 'no-campaign').length
+            };
+
+            document.getElementById('campaigns-ready').textContent = campaignCounts.ready;
+            document.getElementById('campaigns-progress').textContent = campaignCounts.progress;
+            document.getElementById('campaigns-none').textContent = campaignCounts.none;
+
+            // Action items
+            document.getElementById('action-send').textContent = campaignCounts.ready;
+            document.getElementById('action-followup').textContent = campaignCounts.progress;
+            document.getElementById('action-enhance').textContent = campaignCounts.none;
+        }
+
+        // Utility Functions
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 glass-surface rounded-lg p-4 max-w-sm transform transition-all duration-300 translate-x-full`;
+            
+            const icon = type === 'success' ? 'check-circle' : 
+                        type === 'error' ? 'x-circle' : 'info';
+            const color = type === 'success' ? 'text-green-400' : 
+                         type === 'error' ? 'text-red-400' : 'text-blue-400';
+            
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="${icon}" class="w-5 h-5 ${color}"></i>
+                    <span class="text-sm text-gray-200">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto remove
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        function exportData() {
+            const dataToExport = {
+                exportDate: new Date().toISOString(),
+                totalContractors: allContractors.length,
+                contractors: allContractors
+            };
+            
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
+                type: 'application/json'
+            });
+            
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `contractor-intelligence-export-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Data exported successfully!', 'success');
+        }
+
+        // Modal Tab Styling
+        const modalTabStyles = `
+            <style>
+                .modal-tab {
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    background: transparent;
+                    border: 1px solid var(--border);
+                    color: #9ca3af;
+                    font-size: 14px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    transition: all 0.3s ease;
+                }
+                
+                .modal-tab:hover {
+                    background: rgba(255, 255, 255, 0.05);
+                    color: #d1d5db;
+                }
+                
+                .modal-tab.active {
+                    background: linear-gradient(135deg, var(--primary) 0%, hsl(199, 89%, 40%) 100%);
+                    color: var(--background);
+                    border-color: var(--primary);
+                    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+                }
+            </style>
+        `;
+        document.head.insertAdjacentHTML('beforeend', modalTabStyles);
+
+        // Initialize Application
+        function initializeApp() {
+            // Show loading state
+            document.getElementById('loading-state').style.display = 'grid';
+            document.getElementById('visualization-mode').style.display = 'none';
+            document.getElementById('execution-mode').style.display = 'none';
+
+            // Generate mock data
+            allContractors = generateMockData();
+            filteredContractors = [...allContractors];
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Hide loading and show content
+            setTimeout(() => {
+                document.getElementById('loading-state').style.display = 'none';
+                switchMode('visualization'); // Default to visualization mode
+                updateAnalytics();
+            }, 1500);
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>

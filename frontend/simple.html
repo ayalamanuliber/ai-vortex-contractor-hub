@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Intelligence Hub V4 - Simple Version</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Dark theme glassmorphism */
+        body {
+            background: hsl(240, 10%, 4%);
+            background-image: radial-gradient(at 20% 10%, hsla(220, 50%, 30%, 0.15) 0px, transparent 50%);
+            color: hsl(0, 0%, 97%);
+        }
+        
+        .glass-surface {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.9) 0%,
+                hsla(220, 13%, 15%, 0.95) 100%
+            );
+            backdrop-filter: blur(20px);
+            border: 1px solid hsla(220, 13%, 30%, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .glass-button {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 20%, 0.8) 0%,
+                hsla(220, 13%, 18%, 0.9) 100%
+            );
+            backdrop-filter: blur(12px);
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-button:hover {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 25%, 0.9) 0%,
+                hsla(220, 13%, 22%, 0.95) 100%
+            );
+            border-color: hsla(199, 89%, 48%, 0.5);
+        }
+        
+        .contractor-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .contractor-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="glass-surface">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i data-lucide="building-2" class="w-8 h-8 text-blue-400"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Contractor Intelligence Hub V4</h1>
+                        <p class="text-sm text-gray-400">Operations Center - Simple Mode</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <i data-lucide="moon" class="w-4 h-4"></i>
+                    </button>
+                    <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-8">
+        <!-- Dashboard Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Contractors</p>
+                        <p class="text-2xl font-bold">4,247</p>
+                    </div>
+                    <i data-lucide="building-2" class="w-8 h-8 text-blue-400"></i>
+                </div>
+            </div>
+            
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Ready Campaigns</p>
+                        <p class="text-2xl font-bold">127</p>
+                    </div>
+                    <i data-lucide="mail" class="w-8 h-8 text-green-400"></i>
+                </div>
+            </div>
+            
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Completion 80+</p>
+                        <p class="text-2xl font-bold">1,547</p>
+                    </div>
+                    <i data-lucide="target" class="w-8 h-8 text-amber-400"></i>
+                </div>
+            </div>
+            
+            <div class="glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Sent This Week</p>
+                        <p class="text-2xl font-bold">45</p>
+                    </div>
+                    <i data-lucide="trending-up" class="w-8 h-8 text-red-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar and Actions -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Calendar -->
+            <div class="lg:col-span-2 glass-surface p-6 rounded-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold flex items-center space-x-2">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                        <span>Campaign Calendar</span>
+                    </h3>
+                    <div class="flex space-x-2">
+                        <button class="glass-button p-2 rounded">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <button class="glass-button p-2 rounded">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-center text-gray-400">
+                    <p>September 2025</p>
+                    <div class="grid grid-cols-7 gap-2 mt-4 text-sm">
+                        <div class="p-2 font-semibold">S</div>
+                        <div class="p-2 font-semibold">M</div>
+                        <div class="p-2 font-semibold">T</div>
+                        <div class="p-2 font-semibold">W</div>
+                        <div class="p-2 font-semibold">T</div>
+                        <div class="p-2 font-semibold">F</div>
+                        <div class="p-2 font-semibold">S</div>
+                        <!-- Sample calendar days -->
+                        <div class="p-2">1</div>
+                        <div class="p-2">2</div>
+                        <div class="p-2 bg-blue-500 rounded">3</div>
+                        <div class="p-2">4</div>
+                        <div class="p-2 bg-amber-500 rounded">5</div>
+                        <div class="p-2">6</div>
+                        <div class="p-2">7</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Today's Actions -->
+            <div class="glass-surface p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+                    <i data-lucide="target" class="w-5 h-5"></i>
+                    <span>Today's Actions</span>
+                </h3>
+                <div class="space-y-3">
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="mail" class="w-4 h-4 text-blue-400"></i>
+                            <span>Ready to Send (23)</span>
+                        </div>
+                    </button>
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="edit" class="w-4 h-4 text-amber-400"></i>
+                            <span>Enrich Data (145)</span>
+                        </div>
+                    </button>
+                    <button class="w-full glass-button p-3 rounded-lg text-left flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="upload" class="w-4 h-4 text-green-400"></i>
+                            <span>Export Updates</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="glass-surface p-6 rounded-2xl mb-8">
+            <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <input type="text" placeholder="Search contractors..." class="bg-transparent border border-gray-600 rounded-lg px-4 py-2 min-w-64">
+                </div>
+                <select class="glass-button px-4 py-2 rounded-lg">
+                    <option>All Trades</option>
+                    <option>Roofing</option>
+                    <option>Plumbing</option>
+                    <option>Electrical</option>
+                </select>
+                <select class="glass-button px-4 py-2 rounded-lg">
+                    <option>All Completion</option>
+                    <option>90-100%</option>
+                    <option>80-89%</option>
+                    <option>70-79%</option>
+                </select>
+                <select class="glass-button px-4 py-2 rounded-lg">
+                    <option>Campaign Status</option>
+                    <option>Has Campaign</option>
+                    <option>No Campaign</option>
+                    <option>In Progress</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Sample Contractor Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1 - Has Campaign -->
+            <div class="contractor-card p-6 rounded-2xl">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-bold">
+                            92%
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Summit Roofing</h3>
+                            <p class="text-sm text-gray-400">Denver, CO</p>
+                        </div>
+                    </div>
+                    <span class="px-2 py-1 bg-green-500 text-xs rounded-full flex items-center space-x-1">
+                        <i data-lucide="check-circle" class="w-3 h-3"></i>
+                        <span>Campaign Ready</span>
+                    </span>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <p class="text-sm"><i data-lucide="mail" class="w-4 h-4 inline mr-2"></i> 3-Email Sequence</p>
+                    <p class="text-sm"><i data-lucide="clock" class="w-4 h-4 inline mr-2"></i> Best: Tue 6:30 AM</p>
+                    <p class="text-sm text-gray-300">"Your Denver roofing business..."</p>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                        <i data-lucide="clipboard" class="w-4 h-4"></i>
+                        <span>Copy</span>
+                    </button>
+                    <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        <span>Mark Sent</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2 - No Campaign -->
+            <div class="contractor-card p-6 rounded-2xl">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-white font-bold">
+                            76%
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Elite Plumbing LLC</h3>
+                            <p class="text-sm text-gray-400">Austin, TX</p>
+                        </div>
+                    </div>
+                    <span class="px-2 py-1 bg-red-500 text-xs rounded-full flex items-center space-x-1">
+                        <i data-lucide="x-circle" class="w-3 h-3"></i>
+                        <span>No Campaign</span>
+                    </span>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <p class="text-sm"><i data-lucide="target" class="w-4 h-4 inline mr-2"></i> Enhancement Needed</p>
+                    <p class="text-sm text-gray-400">• Missing: Owner name</p>
+                    <p class="text-sm text-gray-400">• Phone verification</p>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                        <i data-lucide="edit" class="w-4 h-4"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                        <i data-lucide="rocket" class="w-4 h-4"></i>
+                        <span>Generate</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3 - In Progress -->
+            <div class="contractor-card p-6 rounded-2xl">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                            88%
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Spark Electric</h3>
+                            <p class="text-sm text-gray-400">Miami, FL</p>
+                        </div>
+                    </div>
+                    <span class="px-2 py-1 bg-amber-500 text-xs rounded-full flex items-center space-x-1">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                        <span>Email 2 Pending</span>
+                    </span>
+                </div>
+                
+                <div class="space-y-2 mb-4">
+                    <p class="text-sm"><i data-lucide="check-circle" class="w-4 h-4 inline mr-2 text-green-400"></i> Email 1: Sent</p>
+                    <p class="text-sm"><i data-lucide="clock" class="w-4 h-4 inline mr-2 text-amber-400"></i> Email 2: Due Thu 7:30 PM</p>
+                    <p class="text-sm text-gray-300">"Following up on..."</p>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                        <i data-lucide="clipboard" class="w-4 h-4"></i>
+                        <span>Copy</span>
+                    </button>
+                    <button class="flex-1 glass-button px-4 py-2 rounded-lg text-sm flex items-center justify-center space-x-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        <span>Mark</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-center mt-8 space-x-4">
+            <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                <span>Previous</span>
+            </button>
+            <span class="px-4 py-2">Page 1 of 167</span>
+            <button class="glass-button px-4 py-2 rounded-lg flex items-center space-x-2">
+                <span>Next</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            console.log('Simple Contractor Hub loaded successfully');
+        });
+    </script>
+</body>
+</html>

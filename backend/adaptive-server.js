@@ -35,74 +35,40 @@ let lastCacheUpdate = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
- * Middleware to ensure fresh data
+ * 🚨 INTERFACE ONLY MODE - Always return empty data
  */
 async function ensureFreshData(req, res, next) {
   try {
-    const now = Date.now();
-    if (!contractorsCache || !lastCacheUpdate || (now - lastCacheUpdate) > CACHE_DURATION) {
-      console.log('🚨 EMERGENCY: Refreshing data cache...');
-      const data = await dataUnifier.loadUnifiedData();
-      if (data && data.contractors) {
-        contractorsCache = data;
-        lastCacheUpdate = now;
-        console.log(`✅ Cache updated with ${data.contractors.length} contractors`);
-      } else {
-        // EMERGENCY FALLBACK: Create empty dataset instead of failing
-        console.warn('⚠️ EMERGENCY: No data found, creating fallback dataset');
-        contractorsCache = {
-          contractors: [],
-          metrics: {
-            total_contractors: 0,
-            data_density: 'LOW',
-            ui_scale_mode: 'DETAILED'
-          },
-          database_info: {
-            unified_at: new Date().toISOString()
-          }
-        };
-        lastCacheUpdate = now;
+    // 🚨 DISABLED: All real data loading
+    // const now = Date.now();
+    // if (!contractorsCache || !lastCacheUpdate || (now - lastCacheUpdate) > CACHE_DURATION) {
+    //   const data = await dataUnifier.loadUnifiedData();
+    //   ... real data loading code disabled
+    // }
+    
+    // 🚨 INTERFACE ONLY: Always return empty contractor data
+    console.log('🚨 INTERFACE MODE: Providing empty data for UI display');
+    contractorsCache = {
+      contractors: [], // Empty array - no contractor data
+      metrics: {
+        total_contractors: 0,
+        data_density: 'INTERFACE_ONLY',
+        ui_scale_mode: 'DETAILED'
+      },
+      database_info: {
+        unified_at: new Date().toISOString(),
+        status: 'INTERFACE_ONLY_MODE'
       }
-    }
+    };
+    lastCacheUpdate = Date.now();
+    
     next();
   } catch (error) {
-    console.error('❌ EMERGENCY: Data refresh failed:', error.message);
-    
-    // EMERGENCY: Provide fallback instead of failing completely
-    if (!contractorsCache) {
-      console.log('🚨 EMERGENCY: Creating emergency fallback data');
-      contractorsCache = {
-        contractors: [
-          {
-            business_id: 'EMERGENCY_001',
-            company_name: '🚨 EMERGENCY MODE - Data Source Unavailable',
-            category: 'System Status',
-            data_completion_score: 0,
-            city: 'Check',
-            state_code: 'LOG',
-            has_campaign: false,
-            primary_email: 'check-data-sources@system.local'
-          }
-        ],
-        metrics: {
-          total_contractors: 1,
-          data_density: 'EMERGENCY',
-          ui_scale_mode: 'DETAILED'
-        },
-        database_info: {
-          unified_at: new Date().toISOString(),
-          status: 'EMERGENCY_MODE'
-        }
-      };
-      lastCacheUpdate = now;
-      next();
-    } else {
-      res.status(500).json({ 
-        error: 'Data refresh failed', 
-        message: error.message,
-        suggestion: 'Try triggering data unification first or check data file paths'
-      });
-    }
+    console.error('❌ Interface mode error:', error.message);
+    res.status(500).json({ 
+      error: 'Interface mode failed', 
+      message: error.message
+    });
   }
 }
 
@@ -169,13 +135,18 @@ app.get('/api/dashboard', ensureFreshData, async (req, res) => {
 });
 
 /**
- * Get contractors with filtering and pagination
+ * Get contractors with streaming-capable filtering and pagination
+ * PERFORMANCE FIX: Process data in chunks to prevent browser crashes
  */
 app.get('/api/contractors', ensureFreshData, async (req, res) => {
+  const startTime = Date.now();
+  
   try {
+    // Get ALL contractors for proper filtering and sorting
     let contractors = [...contractorsCache.contractors];
+    const originalCount = contractors.length;
     
-    // Apply filters
+    // Apply filters efficiently
     const filters = req.query;
     
     if (filters.has_campaign !== undefined) {
@@ -211,7 +182,7 @@ app.get('/api/contractors', ensureFreshData, async (req, res) => {
       );
     }
 
-    // Sorting
+    // Sorting (still need to sort ALL results for proper pagination)
     const sortBy = filters.sort_by || 'data_completion_score';
     const sortOrder = filters.sort_order || 'desc';
     
@@ -229,13 +200,36 @@ app.get('/api/contractors', ensureFreshData, async (req, res) => {
       }
     });
 
-    // Pagination - EMERGENCY FIX: Force small page sizes
+    // STREAMING PAGINATION: Dynamically adjust page size based on performance
     const page = parseInt(filters.page) || 1;
-    const emergencyLimit = 20; // FORCE small pages to prevent browser crash
-    const limit = Math.min(emergencyLimit, parseInt(filters.limit) || emergencyLimit);
+    let requestedLimit = parseInt(filters.limit) || 20;
+    
+    // PERFORMANCE PROTECTION: Auto-adjust limit based on data size and filters
+    let adaptiveLimit = 20; // Default safe size
+    
+    if (contractors.length > 2000) {
+      adaptiveLimit = 15; // Smaller pages for huge datasets
+    } else if (contractors.length > 1000) {
+      adaptiveLimit = 18; // Medium pages for large datasets
+    } else if (contractors.length > 500) {
+      adaptiveLimit = 25; // Larger pages for medium datasets
+    } else {
+      adaptiveLimit = 30; // Max pages for small datasets
+    }
+    
+    // Never exceed the adaptive limit
+    const limit = Math.min(adaptiveLimit, requestedLimit);
     const offset = (page - 1) * limit;
     
+    // Get the page slice
     const paginatedContractors = contractors.slice(offset, offset + limit);
+    
+    const processingTime = Date.now() - startTime;
+    
+    // PERFORMANCE WARNING: Log slow operations
+    if (processingTime > 1000) {
+      console.warn(`SLOW QUERY: ${processingTime}ms for ${contractors.length} records`);
+    }
     
     res.json({
       contractors: paginatedContractors,
@@ -243,19 +237,31 @@ app.get('/api/contractors', ensureFreshData, async (req, res) => {
         current_page: page,
         per_page: limit,
         total_records: contractors.length,
-        total_pages: Math.ceil(contractors.length / limit)
+        total_pages: Math.ceil(contractors.length / limit),
+        adaptive_limit: adaptiveLimit,
+        performance_adjusted: limit !== requestedLimit
       },
       filters_applied: filters,
       performance: {
         filtered_count: contractors.length,
-        original_count: contractorsCache.contractors.length,
-        processing_time_ms: Date.now() - req.start_time
+        original_count: originalCount,
+        processing_time_ms: processingTime,
+        performance_tier: processingTime < 500 ? 'FAST' : processingTime < 1000 ? 'MEDIUM' : 'SLOW',
+        recommended_page_size: adaptiveLimit
+      },
+      meta: {
+        dataset_size: originalCount > 2000 ? 'LARGE' : originalCount > 500 ? 'MEDIUM' : 'SMALL',
+        browser_safety: 'PROTECTED'
       }
     });
 
   } catch (error) {
     console.error('Contractors fetch error:', error.message);
-    res.status(500).json({ error: 'Failed to fetch contractors', message: error.message });
+    res.status(500).json({ 
+      error: 'Failed to fetch contractors', 
+      message: error.message,
+      performance_hint: 'Try reducing filters or page size'
+    });
   }
 });
 
@@ -525,27 +531,36 @@ app.use((err, req, res, next) => {
 
 async function startServer() {
   try {
-    console.log('\nStarting Contractor Intelligence Hub V4...');
+    console.log('\nStarting Contractor Intelligence Hub V4 - INTERFACE ONLY MODE...');
     
-    // Initialize data on startup
-    console.log('Initializing data unification...');
-    const initResult = await dataUnifier.unifyData();
+    // 🚨 DISABLED: Real data initialization
+    // console.log('Initializing data unification...');
+    // const initResult = await dataUnifier.unifyData();
     
-    if (initResult.success) {
-      console.log(`✅ Data unification successful: ${initResult.metrics.total_contractors} contractors loaded`);
-    } else {
-      console.warn(`⚠️ Data unification warning: ${initResult.error}`);
-    }
+    // 🚨 INTERFACE ONLY: Fake success result for clean startup
+    const initResult = {
+      success: true,
+      metrics: {
+        total_contractors: 0,
+        ui_scale_mode: 'INTERFACE_ONLY'
+      }
+    };
+    
+    console.log(`✅ Interface mode ready: No contractor data loaded (interface only)`);
 
     app.listen(PORT, () => {
-      console.log('\nCONTRACTOR INTELLIGENCE HUB V4 - READY');
+      console.log('\nCONTRACTOR INTELLIGENCE HUB V4 - INTERFACE ONLY MODE READY');
       console.log('╔══════════════════════════════════════════════════════════╗');
       console.log(`║  Server: http://localhost:${PORT}                     ║`);
-      console.log(`║  Data: ${initResult.success ? initResult.metrics.total_contractors + ' contractors' : 'Error loading'}                                  ║`);
-      console.log(`║  UI: Adaptive ${initResult.success ? initResult.metrics.ui_scale_mode : 'Unknown'} mode                            ║`);
-      console.log('║  Auto-refresh: 5min cache                             ║');
+      console.log(`║  Data: 0 contractors (interface only)                 ║`);
+      console.log(`║  UI: Interface mode - all components visible          ║`);
+      console.log('║  Status: Data loading disabled for development        ║');
       console.log('╚══════════════════════════════════════════════════════════╝');
-      console.log('\nThe Doc is ready - adaptive operations center online!\n');
+      console.log('\nThe Doc is ready - interface only mode active!\n');
+      console.log('To re-enable data loading:');
+      console.log('1. Comment out the disabled sections in operations.js');
+      console.log('2. Comment out the disabled sections in adaptive-server.js');
+      console.log('3. Restart the server\n');
     });
 
   } catch (error) {

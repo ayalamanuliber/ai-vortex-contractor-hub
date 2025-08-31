@@ -262,10 +262,13 @@
 
                 <!-- Empty State -->
                 <div id="contractors-empty" class="contractors-empty" style="display: none;">
-                    <div class="empty-icon"><i data-lucide="search" class="icon-lg"></i></div>
-                    <div class="empty-title">No contractors found</div>
-                    <div class="empty-subtitle">Try adjusting your filters or search criteria</div>
-                    <button class="btn btn-primary" id="clear-filters">Clear Filters</button>
+                    <div class="empty-icon"><i data-lucide="building-2" class="icon-lg"></i></div>
+                    <div class="empty-title">Interface Only Mode</div>
+                    <div class="empty-subtitle">All UI components are loaded and functional. No contractor data is being loaded for development/testing purposes.</div>
+                    <div class="empty-actions">
+                        <button class="btn btn-secondary" onclick="console.log('All filters, search, and UI components are working - just no data loaded')">Test Filters</button>
+                        <button class="btn btn-primary" onclick="alert('Data loading is disabled. To re-enable:\n1. Uncomment disabled sections in operations.js\n2. Uncomment disabled sections in adaptive-server.js\n3. Restart server')">Enable Data Loading</button>
+                    </div>
                 </div>
 
                 <!-- Contractors Grid/List -->

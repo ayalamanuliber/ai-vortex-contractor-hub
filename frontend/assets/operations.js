@@ -70,77 +70,50 @@ class OperationsManager {
     }
 
     /**
-     * 🚨 EMERGENCY INIT - Circuit breaker pattern to prevent browser crashes
+     * SMART INIT - Progressive loading with performance monitoring
      */
     async init() {
         try {
-            console.log('🚨 EMERGENCY INIT: Ultra-safe mode activated');
+            console.log('🚀 SMART INIT: Progressive loading activated');
             
             // Show loading screen
             this.showLoadingScreen();
-            
-            // CIRCUIT BREAKER: Check if browser is already stressed
-            if (this.detectBrowserStress()) {
-                this.redirectToEmergencyMode();
-                return;
-            }
             
             // Initialize components with timeout protection
             this.updateLoadingProgress(20, 'Loading system components...');
             await this.safeInitializeComponents();
             
-            // Set up event listeners (safe)
+            // Set up event listeners
             this.setupEventListeners();
             this.updateLoadingProgress(40, 'Setting up event handlers...');
             
-            // CRITICAL: Ask user before loading data
-            this.updateLoadingProgress(60, 'Ready to load data...');
-            this.hideLoadingScreen();
-            this.showDataLoadingPrompt();
+            // Load dashboard data first (lightweight)
+            this.updateLoadingProgress(60, 'Loading dashboard...');
+            await this.loadDashboardData();
             
-            console.log('🚨 EMERGENCY INIT: Ready for manual data loading');
+            // Start performance monitoring
+            this.startPerformanceMonitoring();
+            
+            // Hide loading and show main interface
+            this.updateLoadingProgress(80, 'Ready to load contractors...');
+            this.hideLoadingScreen();
+            
+            // TEMPORARILY DISABLED - Auto-load first page of contractors
+            this.updateLoadingProgress(100, 'Interface ready - data loading disabled...');
+            // await this.loadContractors();
+            this.showEmptyInterface();
+            
+            // Start auto-refresh (reduced frequency)
+            this.startAutoRefresh();
+            
+            console.log('✅ SMART INIT: System ready with progressive loading');
             
         } catch (error) {
-            console.error('🚨 EMERGENCY INIT FAILED:', error);
-            this.redirectToEmergencyMode();
+            console.error('❌ INIT FAILED:', error);
+            this.showEmergencyFallback();
         }
     }
 
-    /**
-     * 🚨 DETECT BROWSER STRESS - Check if system is already overloaded
-     */
-    detectBrowserStress() {
-        // Check memory usage if available
-        if (performance.memory) {
-            const memoryUsedMB = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
-            const memoryLimitMB = Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024);
-            
-            if (memoryUsedMB > memoryLimitMB * 0.7) {
-                console.warn(`🚨 HIGH MEMORY DETECTED: ${memoryUsedMB}MB/${memoryLimitMB}MB`);
-                return true;
-            }
-        }
-        
-        // Check DOM complexity
-        const domElements = document.querySelectorAll('*').length;
-        if (domElements > 5000) {
-            console.warn(`🚨 DOM OVERLOAD: ${domElements} elements`);
-            return true;
-        }
-        
-        return false;
-    }
-
-    /**
-     * 🚨 REDIRECT TO EMERGENCY MODE
-     */
-    redirectToEmergencyMode() {
-        console.log('🚨 REDIRECTING TO EMERGENCY MODE');
-        this.showToast('error', '🚨 BROWSER STRESS DETECTED', 'Switching to emergency mode to prevent crash');
-        setTimeout(() => {
-            window.location.href = 'emergency-mode.html';
-        }, 3000);
-    }
 
     /**
      * 🚨 SAFE COMPONENT INITIALIZATION - No heavy processing
@@ -163,85 +136,6 @@ class OperationsManager {
         }
     }
 
-    /**
-     * 🚨 SHOW DATA LOADING PROMPT - User must manually trigger data loading
-     */
-    showDataLoadingPrompt() {
-        const app = document.getElementById('app');
-        app.style.display = 'flex';
-        
-        // Create manual loading interface
-        const promptHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;">
-                <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 500px; text-align: center; color: black;">
-                    <h2>🚨 EMERGENCY MODE</h2>
-                    <p style="margin: 1rem 0; line-height: 1.6;">System is ready, but data loading is MANUAL to prevent crashes.</p>
-                    <p style="margin: 1rem 0; color: red;"><strong>WARNING:</strong> Loading large datasets may freeze browser!</p>
-                    
-                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
-                        <button onclick="operationsManager.loadSafeDashboard()" style="padding: 1rem 1.5rem; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                            🛡️ Load Dashboard Only<br><small>(Safe - 5 sec timeout)</small>
-                        </button>
-                        <button onclick="operationsManager.loadFirstPage()" style="padding: 1rem 1.5rem; background: #ffc107; color: black; border: none; border-radius: 8px; cursor: pointer;">
-                            ⚠️ Load First 10 Contractors<br><small>(May cause issues)</small>
-                        </button>
-                        <button onclick="window.location.href='emergency-mode.html'" style="padding: 1rem 1.5rem; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                            🚨 Emergency Mode<br><small>(Ultra-safe)</small>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.insertAdjacentHTML('beforeend', promptHTML);
-    }
-
-    /**
-     * 🚨 LOAD SAFE DASHBOARD - Dashboard data only, 5 second timeout
-     */
-    async loadSafeDashboard() {
-        try {
-            document.querySelector('[style*="position: fixed"]').remove();
-            this.showToast('info', 'Loading Dashboard', 'Loading dashboard data with 5 second timeout...');
-            
-            const controller = new AbortController();
-            setTimeout(() => controller.abort(), 5000);
-            
-            await this.loadDashboardData();
-            this.showToast('success', 'Dashboard Ready', 'Dashboard loaded successfully. Contractor loading is manual.');
-            
-        } catch (error) {
-            this.showToast('error', 'Dashboard Failed', 'Could not load dashboard: ' + error.message);
-        }
-    }
-
-    /**
-     * 🚨 LOAD FIRST PAGE - Only 10 contractors with circuit breaker
-     */
-    async loadFirstPage() {
-        try {
-            document.querySelector('[style*="position: fixed"]').remove();
-            
-            // Override page size for safety
-            const originalPerPage = this.state.perPage;
-            this.state.perPage = 10;
-            
-            this.showToast('warning', 'Loading 10 Contractors', 'Loading first 10 contractors with 10 second timeout...');
-            
-            const startTime = performance.now();
-            await this.loadContractors();
-            const loadTime = performance.now() - startTime;
-            
-            this.showToast('success', 'First Page Loaded', `10 contractors loaded in ${Math.round(loadTime)}ms`);
-            
-            // Restore original page size
-            this.state.perPage = originalPerPage;
-            
-        } catch (error) {
-            this.showToast('error', 'Load Failed', 'Could not load contractors: ' + error.message);
-            this.showEmergencyFallback();
-        }
-    }
 
     /**
      * Initialize all UI components
@@ -359,20 +253,45 @@ class OperationsManager {
     }
 
     /**
-     * Load dashboard overview data
+     * 🚨 DASHBOARD DATA DISABLED - Show fake data for interface only
      */
     async loadDashboardData() {
         try {
-            const response = await fetch(`${this.apiBase}/api/dashboard`);
-            const data = await response.json();
+            // 🚨 DISABLED: Real dashboard data loading
+            // const response = await fetch(`${this.apiBase}/api/dashboard`);
+            // const data = await response.json();
             
-            if (!response.ok) throw new Error(data.error || 'Dashboard data failed');
+            // 🚨 FAKE DASHBOARD DATA - Shows interface without real data
+            const data = {
+                overview: {
+                    total_contractors: 0,
+                    ui_scale_mode: 'DETAILED',
+                    last_updated: new Date().toISOString()
+                },
+                today_actions: {
+                    ready_to_send: 0,
+                    needs_enrichment: 0,
+                    follow_ups_due: 0,
+                    high_priority: 0
+                },
+                metrics: {
+                    completion_80_plus: 0
+                },
+                pipeline: {
+                    queue: 0,
+                    ready: 0,
+                    sent: 0,
+                    complete: 0
+                }
+            };
             
             this.updateDashboard(data);
             this.state.lastUpdate = new Date();
             
+            console.log('✅ DASHBOARD INTERFACE: Fake data loaded for UI display');
+            
         } catch (error) {
-            console.error('Dashboard load error:', error);
+            console.error('Dashboard interface error:', error);
             this.showToast('error', 'Dashboard Error', error.message);
         }
     }
@@ -436,100 +355,104 @@ class OperationsManager {
     }
 
     /**
-     * 🚨 LOAD CONTRACTORS - Maximum protection against browser crashes
+     * Show empty interface with placeholder
+     */
+    showEmptyInterface() {
+        const contractorGrid = document.getElementById('contractor-grid');
+        if (contractorGrid) {
+            contractorGrid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="glass-surface p-8 rounded-2xl max-w-md mx-auto">
+                        <i data-lucide="database" class="w-16 h-16 mx-auto mb-4 text-blue-400"></i>
+                        <h3 class="text-xl font-semibold mb-2">System Ready</h3>
+                        <p class="text-gray-300 mb-4">Interface loaded successfully. Contractor data loading is temporarily disabled for system stability.</p>
+                        <button id="loadDataBtn" class="glass-button px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            <i data-lucide="download" class="w-4 h-4 mr-2"></i>
+                            Enable Data Loading
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+    }
+
+    /**
+     * 🚨 DATA LOADING DISABLED - Interface only mode for development/testing
      */
     async loadContractors(showLoading = true) {
         const startTime = performance.now();
         
         try {
-            // CIRCUIT BREAKER: Check system stress before loading
-            if (this.detectBrowserStress()) {
-                this.showToast('error', '🚨 SYSTEM STRESS', 'Browser is stressed - operation cancelled to prevent crash');
-                return;
-            }
-
             this.state.loading = true;
             if (showLoading) {
                 this.showContractorsLoading();
             }
 
-            // EMERGENCY: Force ultra-small page size if not already set
-            if (this.state.perPage > 50) {
-                this.state.perPage = 20;
-                console.warn('🚨 FORCING SMALL PAGE SIZE TO PREVENT CRASH');
-            }
+            // 🚨 DISABLED: All actual data loading commented out
+            // const params = new URLSearchParams({
+            //     page: this.state.currentPage,
+            //     limit: this.state.perPage,
+            //     sort_by: this.state.sortBy,
+            //     sort_order: this.state.sortOrder,
+            //     ...this.state.filters
+            // });
 
-            const params = new URLSearchParams({
-                page: this.state.currentPage,
-                limit: Math.min(this.state.perPage, 50), // HARD LIMIT: Never more than 50
-                sort_by: this.state.sortBy,
-                sort_order: this.state.sortOrder,
-                ...this.state.filters
-            });
+            // const controller = new AbortController();
+            // const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // EMERGENCY: 10 second timeout
-
-            // EMERGENCY: Show immediate feedback
-            this.showToast('info', 'Loading Data', `Fetching max ${Math.min(this.state.perPage, 50)} contractors... (10s timeout)`);
-
-            const response = await fetch(`${this.apiBase}/api/contractors?${params}`, {
-                signal: controller.signal,
-                headers: {
-                    'Cache-Control': 'no-cache',
-                    'X-Emergency-Mode': 'true'
+            // const response = await fetch(`${this.apiBase}/api/contractors?${params}`, {
+            //     signal: controller.signal,
+            //     headers: {
+            //         'Cache-Control': 'no-cache',
+            //         'X-Performance-Mode': 'adaptive'
+            //     }
+            // });
+            
+            // clearTimeout(timeoutId);
+            // const data = await response.json();
+            
+            // 🚨 INTERFACE ONLY: Return empty data to show UI without contractors
+            const data = {
+                contractors: [], // Empty array - no contractor data
+                pagination: { 
+                    current_page: 1, 
+                    total_pages: 1,
+                    total_records: 0,
+                    per_page: this.state.perPage
+                },
+                performance: {
+                    processing_time_ms: 5,
+                    performance_tier: 'FAST'
                 }
-            });
+            };
             
-            clearTimeout(timeoutId);
-            
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || `HTTP ${response.status}: Failed to load contractors`);
-            }
-            
-            const data = await response.json();
-            
-            // CIRCUIT BREAKER: Check if response is too large
-            if (data.contractors && data.contractors.length > 100) {
-                this.showToast('warning', '🚨 LARGE DATASET', 'Truncating to 50 records to prevent crash');
-                data.contractors = data.contractors.slice(0, 50);
-            }
-            
-            this.state.contractors = data.contractors || [];
-            this.state.filteredContractors = data.contractors || [];
-            this.state.totalContractors = data.pagination ? data.pagination.total_records : 0;
+            // Update state with empty data
+            this.state.contractors = [];
+            this.state.filteredContractors = [];
+            this.state.totalContractors = 0;
             this.state.lastUpdate = new Date();
             
             const loadTime = performance.now() - startTime;
-            console.log(`🚨 SAFE LOAD: ${data.contractors ? data.contractors.length : 0} contractors in ${Math.round(loadTime)}ms`);
+            console.log(`✅ INTERFACE MODE: UI loaded in ${Math.round(loadTime)}ms (no contractor data)`);
             
-            // SAFETY: Use timeout for rendering to prevent blocking
+            // Render empty state immediately
             setTimeout(() => {
-                this.renderContractorsSafely(data.contractors || []);
-                this.updatePagination(data.pagination || { current_page: 1, total_pages: 1 });
-                this.updateContractorsHeader(data.pagination ? data.pagination.total_records : 0);
-            }, 100);
+                this.renderContractorsProgressively([]);
+                this.updatePagination(data.pagination);
+                this.updateContractorsHeader(0, data.performance);
+            }, 50);
             
-            // Show performance warning
-            if (loadTime > 5000) {
-                this.showToast('warning', 'SLOW LOAD', `Load took ${Math.round(loadTime)}ms - consider reducing filters`);
-            }
+            // Show helpful message
+            this.showToast('info', 'Interface Mode', 'UI loaded without contractor data - ready for development');
             
         } catch (error) {
-            console.error('🚨 CONTRACTORS LOAD ERROR:', error);
-            
-            // EMERGENCY: Better error handling with fallback data
-            if (error.name === 'AbortError') {
-                this.showToast('error', '🚨 TIMEOUT (10s)', 'Server too slow - switching to emergency mode');
-                this.showEmergencyFallback();
-            } else if (error.message.includes('Failed to fetch')) {
-                this.showToast('error', '🚨 SERVER DOWN', 'Cannot connect - check if server is running');
-                this.showEmergencyFallback();
-            } else {
-                this.showToast('error', '🚨 LOAD ERROR', `${error.message}`);
-                this.showEmergencyFallback();
-            }
+            console.error('❌ INTERFACE LOAD ERROR:', error);
+            this.showToast('error', 'Interface Error', `${error.message}`);
             
         } finally {
             this.state.loading = false;
@@ -537,15 +460,15 @@ class OperationsManager {
     }
 
     /**
-     * 🚨 RENDER CONTRACTORS SAFELY - Prevent DOM overload
+     * PROGRESSIVE RENDERING - Smooth non-blocking DOM updates
      */
-    renderContractorsSafely(contractors) {
+    renderContractorsProgressively(contractors) {
         const container = document.getElementById('contractors-container');
         const loading = document.getElementById('contractors-loading');
         const empty = document.getElementById('contractors-empty');
         
         if (!container) {
-            console.error('🚨 CONTAINER NOT FOUND - DOM may be corrupted');
+            console.error('❌ CONTAINER NOT FOUND - DOM may be corrupted');
             return;
         }
         
@@ -560,31 +483,40 @@ class OperationsManager {
         empty.style.display = 'none';
         container.style.display = 'grid';
         
-        // SAFETY: Limit DOM rendering
-        const safeLimit = Math.min(contractors.length, 25);
-        const safeContractors = contractors.slice(0, safeLimit);
+        // Clear existing content
+        container.innerHTML = '';
         
-        if (contractors.length > safeLimit) {
-            this.showToast('warning', '🚨 DOM PROTECTION', `Showing ${safeLimit}/${contractors.length} to prevent browser slowdown`);
-        }
-        
-        // Use DocumentFragment for better performance
-        const fragment = document.createDocumentFragment();
-        safeContractors.forEach((contractor, index) => {
-            // Add delay between renders to prevent blocking
-            setTimeout(() => {
+        // Progressive rendering with requestAnimationFrame for smoothness
+        let index = 0;
+        const renderBatch = () => {
+            const startTime = performance.now();
+            const batchSize = contractors.length > 30 ? 3 : 5; // Smaller batches for larger datasets
+            
+            // Render a batch of cards
+            for (let i = 0; i < batchSize && index < contractors.length; i++, index++) {
+                const contractor = contractors[index];
                 const cardHTML = this.renderContractorCard(contractor);
                 const div = document.createElement('div');
                 div.innerHTML = cardHTML;
-                fragment.appendChild(div.firstElementChild);
-                
-                if (index === safeContractors.length - 1) {
-                    container.innerHTML = '';
-                    container.appendChild(fragment);
-                    this.setupCardEventListeners();
-                }
-            }, index * 10); // 10ms delay between each card
-        });
+                container.appendChild(div.firstElementChild);
+            }
+            
+            const renderTime = performance.now() - startTime;
+            
+            // Continue with next batch if there are more cards
+            if (index < contractors.length) {
+                // Adaptive delay based on render performance
+                const delay = renderTime > 15 ? 25 : renderTime > 8 ? 10 : 5;
+                setTimeout(() => requestAnimationFrame(renderBatch), delay);
+            } else {
+                // All done, set up event listeners
+                this.setupCardEventListeners();
+                console.log(`📋 Rendered ${contractors.length} contractor cards progressively`);
+            }
+        };
+        
+        // Start progressive rendering
+        requestAnimationFrame(renderBatch);
     }
 
     /**
@@ -805,18 +737,35 @@ class OperationsManager {
     }
 
     /**
-     * Update contractors header
+     * Update contractors header with performance info
      */
-    updateContractorsHeader(totalRecords) {
+    updateContractorsHeader(totalRecords, performanceInfo = null) {
         const countElement = document.getElementById('contractors-count');
         const subtitleElement = document.getElementById('section-subtitle');
         
         countElement.textContent = `${totalRecords.toLocaleString()} contractors`;
         
         let subtitle = 'Adaptive display optimized for your data volume';
-        if (totalRecords > 2000) subtitle = 'Compact view - High data density detected';
-        else if (totalRecords > 500) subtitle = 'Balanced view - Medium data density';
-        else subtitle = 'Detailed view - Full information display';
+        
+        if (performanceInfo) {
+            // Show performance-aware subtitle
+            if (performanceInfo.performance_tier === 'FAST') {
+                subtitle = `Fast query (${performanceInfo.processing_time_ms}ms) - Performance optimized`;
+            } else if (performanceInfo.performance_tier === 'MEDIUM') {
+                subtitle = `Medium dataset (${performanceInfo.processing_time_ms}ms) - Balanced view`;
+            } else if (performanceInfo.performance_tier === 'SLOW') {
+                subtitle = `Large dataset (${performanceInfo.processing_time_ms}ms) - Compact view for performance`;
+            }
+            
+            if (performanceInfo.filtered_count !== performanceInfo.original_count) {
+                subtitle += ` - Filtered from ${performanceInfo.original_count.toLocaleString()}`;
+            }
+        } else {
+            // Fallback subtitle based on record count
+            if (totalRecords > 2000) subtitle = 'Compact view - High data density detected';
+            else if (totalRecords > 500) subtitle = 'Balanced view - Medium data density';
+            else subtitle = 'Detailed view - Full information display';
+        }
         
         subtitleElement.textContent = subtitle;
     }

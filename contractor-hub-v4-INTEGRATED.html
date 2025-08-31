@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligence Hub - AI Vortex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'hsl(240, 10%, 4%)',
+                        foreground: 'hsl(0, 0%, 97%)',
+                        muted: 'hsl(240, 3.7%, 15.9%)',
+                        'muted-foreground': 'hsl(240, 5%, 64%)',
+                        popover: 'hsla(220, 13%, 18%, 0.5)',
+                        'popover-foreground': 'hsl(0, 0%, 97%)',
+                        card: 'hsla(220, 13%, 18%, 0.5)',
+                        'card-foreground': 'hsl(0, 0%, 97%)',
+                        border: 'hsla(220, 13%, 40%, 0.5)',
+                        input: 'hsla(220, 13%, 18%, 0.5)',
+                        primary: 'hsl(199, 89%, 48%)',
+                        'primary-foreground': 'hsl(240, 10%, 4%)',
+                        secondary: 'hsla(220, 13%, 18%, 0.5)',
+                        'secondary-foreground': 'hsl(0, 0%, 97%)',
+                        accent: 'hsla(220, 13%, 18%, 0.5)',
+                        'accent-foreground': 'hsl(0, 0%, 97%)',
+                        destructive: 'hsl(346, 87%, 43%)',
+                        'destructive-foreground': 'hsl(0, 0%, 97%)',
+                        ring: 'hsl(199, 89%, 48%)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* AI Vortex Dark Theme */
+        body {
+            background: hsl(240, 10%, 4%);
+            background-image: radial-gradient(at 20% 10%, hsla(220, 50%, 30%, 0.15) 0px, transparent 50%), 
+                              radial-gradient(at 80% 90%, hsla(280, 50%, 30%, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: hsl(0, 0%, 97%);
+        }
+        
+        /* Glass morphism components matching the app */
+        .glass-surface {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.9) 0%,
+                hsla(220, 13%, 15%, 0.95) 100%
+            );
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid hsla(220, 13%, 30%, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        
+        .glass-button {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 20%, 0.8) 0%,
+                hsla(220, 13%, 18%, 0.9) 100%
+            );
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-button:hover {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 25%, 0.9) 0%,
+                hsla(220, 13%, 22%, 0.95) 100%
+            );
+            border-color: hsla(199, 89%, 48%, 0.5);
+        }
+        
+        /* Intelligence cards */
+        .intelligence-card {
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 18%, 0.85) 0%,
+                hsla(220, 13%, 15%, 0.9) 100%
+            );
+            backdrop-filter: blur(20px);
+            border: 1px solid hsla(220, 13%, 30%, 0.4);
+            transition: all 0.4s ease;
+            border-radius: 1rem;
+        }
+        
+        .intelligence-card:hover {
+            transform: translateY(-4px);
+            border-color: hsla(199, 89%, 48%, 0.6);
+            background: linear-gradient(135deg, 
+                hsla(220, 13%, 22%, 0.9) 0%,
+                hsla(220, 13%, 18%, 0.95) 100%
+            );
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Completion Score Circles - Changed from health to completion */
+        .completion-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            position: relative;
+        }
+        
+        .completion-excellent { 
+            background: conic-gradient(hsl(142, 76%, 36%) 0deg, hsl(142, 76%, 36%) calc(var(--score) * 3.6deg), hsl(240, 3.7%, 15.9%) calc(var(--score) * 3.6deg)); 
+        }
+        .completion-good { 
+            background: conic-gradient(hsl(45, 93%, 47%) 0deg, hsl(45, 93%, 47%) calc(var(--score) * 3.6deg), hsl(240, 3.7%, 15.9%) calc(var(--score) * 3.6deg)); 
+        }
+        .completion-fair { 
+            background: conic-gradient(hsl(0, 84%, 60%) 0deg, hsl(0, 84%, 60%) calc(var(--score) * 3.6deg), hsl(240, 3.7%, 15.9%) calc(var(--score) * 3.6deg)); 
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+            height: 32px;
+        }
+        
+        .mode-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .mode-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, hsla(220, 13%, 20%, 0.8), hsla(220, 13%, 18%, 0.9));
+            border: 1px solid hsla(220, 13%, 30%, 0.5);
+            transition: .3s;
+            border-radius: 16px;
+        }
+        
+        .mode-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 56px;
+            left: 4px;
+            bottom: 3px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            transition: .3s;
+            border-radius: 12px;
+        }
+        
+        input:checked + .mode-slider {
+            background: linear-gradient(135deg, hsla(45, 93%, 47%, 0.2), hsla(45, 93%, 47%, 0.1));
+            border-color: hsla(45, 93%, 47%, 0.5);
+        }
+        
+        input:checked + .mode-slider:before {
+            transform: translateX(56px);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        /* Calendar styles */
+        .calendar-container {
+            max-width: 350px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            border-radius: 4px;
+            background: hsla(220, 13%, 20%, 0.5);
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day:hover {
+            background: hsla(199, 89%, 48%, 0.2);
+            color: #60a5fa;
+        }
+        
+        .calendar-day.today {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .calendar-day.has-campaigns {
+            background: hsla(45, 93%, 47%, 0.2);
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        /* Tags and badges */
+        .intelligence-tag {
+            background: hsla(220, 13%, 25%, 0.8);
+            color: hsl(0, 0%, 85%);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid hsla(220, 13%, 35%, 0.5);
+        }
+        
+        .tag-established { background: hsla(142, 71%, 45%, 0.1); color: #10b981; border-color: hsla(142, 71%, 45%, 0.3); }
+        .tag-growing { background: hsla(45, 93%, 47%, 0.1); color: #f59e0b; border-color: hsla(45, 93%, 47%, 0.3); }
+        .tag-amateur { background: hsla(0, 84%, 60%, 0.1); color: #ef4444; border-color: hsla(0, 84%, 60%, 0.3); }
+        .tag-critical { background: hsla(0, 84%, 60%, 0.1); color: #ef4444; border-color: hsla(0, 84%, 60%, 0.3); }
+        .tag-warning { background: hsla(45, 93%, 47%, 0.1); color: #f59e0b; border-color: hsla(45, 93%, 47%, 0.3); }
+        .tag-active { background: hsla(142, 71%, 45%, 0.1); color: #10b981; border-color: hsla(142, 71%, 45%, 0.3); }
+        .tag-ready { background: hsla(142, 71%, 45%, 0.1); color: #10b981; border-color: hsla(142, 71%, 45%, 0.3); }
+
+        /* Tab system */
+        .tab-button {
+            background: hsla(220, 13%, 18%, 0.5);
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content:not(.hidden) {
+            display: block;
+        }
+
+        /* Email sequence styling */
+        .email-sequence {
+            background: linear-gradient(135deg, hsla(220, 13%, 18%, 0.8), hsla(220, 13%, 15%, 0.9));
+            border: 1px solid hsla(220, 13%, 30%, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .email-preview {
+            background: hsla(220, 13%, 10%, 0.8);
+            border: 1px solid hsla(220, 13%, 30%, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            white-space: pre-line;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: #e5e7eb;
+        }
+    </style>
+</head>
+<body class="dark">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="glass-surface border-b border-border/50">
+            <div class="container mx-auto px-6 py-6">
+                <!-- Top Header Row -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+                            <i data-lucide="brain" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-foreground">Contractor Intelligence Hub V4</h1>
+                            <p class="text-muted-foreground text-sm mt-1">5 contractors • Real campaign data • Focus Intel integration</p>
+                        </div>
+                        
+                        <!-- AI Status Indicator -->
+                        <div class="hidden xl:flex items-center space-x-2 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 px-3 py-2 rounded-lg">
+                            <div class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                            <span class="text-xs text-cyan-300 font-medium">AI Intelligence Active</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Global Mode Toggle -->
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-muted-foreground">Mode:</span>
+                            <label class="mode-toggle">
+                                <input type="checkbox" id="globalMode" onchange="toggleGlobalMode()">
+                                <span class="mode-slider"></span>
+                            </label>
+                            <div class="text-sm">
+                                <span class="text-blue-400 global-mode-label">Intelligence</span>
+                                <span class="text-orange-400 global-mode-label hidden">Execution</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Calendar & Quick Actions -->
+        <div class="container mx-auto px-6 py-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                
+                <!-- Campaign Calendar -->
+                <div class="glass-surface rounded-xl p-6 calendar-container">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold flex items-center">
+                            <i data-lucide="calendar" class="w-5 h-5 mr-2 text-primary"></i>
+                            Campaign Calendar
+                        </h3>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="previousMonth()" class="p-1 rounded hover:bg-muted">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="nextMonth()" class="p-1 rounded hover:bg-muted">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar days will be generated by JS -->
+                    </div>
+                    
+                    <div class="mt-4 space-y-2 text-xs">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="text-muted-foreground">Today</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
+                            <span class="text-muted-foreground">Campaigns Due</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="lg:col-span-3 glass-surface rounded-xl p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i data-lucide="zap" class="w-5 h-5 mr-2 text-primary"></i>
+                        Quick Actions & Campaign Status
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-400">3</div>
+                            <div class="text-sm text-muted-foreground mb-2">Ready to Send</div>
+                            <button class="w-full bg-green-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-700 transition">
+                                Review Campaigns
+                            </button>
+                        </div>
+                        
+                        <div class="bg-orange-500/10 border border-orange-500/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-orange-400">2</div>
+                            <div class="text-sm text-muted-foreground mb-2">Pending Generation</div>
+                            <button class="w-full bg-orange-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-orange-700 transition">
+                                Generate Campaigns
+                            </button>
+                        </div>
+                        
+                        <div class="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-400">100%</div>
+                            <div class="text-sm text-muted-foreground mb-2">Data Complete</div>
+                            <button class="w-full bg-blue-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+                                Export Data
+                            </button>
+                        </div>
+                        
+                        <div class="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-purple-400">0</div>
+                            <div class="text-sm text-muted-foreground mb-2">Responses</div>
+                            <button class="w-full bg-purple-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-purple-700 transition">
+                                Track Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contractors Grid -->
+        <div class="container mx-auto px-6 pb-8">
+            <div class="glass-surface rounded-xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold">Contractor Intelligence</h2>
+                </div>
+                
+                <div id="contractors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Contractor cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden">
+        <div class="h-full flex">
+            <!-- Profile Content -->
+            <div class="w-full h-full bg-background overflow-y-auto">
+                
+                <!-- Profile Header -->
+                <div class="glass-surface border-b border-border/50 p-6 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="closeProfile()" class="glass-button p-2 rounded-lg">
+                            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                        </button>
+                        <div>
+                            <h1 id="profile-company-name" class="text-2xl font-bold text-foreground">Company Name</h1>
+                            <p id="profile-business-id" class="text-muted-foreground">BUSINESS_ID • Intelligence Profile</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Individual Mode Toggle -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-muted-foreground">View:</span>
+                            <label class="mode-toggle">
+                                <input type="checkbox" id="profileMode" onchange="toggleProfileMode()">
+                                <span class="mode-slider"></span>
+                            </label>
+                            <div class="text-sm">
+                                <span class="text-blue-400 profile-mode-label">Intelligence</span>
+                                <span class="text-orange-400 profile-mode-label hidden">Execution</span>
+                            </div>
+                        </div>
+                        
+                        <button class="glass-button px-4 py-2 rounded-lg">
+                            <i data-lucide="external-link" class="w-4 h-4 mr-2 inline"></i>
+                            Open in App
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="glass-surface border-b border-border/50">
+                    <div class="px-6">
+                        <div class="flex space-x-1">
+                            <button onclick="switchProfileTab('overview')" id="tab-overview" class="tab-button active px-4 py-3 rounded-tl-lg rounded-tr-lg text-sm font-medium flex items-center space-x-2">
+                                <i data-lucide="brain" class="w-4 h-4"></i>
+                                <span>Intelligence</span>
+                            </button>
+                            <button onclick="switchProfileTab('campaigns')" id="tab-campaigns" class="tab-button px-4 py-3 rounded-tl-lg rounded-tr-lg text-sm font-medium flex items-center space-x-2">
+                                <i data-lucide="mail" class="w-4 h-4"></i>
+                                <span>Campaigns</span>
+                            </button>
+                            <button onclick="switchProfileTab('notes')" id="tab-notes" class="tab-button px-4 py-3 rounded-tl-lg rounded-tr-lg text-sm font-medium flex items-center space-x-2">
+                                <i data-lucide="sticky-note" class="w-4 h-4"></i>
+                                <span>Activity & Notes</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6">
+                    
+                    <!-- Intelligence Overview Tab -->
+                    <div id="profile-tab-overview" class="tab-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Key Metrics -->
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="intelligence-card p-6">
+                                    <h3 class="text-lg font-semibold mb-4">Key Metrics</h3>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div class="text-center">
+                                            <div id="profile-completion-score" class="text-2xl font-bold text-green-400">100</div>
+                                            <div class="text-sm text-muted-foreground">Completion Score</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div id="profile-psi-mobile" class="text-2xl font-bold text-orange-400">--</div>
+                                            <div class="text-sm text-muted-foreground">Mobile PSI</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div id="profile-rating" class="text-2xl font-bold text-yellow-400">--</div>
+                                            <div class="text-sm text-muted-foreground">Google Rating</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div id="profile-reviews" class="text-2xl font-bold text-blue-400">--</div>
+                                            <div class="text-sm text-muted-foreground">Reviews</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Business Intelligence -->
+                                <div class="intelligence-card p-6">
+                                    <h3 class="text-lg font-semibold mb-4">Business Intelligence</h3>
+                                    <div id="profile-opportunities" class="space-y-3">
+                                        <!-- Opportunities will be populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact & Business Info -->
+                            <div class="space-y-6">
+                                <div class="intelligence-card p-6">
+                                    <h3 class="text-lg font-semibold mb-4">Contact Information</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="mail" class="w-4 h-4 text-muted-foreground"></i>
+                                            <span id="profile-email" class="text-sm">--</span>
+                                        </div>
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="phone" class="w-4 h-4 text-muted-foreground"></i>
+                                            <span id="profile-phone" class="text-sm">--</span>
+                                        </div>
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="globe" class="w-4 h-4 text-muted-foreground"></i>
+                                            <span id="profile-website" class="text-sm">--</span>
+                                        </div>
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="map-pin" class="w-4 h-4 text-muted-foreground"></i>
+                                            <span id="profile-location" class="text-sm">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Business Analytics -->
+                                <div class="intelligence-card p-6">
+                                    <h3 class="text-lg font-semibold mb-4">Business Analytics</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-muted-foreground">Sophistication Tier</span>
+                                            <span id="profile-tier" class="font-medium">--</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-muted-foreground">Platform</span>
+                                            <span id="profile-platform" class="font-medium">--</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-muted-foreground">Review Frequency</span>
+                                            <span id="profile-review-frequency" class="font-medium">--</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-muted-foreground">Last Review</span>
+                                            <span id="profile-last-review" class="font-medium">-- days ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campaigns Tab -->
+                    <div id="profile-tab-campaigns" class="tab-content hidden">
+                        <div id="campaign-content">
+                            <!-- Campaign content will be populated by JS based on mode -->
+                        </div>
+                    </div>
+                    
+                    <!-- Notes Tab -->
+                    <div id="profile-tab-notes" class="tab-content hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="intelligence-card p-6">
+                                <h3 class="text-lg font-semibold mb-4">Campaign Tracking</h3>
+                                <div class="space-y-4">
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium">Email Status</label>
+                                        <select class="w-full bg-muted border border-border rounded-lg p-2 text-sm">
+                                            <option>Not Sent</option>
+                                            <option>Sent</option>
+                                            <option>Opened</option>
+                                            <option>Responded</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium">Send Date</label>
+                                        <input type="date" class="w-full bg-muted border border-border rounded-lg p-2 text-sm">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-sm font-medium">Response Date</label>
+                                        <input type="date" class="w-full bg-muted border border-border rounded-lg p-2 text-sm">
+                                    </div>
+                                    <button class="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition">
+                                        Update Tracking
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="intelligence-card p-6">
+                                <h3 class="text-lg font-semibold mb-4">Notes</h3>
+                                <textarea 
+                                    class="w-full h-32 bg-muted border border-border rounded-lg p-3 text-sm resize-none"
+                                    placeholder="Add notes about this contractor..."></textarea>
+                                <button class="mt-3 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition">
+                                    Save Notes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Real contractor data from CSV + Campaign data from JSON
+        const contractors = [
+            {
+                id: 1052,
+                businessName: 'CTX Roofing LLC',
+                trade: 'Roofing',
+                city: 'ID',
+                email: 'alan@ctxroofing.net',
+                phone: '(208) 589-9500',
+                website: 'https://www.ctxroofing.net/',
+                platform: 'Squarespace',
+                completionScore: 100, // All contractors have 100% completion
+                googleRating: 5.0,
+                reviewsCount: 3,
+                daysSinceLastReview: 757,
+                reviewFrequency: 'INACTIVE',
+                businessHealth: 'EMERGING',
+                psiMobile: 52,
+                psiDesktop: 88,
+                sophisticationScore: 45,
+                sophisticationTier: 'GROWING',
+                trustScore: 0.75,
+                opportunities: [
+                    {
+                        id: 'OPP-PSI-01052',
+                        category: 'PERFORMANCE',
+                        title: 'Fix crítico de velocidad móvil (52 pts)',
+                        severity: 'MEDIUM',
+                        valueRange: { low: 2500, high: 5000 },
+                        solution: ['Critical CSS + defer JS', 'Image compression + WebP', 'Server caching/CDN']
+                    },
+                    {
+                        id: 'OPP-REV-01052', 
+                        category: 'REPUTATION',
+                        title: 'Acelerar reviews (frecuencia INACTIVE)',
+                        severity: 'MEDIUM',
+                        valueRange: { low: 1500, high: 5000 },
+                        solution: ['Review engine post-job (SMS+QR)', 'Templates de respuesta', 'Automations con CRM']
+                    }
+                ],
+                hasCampaign: true,
+                campaignStatus: 'ready',
+                optimalTiming: 'Tuesday 07:00 AM',
+                emailSequences: [
+                    {
+                        email_number: 1,
+                        subject: 'CTX Roofing: Your Google reviews',
+                        send_day: 'Tuesday',
+                        send_time: '07:00 AM',
+                        body: `Manu here. I noticed CTX Roofing only has 3 Google reviews, and they haven't been active. This is a real problem, as new customers often check reviews first. Without more recent feedback, you're missing out on potential leads and trust. I can fix this for you quickly. Want to hear how? Reply to this email.`
+                    },
+                    {
+                        email_number: 2,
+                        subject: 'Re: CTX Roofing: Your Google reviews',
+                        send_day: 'Thursday',
+                        send_time: '06:30 PM',
+                        body: `Following up on my last email. Your low and inactive Google reviews are likely costing you new business every week. Most contractors I've analyzed, including 5,500+ others, struggle with this. I have a direct way to get more reviews and improve your online trust without any hassle on your end. It's a quick fix that brings real results. Reply if you want to know more.`
+                    },
+                    {
+                        email_number: 3,
+                        subject: 'Re: CTX Roofing: Your Google reviews - Quick fix',
+                        send_day: 'Monday',
+                        send_time: '07:00 AM',
+                        body: `Last attempt on your Google reviews situation. If you're serious about getting more leads and building trust online, this needs to be addressed. I've helped contractors like you turn this around quickly. No long meetings, no big packages. Just a direct solution to get your reviews active and working for you. If you're ready to fix this, hit reply. Otherwise, no worries.`
+                    }
+                ]
+            },
+            {
+                id: 1062,
+                businessName: 'Two State Roofing',
+                trade: 'Roofing', 
+                city: 'ID',
+                email: 'andrew@twostateroofs.com',
+                phone: '(208) 523-8406',
+                website: 'https://www.twostateroofs.com/',
+                platform: 'Wix',
+                completionScore: 100,
+                googleRating: 4.8,
+                reviewsCount: 24,
+                daysSinceLastReview: 286,
+                reviewFrequency: 'SLOW',
+                businessHealth: 'HEALTHY',
+                psiMobile: 45,
+                psiDesktop: 75,
+                sophisticationScore: 50,
+                sophisticationTier: 'ESTABLISHED',
+                trustScore: 0.85,
+                opportunities: [
+                    {
+                        id: 'OPP-PSI-01062',
+                        category: 'PERFORMANCE',
+                        title: 'Fix crítico de velocidad móvil (45 pts)',
+                        severity: 'HIGH',
+                        valueRange: { low: 3000, high: 6000 },
+                        solution: ['Critical CSS + defer JS', 'Image compression + WebP', 'Server caching/CDN']
+                    }
+                ],
+                hasCampaign: false,
+                campaignStatus: 'pending',
+                optimalTiming: 'Thursday 10:30 AM',
+                emailSequences: []
+            },
+            {
+                id: 1217,
+                businessName: 'Elias Roofing Remodel & Repair LLC',
+                trade: 'Roofing',
+                city: 'Nampa, ID',
+                email: 'rebekah.eliasllc@gmail.com',
+                phone: '(208) 906-7693',
+                website: 'http://www.eliasroofingllc.com/',
+                platform: 'Wix',
+                completionScore: 100,
+                googleRating: 4.1,
+                reviewsCount: 14,
+                daysSinceLastReview: 102,
+                reviewFrequency: 'SLOW',
+                businessHealth: 'HEALTHY',
+                psiMobile: 56,
+                psiDesktop: 66,
+                sophisticationScore: 20,
+                sophisticationTier: 'AMATEUR',
+                trustScore: 0.55,
+                opportunities: [
+                    {
+                        id: 'OPP-PSI-01217',
+                        category: 'PERFORMANCE',
+                        title: 'Fix crítico de velocidad móvil (56 pts)',
+                        severity: 'MEDIUM',
+                        valueRange: { low: 2500, high: 5000 },
+                        solution: ['Critical CSS + defer JS', 'Image compression + WebP', 'Server caching/CDN']
+                    },
+                    {
+                        id: 'OPP-EMAIL-01217',
+                        category: 'BRANDING',
+                        title: 'Profesionalización de email domain',
+                        severity: 'MEDIUM',
+                        valueRange: { low: 800, high: 2500 },
+                        solution: ['Professional email setup', 'Domain-based emails', 'Email signatures']
+                    }
+                ],
+                hasCampaign: true,
+                campaignStatus: 'ready',
+                optimalTiming: 'Tuesday 6:30 AM',
+                emailSequences: [
+                    {
+                        email_number: 1,
+                        subject: 'Your online reviews are costing you jobs, Elias.',
+                        send_day: 'Tuesday',
+                        send_time: '6:30 AM',
+                        body: `Elias, I've been looking at roofing contractors in your area, and I noticed your online reviews and overall reputation could be stronger. When potential clients search for a roofer, what they find online often decides if they even call you. My data shows this directly impacts your ability to win bids. I can show you exactly what's happening and how to fix it without a big team or overhead.`
+                    },
+                    {
+                        email_number: 2,
+                        subject: 'Re: Your online reviews are costing you jobs, Elias.',
+                        send_day: 'Thursday',
+                        send_time: '6:30 AM',
+                        body: `Elias, following up on my last email. Beyond just reviews, your online presence – like that Wix site and gmail email – can signal to potential clients that you're not as established or trustworthy as competitors. This isn't about looking "fancy," it's about not losing bids before you even get a chance to quote. I've analyzed 5,500+ contractors and know what turns potential clients away. I can put together a quick info packet on how this specifically impacts Elias Roofing and what steps you can take.`
+                    },
+                    {
+                        email_number: 3,
+                        subject: 'Re: Your online reviews are costing you jobs, Elias.',
+                        send_day: 'Monday',
+                        send_time: '6:30 PM',
+                        body: `Elias, one last time on this. If your online reputation and overall digital presence aren't top-notch, you're leaving money on the table every week. My analysis shows this is a real problem for contractors like you, costing them qualified leads and profitable jobs. I'm a one-man operation, focused on fast, direct solutions. No fluff, just results. Would you like me to send over a brief info packet outlining the specific issues I see for Elias Roofing and a no-nonsense plan to fix them?`
+                    }
+                ]
+            },
+            {
+                id: 1331,
+                businessName: 'NW Peak Roofing LLC',
+                trade: 'Roofing',
+                city: 'Post Falls, ID',
+                email: 'info@nwpeakroofing.com',
+                phone: '(509) 251-9435',
+                website: 'https://www.nwpeakroofing.com/',
+                platform: 'Unknown',
+                completionScore: 100,
+                googleRating: 5.0,
+                reviewsCount: 11,
+                daysSinceLastReview: 47,
+                reviewFrequency: 'ACTIVE',
+                businessHealth: 'HEALTHY',
+                psiMobile: 58,
+                psiDesktop: 78,
+                sophisticationScore: 45,
+                sophisticationTier: 'GROWING',
+                trustScore: 0.8,
+                opportunities: [
+                    {
+                        id: 'OPP-PSI-01331',
+                        category: 'PERFORMANCE',
+                        title: 'Fix crítico de velocidad móvil (58 pts)',
+                        severity: 'MEDIUM',
+                        valueRange: { low: 2500, high: 5000 },
+                        solution: ['Critical CSS + defer JS', 'Image compression + WebP', 'Server caching/CDN']
+                    }
+                ],
+                hasCampaign: true,
+                campaignStatus: 'ready',
+                optimalTiming: 'Tuesday 6:30 AM',
+                emailSequences: [
+                    {
+                        email_number: 1,
+                        subject: 'Are bad reviews costing NW Peak Roofing bids?',
+                        send_day: 'Tuesday',
+                        send_time: '6:30 AM',
+                        body: `Manu here. I noticed some online feedback for NW Peak Roofing that might be costing you jobs. Many contractors struggle with this, losing bids even when their work is solid. My data from 5,500+ contractors shows exactly how this happens and how to fix it fast. No team, no overhead, just direct solutions. Want to quickly see if this applies to you? Reply to this email.`
+                    },
+                    {
+                        email_number: 2,
+                        subject: 'Re: Are bad reviews costing NW Peak Roofing bids?',
+                        send_day: 'Thursday',
+                        send_time: '6:30 AM',
+                        body: `Following up on my last email. If those online reviews are making you lose bids, it's a problem I can fix. I focus on practical steps to turn your reputation into a lead-generating asset. We're talking about direct actions that get results, not generic marketing fluff. This isn't about selling you a package; it's about solving *your* specific issue. Interested in a quick chat over email to see how?`
+                    },
+                    {
+                        email_number: 3,
+                        subject: 'Re: Are bad reviews costing NW Peak Roofing bids?',
+                        send_day: 'Monday',
+                        send_time: '6:30 AM',
+                        body: `One last thought on your online reputation and losing bids. I understand you're busy, so I'll be direct. My analysis of over 5,500 contractors pinpoints exactly why good companies lose out. I can show you the specific blind spots and how to fix them quickly, often with immediate impact on your bid success. If you're serious about stopping lost jobs due to reviews, just reply "Yes" and I'll send over a few local examples of what I mean.`
+                    }
+                ]
+            },
+            {
+                id: 1531,
+                businessName: 'Dodd Roofing and Exteriors',
+                trade: 'Roofing',
+                city: 'Meridian, ID',
+                email: 'info@doddroofs.com',
+                phone: '(208) 295-9421',
+                website: 'https://www.doddroofs.com/',
+                platform: 'Wix',
+                completionScore: 100,
+                googleRating: 5.0,
+                reviewsCount: 256,
+                daysSinceLastReview: 32,
+                reviewFrequency: 'ACTIVE',
+                businessHealth: 'HEALTHY',
+                psiMobile: 36,
+                psiDesktop: 64,
+                sophisticationScore: 50,
+                sophisticationTier: 'ESTABLISHED',
+                trustScore: 0.9,
+                opportunities: [
+                    {
+                        id: 'OPP-PSI-01531',
+                        category: 'PERFORMANCE',
+                        title: 'Fix crítico de velocidad móvil (36 pts)',
+                        severity: 'HIGH',
+                        valueRange: { low: 3000, high: 8000 },
+                        solution: ['Complete mobile optimization', 'CDN implementation', 'Image optimization']
+                    }
+                ],
+                hasCampaign: false,
+                campaignStatus: 'pending',
+                optimalTiming: 'Wednesday 8:00 AM',
+                emailSequences: []
+            }
+        ];
+
+        // Global mode state
+        let isExecutionMode = false;
+
+        // Calendar functionality
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Clear existing calendar
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'text-xs font-semibold text-muted-foreground text-center py-2';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day opacity-30';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Mark today
+                if (today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Mark days with campaigns (Tuesday = 2, Thursday = 4, Monday = 1)
+                const dayOfWeek = new Date(currentYear, currentMonth, day).getDay();
+                if ([1, 2, 4].includes(dayOfWeek)) {
+                    dayElement.classList.add('has-campaigns');
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar();
+        }
+        
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar();
+        }
+        
+        // Mode toggle functions
+        function toggleGlobalMode() {
+            isExecutionMode = document.getElementById('globalMode').checked;
+            const labels = document.querySelectorAll('.global-mode-label');
+            
+            labels.forEach((label, index) => {
+                if (index === 0) { // Intelligence label
+                    label.classList.toggle('hidden', isExecutionMode);
+                } else { // Execution label
+                    label.classList.toggle('hidden', !isExecutionMode);
+                }
+            });
+            
+            // Re-render contractor cards with new mode
+            renderContractorCards();
+        }
+        
+        function toggleProfileMode() {
+            const profileExecutionMode = document.getElementById('profileMode').checked;
+            const labels = document.querySelectorAll('.profile-mode-label');
+            
+            labels.forEach((label, index) => {
+                if (index === 0) { // Intelligence label
+                    label.classList.toggle('hidden', profileExecutionMode);
+                } else { // Execution label
+                    label.classList.toggle('hidden', !profileExecutionMode);
+                }
+            });
+            
+            // Update campaign content based on mode
+            updateCampaignContent();
+        }
+        
+        // Render contractor cards
+        function renderContractorCards() {
+            const grid = document.getElementById('contractors-grid');
+            grid.innerHTML = '';
+            
+            contractors.forEach(contractor => {
+                const card = document.createElement('div');
+                card.className = 'intelligence-card p-6 cursor-pointer';
+                card.onclick = () => openProfile(contractor.id);
+                
+                // Generate tags based on mode
+                const tags = isExecutionMode ? 
+                    generateExecutionTags(contractor) : 
+                    generateIntelligenceTags(contractor);
+                
+                // Generate bottom content based on mode
+                const bottomContent = isExecutionMode ?
+                    generateExecutionContent(contractor) :
+                    generateIntelligenceContent(contractor);
+                
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="completion-circle completion-excellent" style="--score: ${contractor.completionScore}">
+                            <span class="text-lg font-bold">${contractor.completionScore}</span>
+                            <div class="absolute -bottom-6 text-xs text-center w-full text-green-300">Completion</div>
+                        </div>
+                        
+                        <div class="flex flex-col items-end space-y-2">
+                            <div class="flex items-center space-x-1">
+                                <div class="text-yellow-400">${'★'.repeat(Math.floor(contractor.googleRating))}${'☆'.repeat(5-Math.floor(contractor.googleRating))}</div>
+                                <span class="text-sm text-muted-foreground">${contractor.googleRating}</span>
+                            </div>
+                            <span class="text-xs text-muted-foreground">${contractor.reviewsCount} reviews</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-foreground mb-1">${contractor.businessName}</h3>
+                        <p class="text-sm text-muted-foreground mb-2">${contractor.city} • ${contractor.trade}</p>
+                        <div class="text-xs text-muted-foreground">${contractor.email}</div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${tags.map(tag => `<span class="intelligence-tag ${tag.class}">${tag.text}</span>`).join('')}
+                    </div>
+                    
+                    <div class="text-sm text-muted-foreground">
+                        ${bottomContent}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            // Initialize Lucide icons
+            lucide.createIcons();
+        }
+        
+        function generateIntelligenceTags(contractor) {
+            const tags = [];
+            
+            // Sophistication tier
+            tags.push({
+                class: `tag-${contractor.sophisticationTier.toLowerCase()}`,
+                text: contractor.sophisticationTier
+            });
+            
+            // PSI performance
+            if (contractor.psiMobile < 50) {
+                tags.push({ class: 'tag-critical', text: 'CRITICAL PSI' });
+            } else if (contractor.psiMobile < 70) {
+                tags.push({ class: 'tag-warning', text: 'LOW PSI' });
+            }
+            
+            // Review frequency
+            tags.push({
+                class: `tag-${contractor.reviewFrequency.toLowerCase() === 'active' ? 'active' : contractor.reviewFrequency.toLowerCase() === 'slow' ? 'warning' : 'critical'}`,
+                text: `${contractor.reviewFrequency} REVIEWS`
+            });
+            
+            return tags;
+        }
+        
+        function generateExecutionTags(contractor) {
+            const tags = [];
+            
+            if (contractor.hasCampaign) {
+                tags.push({ class: 'tag-ready', text: 'READY TO SEND' });
+                tags.push({ class: 'intelligence-tag', text: `${contractor.emailSequences.length} EMAILS` });
+            } else {
+                tags.push({ class: 'tag-warning', text: 'PENDING CAMPAIGN' });
+            }
+            
+            // Priority based on opportunities
+            const highPriorityOpp = contractor.opportunities.find(opp => opp.severity === 'HIGH');
+            if (highPriorityOpp) {
+                tags.push({ class: 'tag-critical', text: 'HIGH PRIORITY' });
+            }
+            
+            return tags;
+        }
+        
+        function generateIntelligenceContent(contractor) {
+            return `
+                <strong>Opportunities:</strong> ${contractor.opportunities.length} identified<br>
+                <strong>Revenue Potential:</strong> $${contractor.opportunities.reduce((sum, opp) => sum + opp.valueRange.high, 0).toLocaleString()}/year<br>
+                <strong>PSI Scores:</strong> Mobile ${contractor.psiMobile} • Desktop ${contractor.psiDesktop}<br>
+                <strong>Platform:</strong> ${contractor.platform}
+            `;
+        }
+        
+        function generateExecutionContent(contractor) {
+            if (contractor.hasCampaign) {
+                return `
+                    <strong>Next Email:</strong> "${contractor.emailSequences[0]?.subject}"<br>
+                    <strong>Send Time:</strong> ${contractor.optimalTiming}<br>
+                    <strong>Campaign Status:</strong> ${contractor.campaignStatus.toUpperCase()}<br>
+                    <strong>Sequence:</strong> ${contractor.emailSequences.length}/3 emails ready
+                `;
+            } else {
+                return `
+                    <strong>Status:</strong> Campaign pending generation<br>
+                    <strong>Opportunities:</strong> ${contractor.opportunities.length} identified<br>
+                    <strong>Focus Intel:</strong> Needed to create personalized sequences<br>
+                    <strong>Priority:</strong> ${contractor.opportunities.find(opp => opp.severity === 'HIGH') ? 'High' : 'Medium'}
+                `;
+            }
+        }
+        
+        // Profile functions
+        function openProfile(contractorId) {
+            const contractor = contractors.find(c => c.id === contractorId);
+            if (!contractor) return;
+            
+            // Update profile header
+            document.getElementById('profile-company-name').textContent = contractor.businessName;
+            document.getElementById('profile-business-id').textContent = `BUSINESS_ID: ${contractor.id} • Intelligence Profile`;
+            
+            // Update overview content
+            document.getElementById('profile-completion-score').textContent = contractor.completionScore;
+            document.getElementById('profile-psi-mobile').textContent = contractor.psiMobile;
+            document.getElementById('profile-rating').textContent = contractor.googleRating;
+            document.getElementById('profile-reviews').textContent = contractor.reviewsCount;
+            
+            document.getElementById('profile-email').textContent = contractor.email;
+            document.getElementById('profile-phone').textContent = contractor.phone;
+            document.getElementById('profile-website').textContent = contractor.website;
+            document.getElementById('profile-location').textContent = contractor.city;
+            
+            document.getElementById('profile-tier').textContent = contractor.sophisticationTier;
+            document.getElementById('profile-platform').textContent = contractor.platform;
+            document.getElementById('profile-review-frequency').textContent = contractor.reviewFrequency;
+            document.getElementById('profile-last-review').textContent = `${contractor.daysSinceLastReview} days ago`;
+            
+            // Populate opportunities
+            const opportunitiesContainer = document.getElementById('profile-opportunities');
+            opportunitiesContainer.innerHTML = contractor.opportunities.map(opp => `
+                <div class="border border-border/50 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-medium">${opp.title}</span>
+                        <span class="intelligence-tag tag-${opp.severity.toLowerCase()}">${opp.severity}</span>
+                    </div>
+                    <div class="text-sm text-muted-foreground mb-2">
+                        Est. Value: $${opp.valueRange.low.toLocaleString()} - $${opp.valueRange.high.toLocaleString()}
+                    </div>
+                    <div class="text-xs text-muted-foreground">
+                        ${opp.solution.join(' • ')}
+                    </div>
+                </div>
+            `).join('');
+            
+            // Store contractor data for tab switching
+            window.currentContractor = contractor;
+            
+            // Show modal
+            document.getElementById('profile-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            
+            // Update campaign content
+            updateCampaignContent();
+        }
+        
+        function closeProfile() {
+            document.getElementById('profile-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+        
+        function switchProfileTab(tabName) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected content and activate tab
+            document.getElementById(`profile-tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+        
+        function updateCampaignContent() {
+            if (!window.currentContractor) return;
+            
+            const contractor = window.currentContractor;
+            const profileExecutionMode = document.getElementById('profileMode')?.checked || false;
+            const container = document.getElementById('campaign-content');
+            
+            if (profileExecutionMode) {
+                // Execution mode - show email sequences and tracking
+                if (contractor.hasCampaign && contractor.emailSequences.length > 0) {
+                    container.innerHTML = `
+                        <div class="space-y-6">
+                            <div class="intelligence-card p-6">
+                                <h3 class="text-lg font-semibold mb-4">Campaign Execution</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-green-400">${contractor.emailSequences.length}</div>
+                                        <div class="text-sm text-muted-foreground">Ready Emails</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-orange-400">${contractor.optimalTiming}</div>
+                                        <div class="text-sm text-muted-foreground">Optimal Send Time</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-blue-400">${contractor.campaignStatus.toUpperCase()}</div>
+                                        <div class="text-sm text-muted-foreground">Campaign Status</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                ${contractor.emailSequences.map((email, index) => `
+                                    <div class="email-sequence">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <h4 class="text-lg font-semibold">Email ${email.email_number}</h4>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="intelligence-tag">${email.send_day} ${email.send_time}</span>
+                                                <button onclick="copyEmailToClipboard(${contractor.id}, ${email.email_number})" class="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm hover:bg-primary/90 transition">
+                                                    <i data-lucide="copy" class="w-4 h-4 mr-1 inline"></i>
+                                                    Copy
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <strong>Subject:</strong> ${email.subject}
+                                        </div>
+                                        <div class="email-preview" id="email-${contractor.id}-${email.email_number}">Subject: ${email.subject}
+
+${email.body}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="intelligence-card p-6 text-center">
+                            <div class="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i data-lucide="mail-x" class="w-8 h-8 text-orange-400"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Campaign Available</h3>
+                            <p class="text-muted-foreground mb-4">
+                                This contractor doesn't have email sequences ready yet. Generate Focus Intel first to create personalized campaigns.
+                            </p>
+                            <button class="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition">
+                                Generate Campaign
+                            </button>
+                        </div>
+                    `;
+                }
+            } else {
+                // Intelligence mode - show campaign strategy and insights
+                container.innerHTML = `
+                    <div class="space-y-6">
+                        <div class="intelligence-card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Campaign Strategy</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Target Opportunities</h4>
+                                    <div class="space-y-2">
+                                        ${contractor.opportunities.map(opp => `
+                                            <div class="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                                                <div>
+                                                    <div class="font-medium">${opp.title}</div>
+                                                    <div class="text-sm text-muted-foreground">${opp.category}</div>
+                                                </div>
+                                                <div class="intelligence-tag tag-${opp.severity.toLowerCase()}">${opp.severity}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="font-medium mb-2">Campaign Intelligence</h4>
+                                    <div class="p-3 bg-muted/30 rounded-lg">
+                                        <div class="text-sm">
+                                            <strong>Optimal Timing:</strong> ${contractor.optimalTiming}<br>
+                                            <strong>Review Status:</strong> ${contractor.reviewFrequency} (${contractor.daysSinceLastReview}d ago)<br>
+                                            <strong>Business Tier:</strong> ${contractor.sophisticationTier}<br>
+                                            <strong>Trust Score:</strong> ${Math.round(contractor.trustScore * 100)}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${contractor.hasCampaign ? `
+                            <div class="intelligence-card p-6">
+                                <h3 class="text-lg font-semibold mb-4">Campaign Overview</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-2xl font-bold text-green-400">${contractor.emailSequences.length}</div>
+                                        <div class="text-sm text-muted-foreground">Email Sequences</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold text-orange-400">${contractor.campaignStatus.toUpperCase()}</div>
+                                        <div class="text-sm text-muted-foreground">Status</div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="intelligence-card p-6">
+                                <h3 class="text-lg font-semibold mb-4">Campaign Generation Needed</h3>
+                                <p class="text-muted-foreground">
+                                    Based on intelligence analysis, this contractor has ${contractor.opportunities.length} opportunities worth 
+                                    $${contractor.opportunities.reduce((sum, opp) => sum + opp.valueRange.high, 0).toLocaleString()} in potential value.
+                                </p>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+        
+        function copyEmailToClipboard(contractorId, emailNumber) {
+            const emailElement = document.getElementById(`email-${contractorId}-${emailNumber}`);
+            if (emailElement) {
+                navigator.clipboard.writeText(emailElement.textContent).then(() => {
+                    // Show success feedback
+                    const button = event.target.closest('button');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-1 inline"></i>Copied!';
+                    button.classList.add('bg-green-600', 'hover:bg-green-700');
+                    button.classList.remove('bg-primary', 'hover:bg-primary/90');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        button.classList.add('bg-primary', 'hover:bg-primary/90');
+                        lucide.createIcons();
+                    }, 2000);
+                });
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCalendar();
+            renderContractorCards();
+            lucide.createIcons();
+        });
+        
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeProfile();
+            }
+        });
+    </script>
+</body>
+</html>

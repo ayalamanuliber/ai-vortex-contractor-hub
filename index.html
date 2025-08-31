@@ -1487,7 +1487,7 @@
                 try {
                     // Try to load real CSV intelligence (4000+ records)
                     console.log('📊 Attempting to load real CSV data...');
-                    await this.parseCSVIntelligence('contractors.csv');
+                    await this.parseCSVIntelligence('contractors-real.csv');
                 } catch (error) {
                     console.warn('⚠️ Could not load CSV file:', error.message);
                 }
@@ -1495,7 +1495,7 @@
                 try {
                     // Try to load real JSON campaigns
                     console.log('🎯 Attempting to load real campaign database...');
-                    await this.parseCampaignDatabase('campaigns.json');
+                    await this.parseCampaignDatabase('campaigns-real.json');
                 } catch (error) {
                     console.warn('⚠️ Could not load JSON file:', error.message);
                 }

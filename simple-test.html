@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Test - Loading Real Data</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="p-8">
+        <h1 class="text-2xl font-bold mb-4">🔍 Real Data Test</h1>
+        
+        <div id="status" class="mb-4 p-4 bg-blue-900/50 rounded">
+            <p>Status: Starting...</p>
+        </div>
+        
+        <div id="contractors-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Contractors will be loaded here -->
+        </div>
+        
+        <div id="pagination-controls" class="mt-8 p-4 bg-gray-800 rounded">
+            <!-- Pagination will appear here -->
+        </div>
+    </div>
+
+    <script>
+        let contractors = [];
+        let filteredContractors = [];
+        
+        async function loadContractors() {
+            const status = document.getElementById('status');
+            try {
+                status.innerHTML = '<p>Loading real CSV data...</p>';
+                
+                const response = await fetch('./contractors-real.csv');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                console.log('CSV loaded, size:', csvText.length);
+                
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+                
+                status.innerHTML = `<p>Found ${lines.length} lines, processing first 50...</p>`;
+                
+                // Process first 50 records only for test
+                for (let i = 1; i < Math.min(51, lines.length); i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    const values = lines[i].split(',');
+                    const contractor = {
+                        id: values[0] || i.toString(),
+                        businessName: values[7] || values[1] || 'Unknown Company',
+                        category: values[8] || values[2] || 'General Contractor', 
+                        email: values[9] || values[3] || 'No email',
+                        phone: values[11] || values[4] || 'No phone',
+                        website: values[13] || values[5] || 'No website',
+                        googleRating: parseFloat(values[28]) || Math.random() * 5,
+                        reviewsCount: parseInt(values[29]) || Math.floor(Math.random() * 100)
+                    };
+                    
+                    contractors.push(contractor);
+                }
+                
+                filteredContractors = [...contractors];
+                renderContractors();
+                
+                status.innerHTML = `<p>✅ Loaded ${contractors.length} contractors successfully!</p>`;
+                
+            } catch (error) {
+                status.innerHTML = `<p>❌ Error: ${error.message}</p>`;
+                console.error('Full error:', error);
+                
+                // Create sample data as fallback
+                createSampleData();
+                status.innerHTML += '<p>⚠️ Using sample data instead</p>';
+            }
+        }
+        
+        function createSampleData() {
+            contractors = [
+                {
+                    id: '1',
+                    businessName: 'Elite Construction Co',
+                    category: 'General Contractor',
+                    email: 'info@eliteconstruction.com',
+                    phone: '(555) 123-4567',
+                    website: 'www.eliteconstruction.com',
+                    googleRating: 4.8,
+                    reviewsCount: 127
+                },
+                {
+                    id: '2',
+                    businessName: 'Pro Roofing Services',
+                    category: 'Roofing Contractor',
+                    email: 'contact@proroofing.com', 
+                    phone: '(555) 987-6543',
+                    website: 'www.proroofing.com',
+                    googleRating: 4.5,
+                    reviewsCount: 89
+                }
+            ];
+            filteredContractors = [...contractors];
+            renderContractors();
+        }
+        
+        function renderContractors() {
+            const grid = document.getElementById('contractors-grid');
+            grid.innerHTML = '';
+            
+            const toShow = filteredContractors.slice(0, 20);
+            
+            toShow.forEach((contractor, index) => {
+                const card = document.createElement('div');
+                card.className = 'p-4 bg-gray-800 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-bold text-white">${contractor.businessName}</h3>
+                        <span class="text-xs bg-blue-600 px-2 py-1 rounded">${contractor.id}</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">${contractor.category}</p>
+                    <p class="text-blue-400 text-xs">${contractor.email}</p>
+                    <div class="mt-2 flex justify-between text-xs">
+                        <span>Rating: ${contractor.googleRating.toFixed(1)}/5</span>
+                        <span>Reviews: ${contractor.reviewsCount}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            const pagination = document.getElementById('pagination-controls');
+            pagination.innerHTML = `<p>Showing ${toShow.length} of ${filteredContractors.length} contractors</p>`;
+        }
+        
+        // Start loading on page load
+        document.addEventListener('DOMContentLoaded', loadContractors);
+    </script>
+</body>
+</html>

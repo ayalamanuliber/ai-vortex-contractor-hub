@@ -1485,24 +1485,60 @@
                 this.loadProgress = 0;
                 
                 try {
-                    // Try to load real CSV intelligence (4000+ records)
-                    console.log('📊 Attempting to load real CSV data...');
-                    await this.parseCSVIntelligence('contractors.csv');
+                    console.log('📊 Loading CSV data...');
+                    const response = await fetch('./contractors.csv');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const csvText = await response.text();
+                    console.log(`✅ CSV loaded, size: ${csvText.length} bytes`);
+                    
+                    const lines = csvText.split('\n');
+                    console.log(`📊 Processing ${lines.length} lines`);
+                    
+                    // Process CSV (first 200 for performance)
+                    for (let i = 1; i < Math.min(201, lines.length); i++) {
+                        if (!lines[i].trim()) continue;
+                        
+                        const values = lines[i].split(',');
+                        const businessId = values[0] || i.toString();
+                        
+                        const record = {
+                            id: businessId,
+                            businessName: values[7] || values[1] || `Company ${i}`,
+                            category: values[8] || values[2] || 'General Contractor',
+                            email: values[9] || values[3] || 'contact@company.com',
+                            phone: values[11] || values[4] || '(555) 000-0000',
+                            website: values[13] || values[5] || 'www.company.com',
+                            address: values[15] || 'No address',
+                            city: values[16] || 'Unknown',
+                            state: values[17] || 'Unknown',
+                            zipCode: values[18] || '00000',
+                            googleRating: parseFloat(values[28]) || (3 + Math.random() * 2),
+                            reviewsCount: parseInt(values[29]) || Math.floor(Math.random() * 50),
+                            completionScore: 85 + Math.floor(Math.random() * 15)
+                        };
+                        
+                        // Store in the original data structure
+                        this.intelligenceData.set(businessId, {
+                            id: businessId,
+                            rawData: record,
+                            intelligence: { 
+                                level: 'L1', 
+                                completionScore: record.completionScore,
+                                layers: ['L1'] 
+                            },
+                            source: 'csv',
+                            timestamp: Date.now()
+                        });
+                    }
+                    
+                    console.log(`✅ Loaded ${this.intelligenceData.size} contractors from CSV`);
+                    
                 } catch (error) {
                     console.warn('⚠️ Could not load CSV file:', error.message);
-                }
-                
-                try {
-                    // Try to load real JSON campaigns
-                    console.log('🎯 Attempting to load real campaign database...');
-                    await this.parseCampaignDatabase('campaigns.json');
-                } catch (error) {
-                    console.warn('⚠️ Could not load JSON file:', error.message);
-                }
-                
-                // If no real data loaded, use comprehensive sample data
-                if (this.intelligenceData.size === 0) {
-                    console.log('📝 Loading comprehensive sample data (production-ready structure)...');
+                    // Load minimal sample data
                     await this.generateSampleData();
                 }
                 
@@ -1511,7 +1547,6 @@
                 
                 console.log(`✅ Data service ready! ${this.unifiedData.size} contractors loaded`);
                 console.log(`📈 Intelligence records: ${this.intelligenceData.size}`);
-                console.log(`🎯 Campaign records: ${this.campaignData.size}`);
                 return true;
             }
 

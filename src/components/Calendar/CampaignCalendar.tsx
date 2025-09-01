@@ -22,6 +22,8 @@ interface DayDetail {
       businessId: string;
       location: string;
       completionScore: number;
+      bestTime?: string;
+      altTime?: string;
     }>;
     scheduled: Array<{
       id: string;
@@ -42,27 +44,43 @@ interface DayDetail {
   };
 }
 
-// Mock data generator for campaigns
-const generateMockCampaignData = (): { [key: string]: CampaignDay } => {
+// Real data generator based on contractors with campaigns
+const generateRealCampaignData = (contractors: any[]): { [key: string]: CampaignDay } => {
   const data: { [key: string]: CampaignDay } = {};
   const today = new Date();
+  
+  // Get contractors with campaigns
+  const contractorsWithCampaigns = contractors.filter(c => c.hasCampaign && c.campaignData);
+  
+  // Day name mapping
+  const dayMap: { [key: string]: number } = {
+    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 
+    'thursday': 4, 'friday': 5, 'saturday': 6
+  };
   
   for (let i = 0; i < 31; i++) {
     const date = new Date(today.getFullYear(), today.getMonth(), i + 1);
     const dateKey = date.toISOString().split('T')[0];
-    
-    // Generate realistic campaign numbers
     const dayOfWeek = date.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     
-    if (isWeekend) {
-      data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
-    } else {
-      const ready = Math.floor(Math.random() * 25) + 5;
-      const scheduled = Math.floor(Math.random() * 8) + 2;
-      const sent = Math.floor(Math.random() * 6);
-      data[dateKey] = { ready, scheduled, sent };
-    }
+    // Count contractors ready for this day
+    let ready = 0;
+    contractorsWithCampaigns.forEach(contractor => {
+      const campaignData = contractor.campaignData;
+      if (campaignData?.contact_timing?.best_day_email_1) {
+        const bestDay = campaignData.contact_timing.best_day_email_1.toLowerCase();
+        if (dayMap[bestDay] === dayOfWeek) {
+          ready++;
+        }
+      }
+    });
+    
+    // Mock scheduled and sent for now (will be real when we connect dossier)
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const scheduled = isWeekend ? 0 : Math.floor(Math.random() * 8) + 2;
+    const sent = isWeekend ? 0 : Math.floor(Math.random() * 6);
+    
+    data[dateKey] = { ready, scheduled, sent };
   }
   
   return data;
@@ -95,22 +113,42 @@ const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: Cam
   return weekData;
 };
 
-// Mock detailed day data
-const generateMockDayDetail = (dateKey: string, campaignDay: CampaignDay): DayDetail => {
+// Real detailed day data based on contractors
+const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contractors: any[]): DayDetail => {
   const date = new Date(dateKey);
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayOfWeek = date.getDay();
+  
+  // Day name mapping
+  const dayMap: { [key: string]: number } = {
+    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 
+    'thursday': 4, 'friday': 5, 'saturday': 6
+  };
+  
+  // Get contractors with campaigns ready for this day
+  const contractorsWithCampaigns = contractors.filter(c => c.hasCampaign && c.campaignData);
+  const readyContractors = contractorsWithCampaigns.filter(contractor => {
+    const campaignData = contractor.campaignData;
+    if (campaignData?.contact_timing?.best_day_email_1) {
+      const bestDay = campaignData.contact_timing.best_day_email_1.toLowerCase();
+      return dayMap[bestDay] === dayOfWeek;
+    }
+    return false;
+  });
   
   return {
     date: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
     dayName: dayNames[date.getDay()],
     weekNumber: Math.ceil(date.getDate() / 7) + 35,
     campaigns: {
-      ready: Array.from({ length: campaignDay.ready }, (_, i) => ({
-        id: `ready-${i}`,
-        name: ['Meridian Roofing Solutions', '1 Core Construction LLC', 'DL Granite & Design', 'Elite Home Solutions', 'AllStar Heating'][i % 5],
-        businessId: `#${Math.floor(Math.random() * 5000)}`,
-        location: ['Topeka, KS', 'Kansas City, KS', 'Tonganoxie, KS', 'Wichita, KS', 'Lawrence, KS'][i % 5],
-        completionScore: Math.floor(Math.random() * 40) + 60
+      ready: readyContractors.map((contractor) => ({
+        id: contractor.id,
+        name: contractor.businessName,
+        businessId: `#${contractor.id}`,
+        location: `${contractor.city}, ${contractor.state}`,
+        completionScore: contractor.completionScore,
+        bestTime: contractor.campaignData?.contact_timing?.window_a_time || '9:00 AM',
+        altTime: contractor.campaignData?.contact_timing?.window_b_time || '2:00 PM'
       })),
       scheduled: Array.from({ length: campaignDay.scheduled }, (_, i) => ({
         id: `scheduled-${i}`,
@@ -133,11 +171,11 @@ const generateMockDayDetail = (dateKey: string, campaignDay: CampaignDay): DayDe
 };
 
 export function CampaignCalendar() {
-  const { isCalendarMinimized, toggleCalendar } = useContractorStore();
+  const { isCalendarMinimized, toggleCalendar, contractors } = useContractorStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   
-  const campaignData = generateMockCampaignData();
+  const campaignData = generateRealCampaignData(contractors);
   
   const today = new Date();
   const year = currentDate.getFullYear();
@@ -165,7 +203,7 @@ export function CampaignCalendar() {
 
   // Calculate month statistics
   const monthStats = Object.values(campaignData).reduce(
-    (acc, day) => ({
+    (acc: CampaignDay, day: CampaignDay) => ({
       ready: acc.ready + day.ready,
       scheduled: acc.scheduled + day.scheduled,
       sent: acc.sent + day.sent
@@ -179,7 +217,7 @@ export function CampaignCalendar() {
   };
 
   const selectedDayData = selectedDay ? campaignData[selectedDay] : null;
-  const selectedDayDetail = selectedDay && selectedDayData ? generateMockDayDetail(selectedDay, selectedDayData) : null;
+  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, contractors) : null;
   
   // Generate week data if a day is selected
   const weekData = selectedDay ? generateWeekData(new Date(selectedDay), campaignData) : null;
@@ -193,12 +231,31 @@ export function CampaignCalendar() {
           className="w-full bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-4 hover:bg-[#111113] hover:border-white/10 transition-colors group"
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-4">
               <Calendar className="w-5 h-5 text-blue-400" />
-              <span className="text-white/95 font-medium">Campaign Calendar</span>
-              <span className="text-xs text-white/50">Click to expand</span>
+              <span className="text-[14px] font-semibold text-white/95">Campaign Calendar</span>
+              <span className="text-[11px] text-white/50">Click to expand</span>
+              
+              {/* Mini stats when collapsed */}
+              <div className="flex items-center gap-3 text-[11px] ml-4">
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
+                  <span className="text-white/70 font-medium">{monthStats.ready}</span>
+                  <span className="text-white/40">ready</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-blue-400"></div>
+                  <span className="text-white/70 font-medium">{monthStats.scheduled}</span>
+                  <span className="text-white/40">scheduled</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                  <span className="text-white/70 font-medium">{monthStats.sent}</span>
+                  <span className="text-white/40">sent</span>
+                </div>
+              </div>
             </div>
-            <ChevronDown className="w-4 h-4 text-white/50 group-hover:text-white/70 transition-colors transform rotate-90" />
+            <ChevronDown className="w-4 h-4 text-white/50 group-hover:text-white/70 transition-colors" />
           </div>
         </button>
       </div>
@@ -305,25 +362,25 @@ export function CampaignCalendar() {
                         </div>
                       )}
                       
-                      <div className="flex-1 flex flex-col justify-center gap-1.5">
+                      <div className="flex-1 flex flex-col justify-center gap-1">
                         {dayData.ready > 0 && (
-                          <div className="flex items-center gap-1.5 text-[11px]">
-                            <div className="w-1.25 h-1.25 rounded-full bg-[#facc15] opacity-80 flex-shrink-0"></div>
-                            <span className="text-white/30 text-[9px] uppercase tracking-wider min-w-[28px]">RDY</span>
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 flex-shrink-0"></div>
+                            <span className="text-white/30 text-[9px] uppercase tracking-wider font-medium">RDY</span>
                             <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.ready}</span>
                           </div>
                         )}
                         {dayData.scheduled > 0 && (
-                          <div className="flex items-center gap-1.5 text-[11px]">
-                            <div className="w-1.25 h-1.25 rounded-full bg-[#3b82f6] opacity-80 flex-shrink-0"></div>
-                            <span className="text-white/30 text-[9px] uppercase tracking-wider min-w-[28px]">SCH</span>
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"></div>
+                            <span className="text-white/30 text-[9px] uppercase tracking-wider font-medium">SCH</span>
                             <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.scheduled}</span>
                           </div>
                         )}
                         {dayData.sent > 0 && (
-                          <div className="flex items-center gap-1.5 text-[11px]">
-                            <div className="w-1.25 h-1.25 rounded-full bg-[#22c55e] opacity-80 flex-shrink-0"></div>
-                            <span className="text-white/30 text-[9px] uppercase tracking-wider min-w-[28px]">SNT</span>
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-400 flex-shrink-0"></div>
+                            <span className="text-white/30 text-[9px] uppercase tracking-wider font-medium">SNT</span>
                             <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.sent}</span>
                           </div>
                         )}
@@ -408,17 +465,20 @@ export function CampaignCalendar() {
                     </span>
                   </div>
                   <div className="max-h-60 overflow-y-auto">
-                    {selectedDayDetail.campaigns.ready.slice(0, 5).map((campaign, index) => (
+                    {selectedDayDetail.campaigns.ready.slice(0, 8).map((campaign: any, index: number) => (
                       <div key={index} className="px-5 py-2.5 border-b border-white/[0.06] flex justify-between items-center hover:bg-[#111113] transition-all cursor-pointer">
-                        <div className="flex flex-col gap-0.5">
+                        <div className="flex flex-col gap-0.5 flex-1">
                           <div className="text-[13px] font-medium text-white/95">{campaign.name}</div>
                           <div className="text-[11px] text-white/50">{campaign.businessId} · {campaign.location} · {campaign.completionScore}% complete</div>
+                          <div className="text-[10px] text-white/40 mt-1">
+                            Best times: {campaign.bestTime} / {campaign.altTime}
+                          </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button className="px-2 py-1 rounded bg-[#3b82f6] text-white text-[10px] font-medium hover:opacity-90 transition-opacity">
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button className="px-2.5 py-1.5 rounded bg-[#3b82f6] text-white text-[10px] font-medium hover:opacity-90 transition-opacity">
                             Schedule
                           </button>
-                          <button className="px-2 py-1 rounded bg-[#050505] border border-white/[0.06] text-white/50 text-[10px] font-medium hover:bg-[#111113] hover:border-white/10 hover:text-white/95 transition-all">
+                          <button className="px-2.5 py-1.5 rounded bg-[#050505] border border-white/[0.06] text-white/50 text-[10px] font-medium hover:bg-[#111113] hover:border-white/10 hover:text-white/95 transition-all">
                             View
                           </button>
                         </div>
@@ -441,7 +501,7 @@ export function CampaignCalendar() {
                     </span>
                   </div>
                   <div className="max-h-60 overflow-y-auto">
-                    {selectedDayDetail.campaigns.scheduled.map((campaign, index) => (
+                    {selectedDayDetail.campaigns.scheduled.map((campaign: any, index: number) => (
                       <div key={index} className="px-5 py-2.5 border-b border-white/[0.06] flex justify-between items-center hover:bg-[#111113] transition-all cursor-pointer">
                         <div className="flex flex-col gap-0.5">
                           <div className="text-[13px] font-medium text-white/95">{campaign.name}</div>

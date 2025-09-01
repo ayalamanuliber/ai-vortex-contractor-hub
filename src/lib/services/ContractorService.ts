@@ -112,12 +112,11 @@ export class ContractorService {
     
     // Debug for problematic contractor 3993
     if (id === '3993' || row['business_id'] === '3993' || row['business_id'] === 3993) {
-      console.log(`DEBUG CONTRACTOR - ID MATCHING:`, {
+      console.log(`✅ CSV CONTRACTOR 3993 - PARSED:`, {
         originalBusinessId: row['business_id'],
         normalizedId: id,
         data_completion_score: row['data_completion_score'],
-        finalScore: completionScore,
-        contractorDataScore: undefined // will show after creation
+        finalScore: completionScore
       });
     }
     
@@ -164,14 +163,6 @@ export class ContractorService {
       lastName: '',
     };
     
-    // Debug after creation
-    if (id === '3993' || row['business_id'] === '3993' || row['business_id'] === 3993) {
-      console.log(`DEBUG CONTRACTOR - AFTER CREATION:`, {
-        id: contractorData.id,
-        completionScore: contractorData.completionScore,
-        businessName: contractorData.businessName
-      });
-    }
     
     return contractorData;
   }
@@ -196,11 +187,10 @@ export class ContractorService {
       
       // Debug for 3993
       if (id === '3993') {
-        console.log(`MERGE DEBUG 3993:`, {
-          originalContractor: contractor.completionScore,
-          mergedContractor: merged.completionScore,
+        console.log(`✅ MERGED CONTRACTOR 3993:`, {
+          completionScore: merged.completionScore,
           hasCampaign: merged.hasCampaign,
-          id: merged.id
+          businessName: merged.businessName
         });
       }
       
@@ -217,7 +207,7 @@ export class ContractorService {
       } else {
         // Debug: Campaign trying to overwrite existing CSV data
         if (id === '3993') {
-          console.log(`PREVENTED OVERWRITE 3993 - CSV data protected:`, {
+          console.log(`🛡️ PROTECTED 3993 - Campaign blocked from overwriting CSV:`, {
             existingScore: this.mergedData.get(id)?.completionScore,
             campaignWouldSet: 0
           });

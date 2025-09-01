@@ -44,6 +44,17 @@ export function ContractorGrid() {
     setLoading(true);
     try {
       const data = await contractorService.loadInitialData();
+      
+      // Debug what comes from service
+      const contractor3993 = data.find(c => c.id === '3993');
+      if (contractor3993) {
+        console.log('GRID DEBUG - from service 3993:', {
+          id: contractor3993.id,
+          completionScore: contractor3993.completionScore,
+          businessName: contractor3993.businessName
+        });
+      }
+      
       setContractors(data);
       setPage(1);
       

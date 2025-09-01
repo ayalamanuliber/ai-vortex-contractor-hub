@@ -119,9 +119,9 @@ export class ContractorService {
       sophisticationTier: row['L3_sophistication_intelligence_tier'] || 'Amateur',
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
       
-      // Editable fields
-      name: row['NAME'] || '',
-      lastName: row['LAST_NAME'] || '',
+      // Editable fields (will add later)
+      name: '',
+      lastName: '',
     };
   }
 

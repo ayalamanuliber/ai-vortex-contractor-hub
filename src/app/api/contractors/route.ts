@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
     // Check cache
     const now = Date.now();
     if (!csvCache || now - cacheTimestamp > CACHE_DURATION) {
-      // Use the full editable CSV file
-      const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_editable.csv');
+      // Use the fixed CSV file without column alignment issues
+      const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_fixed.csv');
       
       try {
         await fs.access(csvPath);

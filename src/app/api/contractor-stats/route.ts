@@ -3,8 +3,46 @@ import Papa from 'papaparse';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Cache for better performance
+let statsCache: any = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Function to categorize contractors based on keywords
+function getMegaCategory(category: string): string {
+  if (!category) return 'Other';
+  
+  const cat = category.toLowerCase();
+  
+  if (cat.includes('roofing') || cat.includes('roofer') || cat.includes('skylight')) return 'Roofing';
+  if (cat.includes('hvac') || cat.includes('heating') || cat.includes('air conditioning') || cat.includes('air duct')) return 'HVAC';
+  if (cat.includes('plumber') || cat.includes('plumbing') || cat.includes('septic')) return 'Plumbing';
+  if (cat.includes('electric') || cat.includes('electrical') || cat.includes('lighting') || cat.includes('solar')) return 'Electrical';
+  if (cat.includes('remodel') || cat.includes('kitchen') || cat.includes('bathroom') || cat.includes('paint') || cat.includes('cabinet') || cat.includes('countertop') || cat.includes('floor') || cat.includes('tile') || cat.includes('carpet') || cat.includes('furniture')) return 'Remodeling & Finishing';
+  if (cat.includes('siding') || cat.includes('gutter') || cat.includes('landscap') || cat.includes('lawn') || cat.includes('deck') || cat.includes('fence') || cat.includes('pond')) return 'Exterior & Landscaping';
+  if (cat.includes('pav') || cat.includes('asphalt') || cat.includes('excavat') || cat.includes('demolition') || cat.includes('concrete') || cat.includes('masonry') || cat.includes('road construction') || cat.includes('dock') || cat.includes('logging')) return 'Heavy & Civil Work';
+  if (cat.includes('home builder') || cat.includes('log home') || cat.includes('custom home') || cat.includes('modular home') || cat.includes('portable building')) return 'Home Building';
+  if (cat.includes('handyman') || cat.includes('handywoman') || cat.includes('handyperson') || cat.includes('carpent') || cat.includes('woodworker') || cat.includes('weld') || cat.includes('drilling') || cat.includes('insulation') || cat.includes('swimming pool') || cat.includes('hot tub') || cat.includes('appliance')) return 'Specialty Trades & Handyman';
+  if (cat.includes('supply') || cat.includes('supplier') || cat.includes('store') || cat.includes('shop') || cat.includes('wholesaler') || cat.includes('materials') || cat.includes('sand & gravel') || cat.includes('stone')) return 'Suppliers & Materials';
+  if (cat.includes('architect') || cat.includes('design') || cat.includes('designer') || cat.includes('engineer') || cat.includes('consultant') || cat.includes('water damage') || cat.includes('waterproofing') || cat.includes('fire') || cat.includes('restoration') || cat.includes('home inspector') || cat.includes('land surveyor')) return 'Ancillary Services';
+  if (cat.includes('construction') || cat.includes('contractor') || cat.includes('general contractor') || cat.includes('civil') || cat.includes('utility')) return 'General Construction';
+  if (cat.includes('window') || cat.includes('door') || cat.includes('glass & mirror')) return 'Window & Door';
+  
+  return 'Other';
+}
+
 export async function GET() {
   try {
+    // Check cache first
+    const now = Date.now();
+    if (statsCache && now - cacheTimestamp < CACHE_DURATION) {
+      return NextResponse.json({
+        stats: statsCache,
+        timestamp: new Date(cacheTimestamp).toISOString(),
+        cached: true
+      });
+    }
+
     const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_original.csv');
     const csvContent = await fs.readFile(csvPath, 'utf-8');
     
@@ -14,20 +52,17 @@ export async function GET() {
       transformHeader: (header) => header.trim(),
     });
     
-    // Process contractors for stats
+    // Process contractors for stats (faster processing)
     const contractors = parsed.data.map((row: any) => ({
-      id: String(row['business_id']).replace(/^0+/, '').trim(),
       completionScore: Number(row['data_completion_score']) || 0,
       state: row['L1_state_code'] || '',
-      category: row['L1_category'] || '',
+      category: getMegaCategory(row['L1_category'] || ''),
       googleRating: Number(row['L1_google_rating']) || 0,
-      reviewsCount: Number(row['L1_google_reviews_count']) || 0,
       mobileSpeed: Number(row['L1_psi_mobile_performance']) || 0,
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
-      businessHealth: row['L1_targeting_business_health'] || 'NEEDS_ATTENTION',
     }));
     
-    // Calculate filter stats
+    // Calculate filter stats efficiently
     const stats = {
       total: contractors.length,
       
@@ -39,24 +74,38 @@ export async function GET() {
         veryLow: contractors.filter(c => c.completionScore < 50).length,
       },
       
-      // States (top 6)
+      // Real states from your data
       states: {
-        kansas: contractors.filter(c => c.state === 'KS').length,
-        texas: contractors.filter(c => c.state === 'TX').length,
-        colorado: contractors.filter(c => c.state === 'CO').length,
+        alabama: contractors.filter(c => c.state === 'AL').length,
+        arkansas: contractors.filter(c => c.state === 'AR').length,
         idaho: contractors.filter(c => c.state === 'ID').length,
-        california: contractors.filter(c => c.state === 'CA').length,
-        florida: contractors.filter(c => c.state === 'FL').length,
+        kansas: contractors.filter(c => c.state === 'KS').length,
+        kentucky: contractors.filter(c => c.state === 'KY').length,
+        mississippi: contractors.filter(c => c.state === 'MS').length,
+        montana: contractors.filter(c => c.state === 'MT').length,
+        newMexico: contractors.filter(c => c.state === 'NM').length,
+        oklahoma: contractors.filter(c => c.state === 'OK').length,
+        southDakota: contractors.filter(c => c.state === 'SD').length,
+        utah: contractors.filter(c => c.state === 'UT').length,
+        westVirginia: contractors.filter(c => c.state === 'WV').length,
       },
       
-      // Categories
+      // 14 Real Mega Categories
       categories: {
-        roofing: contractors.filter(c => c.category.toLowerCase().includes('roofing')).length,
-        hvac: contractors.filter(c => c.category.toLowerCase().includes('hvac')).length,
-        electrical: contractors.filter(c => c.category.toLowerCase().includes('electrical')).length,
-        plumbing: contractors.filter(c => c.category.toLowerCase().includes('plumbing')).length,
-        construction: contractors.filter(c => c.category.toLowerCase().includes('construction')).length,
-        contractor: contractors.filter(c => c.category.toLowerCase().includes('contractor')).length,
+        roofing: contractors.filter(c => c.category === 'Roofing').length,
+        hvac: contractors.filter(c => c.category === 'HVAC').length,
+        plumbing: contractors.filter(c => c.category === 'Plumbing').length,
+        electrical: contractors.filter(c => c.category === 'Electrical').length,
+        remodeling: contractors.filter(c => c.category === 'Remodeling & Finishing').length,
+        exterior: contractors.filter(c => c.category === 'Exterior & Landscaping').length,
+        heavyCivil: contractors.filter(c => c.category === 'Heavy & Civil Work').length,
+        homeBuilding: contractors.filter(c => c.category === 'Home Building').length,
+        specialty: contractors.filter(c => c.category === 'Specialty Trades & Handyman').length,
+        suppliers: contractors.filter(c => c.category === 'Suppliers & Materials').length,
+        ancillary: contractors.filter(c => c.category === 'Ancillary Services').length,
+        construction: contractors.filter(c => c.category === 'General Construction').length,
+        windowDoor: contractors.filter(c => c.category === 'Window & Door').length,
+        other: contractors.filter(c => c.category === 'Other').length,
       },
       
       // Website Speed (PSI)
@@ -81,19 +130,16 @@ export async function GET() {
         personal: contractors.filter(c => c.emailQuality === 'PERSONAL_DOMAIN').length,
         unknown: contractors.filter(c => c.emailQuality === 'UNKNOWN').length,
       },
-      
-      // Business Health
-      health: {
-        healthy: contractors.filter(c => c.businessHealth === 'HEALTHY').length,
-        emerging: contractors.filter(c => c.businessHealth === 'EMERGING').length,
-        needsAttention: contractors.filter(c => c.businessHealth === 'NEEDS_ATTENTION').length,
-        struggling: contractors.filter(c => c.businessHealth === 'STRUGGLING').length,
-      }
     };
+    
+    // Cache the results
+    statsCache = stats;
+    cacheTimestamp = now;
     
     return NextResponse.json({
       stats,
       timestamp: new Date().toISOString(),
+      cached: false
     });
     
   } catch (error) {

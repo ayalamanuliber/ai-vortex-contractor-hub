@@ -13,20 +13,34 @@ interface FilterStats {
     veryLow: number;
   };
   states: {
-    kansas: number;
-    texas: number;
-    colorado: number;
+    alabama: number;
+    arkansas: number;
     idaho: number;
-    california: number;
-    florida: number;
+    kansas: number;
+    kentucky: number;
+    mississippi: number;
+    montana: number;
+    newMexico: number;
+    oklahoma: number;
+    southDakota: number;
+    utah: number;
+    westVirginia: number;
   };
   categories: {
     roofing: number;
     hvac: number;
-    electrical: number;
     plumbing: number;
+    electrical: number;
+    remodeling: number;
+    exterior: number;
+    heavyCivil: number;
+    homeBuilding: number;
+    specialty: number;
+    suppliers: number;
+    ancillary: number;
     construction: number;
-    contractor: number;
+    windowDoor: number;
+    other: number;
   };
   speed: {
     high: number;
@@ -213,28 +227,42 @@ export function ModernFilters() {
       <div className="space-y-2">
         <SectionHeader section="location" title="Location" />
         {expandedSections.location && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="kansas" label="Kansas" count={stats.states.kansas} color="blue" />
-            <FilterButton filter="texas" label="Texas" count={stats.states.texas} color="blue" />
-            <FilterButton filter="colorado" label="Colorado" count={stats.states.colorado} color="blue" />
-            <FilterButton filter="idaho" label="Idaho" count={stats.states.idaho} color="blue" />
-            <FilterButton filter="california" label="California" count={stats.states.california} color="blue" />
-            <FilterButton filter="florida" label="Florida" count={stats.states.florida} color="blue" />
+          <div className="space-y-1 pl-2 max-h-48 overflow-y-auto">
+            <FilterButton filter="alabama" label="Alabama (AL)" count={stats.states.alabama} color="blue" />
+            <FilterButton filter="arkansas" label="Arkansas (AR)" count={stats.states.arkansas} color="blue" />
+            <FilterButton filter="idaho" label="Idaho (ID)" count={stats.states.idaho} color="blue" />
+            <FilterButton filter="kansas" label="Kansas (KS)" count={stats.states.kansas} color="blue" />
+            <FilterButton filter="kentucky" label="Kentucky (KY)" count={stats.states.kentucky} color="blue" />
+            <FilterButton filter="mississippi" label="Mississippi (MS)" count={stats.states.mississippi} color="blue" />
+            <FilterButton filter="montana" label="Montana (MT)" count={stats.states.montana} color="blue" />
+            <FilterButton filter="newMexico" label="New Mexico (NM)" count={stats.states.newMexico} color="blue" />
+            <FilterButton filter="oklahoma" label="Oklahoma (OK)" count={stats.states.oklahoma} color="blue" />
+            <FilterButton filter="southDakota" label="South Dakota (SD)" count={stats.states.southDakota} color="blue" />
+            <FilterButton filter="utah" label="Utah (UT)" count={stats.states.utah} color="blue" />
+            <FilterButton filter="westVirginia" label="West Virginia (WV)" count={stats.states.westVirginia} color="blue" />
           </div>
         )}
       </div>
       
-      {/* Category */}
+      {/* Category - 14 Real Mega Categories */}
       <div className="space-y-2">
-        <SectionHeader section="category" title="Category" />
+        <SectionHeader section="category" title="Industry (14 Categories)" />
         {expandedSections.category && (
-          <div className="space-y-1 pl-2">
+          <div className="space-y-1 pl-2 max-h-64 overflow-y-auto">
             <FilterButton filter="roofing" label="Roofing" count={stats.categories.roofing} color="purple" />
             <FilterButton filter="hvac" label="HVAC" count={stats.categories.hvac} color="purple" />
-            <FilterButton filter="electrical" label="Electrical" count={stats.categories.electrical} color="purple" />
             <FilterButton filter="plumbing" label="Plumbing" count={stats.categories.plumbing} color="purple" />
-            <FilterButton filter="construction" label="Construction" count={stats.categories.construction} color="purple" />
-            <FilterButton filter="contractor" label="General Contractor" count={stats.categories.contractor} color="purple" />
+            <FilterButton filter="electrical" label="Electrical" count={stats.categories.electrical} color="purple" />
+            <FilterButton filter="remodeling" label="Remodeling & Finishing" count={stats.categories.remodeling} color="purple" />
+            <FilterButton filter="exterior" label="Exterior & Landscaping" count={stats.categories.exterior} color="purple" />
+            <FilterButton filter="heavyCivil" label="Heavy & Civil Work" count={stats.categories.heavyCivil} color="purple" />
+            <FilterButton filter="homeBuilding" label="Home Building" count={stats.categories.homeBuilding} color="purple" />
+            <FilterButton filter="specialty" label="Specialty Trades & Handyman" count={stats.categories.specialty} color="purple" />
+            <FilterButton filter="suppliers" label="Suppliers & Materials" count={stats.categories.suppliers} color="purple" />
+            <FilterButton filter="ancillary" label="Ancillary Services" count={stats.categories.ancillary} color="purple" />
+            <FilterButton filter="construction" label="General Construction" count={stats.categories.construction} color="purple" />
+            <FilterButton filter="windowDoor" label="Window & Door" count={stats.categories.windowDoor} color="purple" />
+            <FilterButton filter="other" label="Other" count={stats.categories.other} color="purple" />
           </div>
         )}
       </div>

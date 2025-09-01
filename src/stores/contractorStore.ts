@@ -253,25 +253,61 @@ function applyFiltersAndSearch(
           case 'completion-0-49':
             return contractor.completionScore < 50;
           
-          // State filters
+          // State filters - Real states from data
+          case 'alabama':
+            return contractor.state === 'AL';
+          case 'arkansas':
+            return contractor.state === 'AR';
           case 'kansas':
             return contractor.state === 'KS';
-          case 'texas':
-            return contractor.state === 'TX';
-          case 'colorado':
-            return contractor.state === 'CO';
+          case 'kentucky':
+            return contractor.state === 'KY';
           case 'idaho':
             return contractor.state === 'ID';
+          case 'mississippi':
+            return contractor.state === 'MS';
+          case 'montana':
+            return contractor.state === 'MT';
+          case 'newMexico':
+            return contractor.state === 'NM';
+          case 'oklahoma':
+            return contractor.state === 'OK';
+          case 'southDakota':
+            return contractor.state === 'SD';
+          case 'utah':
+            return contractor.state === 'UT';
+          case 'westVirginia':
+            return contractor.state === 'WV';
           
-          // Category filters
+          // Category filters - 14 Real Mega Categories
           case 'roofing':
             return contractor.category.toLowerCase().includes('roofing');
           case 'hvac':
             return contractor.category.toLowerCase().includes('hvac');
-          case 'electrical':
-            return contractor.category.toLowerCase().includes('electrical');
           case 'plumbing':
             return contractor.category.toLowerCase().includes('plumbing');
+          case 'electrical':
+            return contractor.category.toLowerCase().includes('electrical');
+          case 'remodeling':
+            return contractor.category.toLowerCase().includes('remodeling') || contractor.category.toLowerCase().includes('finishing');
+          case 'exterior':
+            return contractor.category.toLowerCase().includes('exterior') || contractor.category.toLowerCase().includes('landscaping');
+          case 'heavyCivil':
+            return contractor.category.toLowerCase().includes('heavy') || contractor.category.toLowerCase().includes('civil');
+          case 'homeBuilding':
+            return contractor.category.toLowerCase().includes('home building') || contractor.category.toLowerCase().includes('builder');
+          case 'specialty':
+            return contractor.category.toLowerCase().includes('specialty') || contractor.category.toLowerCase().includes('handyman');
+          case 'suppliers':
+            return contractor.category.toLowerCase().includes('suppliers') || contractor.category.toLowerCase().includes('materials');
+          case 'ancillary':
+            return contractor.category.toLowerCase().includes('ancillary') || contractor.category.toLowerCase().includes('services');
+          case 'construction':
+            return contractor.category.toLowerCase().includes('construction') || contractor.category.toLowerCase().includes('contractor');
+          case 'windowDoor':
+            return contractor.category.toLowerCase().includes('window') || contractor.category.toLowerCase().includes('door');
+          case 'other':
+            return contractor.category.toLowerCase().includes('other') || contractor.category === '';
           
           // Campaign filters
           case 'campaign-ready':

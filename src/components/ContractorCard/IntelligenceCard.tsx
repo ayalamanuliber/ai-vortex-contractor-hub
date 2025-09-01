@@ -10,6 +10,16 @@ interface IntelligenceCardProps {
 
 export function IntelligenceCard({ contractor, onClick }: IntelligenceCardProps) {
   const campaignReady = contractor.hasFocusGroup && contractor.hasCampaign;
+  
+  // Debug for specific contractor
+  if (contractor.id === '3993') {
+    console.log('COMPONENT DEBUG 3993:', {
+      id: contractor.id,
+      completionScore: contractor.completionScore,
+      type: typeof contractor.completionScore,
+      businessName: contractor.businessName
+    });
+  }
 
   return (
     <div className="intelligence-card p-6 cursor-pointer" onClick={onClick}>

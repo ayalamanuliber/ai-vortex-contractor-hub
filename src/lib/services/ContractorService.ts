@@ -82,16 +82,17 @@ export class ContractorService {
   private parseContractorFromCSV(row: any): Contractor {
     const id = this.normalizeId(row['business_id'] || row.id);
     
-    // Debug specific contractor
-    if (id === '3993' || id === '3127') {
-      const completionScoreRaw = row['data_completion_score'];
-      const completionScoreParsed = parseInt(String(completionScoreRaw)) || 0;
-      console.log(`DEBUG ${id} - Completion Score:`, {
-        raw: completionScoreRaw,
-        type: typeof completionScoreRaw,
-        string: String(completionScoreRaw),
-        parsed: completionScoreParsed,
-        working: completionScoreParsed > 0 ? 'YES' : 'NO'
+    const completionScore = parseInt(String(row['data_completion_score'])) || 0;
+    
+    // Debug specific contractor - AFTER parsing
+    if (id === '3993') {
+      console.log(`DEBUG ${id} - FINAL CONTRACTOR OBJECT:`, {
+        id,
+        businessName: row['L1_company_name'],
+        completionScore,
+        rawScore: row['data_completion_score'],
+        googleRating: parseFloat(row['L1_google_rating']) || 0,
+        websiteSpeed: parseInt(row['L1_psi_mobile_performance']) || 0
       });
     }
     
@@ -108,7 +109,7 @@ export class ContractorService {
       zipCode: row['L1_postal_code'] || '',
       
       // Scores - using data_completion_score and other L2/L3 fields  
-      completionScore: parseInt(String(row['data_completion_score'])) || 0,
+      completionScore: completionScore,
       healthScore: this.calculateHealthScore(row),
       trustScore: Math.round(parseFloat(row['L2_trust_score']) * 100) || 0,
       googleRating: parseFloat(row['L1_google_rating']) || 0,

@@ -16,7 +16,7 @@ export function GlobalSearch() {
   const performSearch = async (searchTerm: string) => {
     if (!searchTerm.trim()) {
       // Clear search - reload initial data
-      const response = await fetch('/api/simple-contractors?start=0&limit=5000');
+      const response = await fetch('/api/simple-contractors?start=0&limit=200');
       const result = await response.json();
       setContractors(result.contractors || []);
       setResults([]);
@@ -26,7 +26,7 @@ export function GlobalSearch() {
     setIsLoading(true);
     try {
       // Search across ALL contractors
-      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(searchTerm)}&start=0&limit=5000`);
+      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(searchTerm)}&start=0&limit=500`);
       const result = await response.json();
       
       setResults(result.contractors || []);

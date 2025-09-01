@@ -38,10 +38,38 @@ export async function GET(request: NextRequest) {
       skipEmptyLines: true,
       transformHeader: (header) => header.trim(),
     });
+
+    // Load campaigns JSON data
+    let campaignsData = null;
+    try {
+      const campaignsPath = path.join(process.cwd(), 'public', 'data', 'campaigns.json');
+      const campaignsContent = await fs.readFile(campaignsPath, 'utf-8');
+      campaignsData = JSON.parse(campaignsContent);
+    } catch (error) {
+      console.log('No campaigns data found, using default');
+      campaignsData = { contractors: {} };
+    }
     
     // Process each contractor directly with proper completion score
     const contractors = parsed.data.map((row: any) => {
       const id = String(row['business_id']).replace(/^0+/, '').trim();
+      const originalId = String(row['business_id']).trim(); // Keep original with leading zeros
+      
+      // Check campaign data using both formats
+      const campaignData = campaignsData.contractors[originalId] || campaignsData.contractors[id];
+      const hasCampaign = !!campaignData && campaignData.processing_status === 'completed';
+      
+      // Debug for contractor 1062
+      if (id === '1062') {
+        console.log('DEBUG 1062 Matching:', {
+          id, 
+          originalId, 
+          foundWithOriginal: !!campaignsData.contractors[originalId],
+          foundWithId: !!campaignsData.contractors[id],
+          campaignData: !!campaignData,
+          hasCampaign
+        });
+      }
       
       // Direct completion score parsing
       let completionScore = 0;
@@ -86,24 +114,34 @@ export async function GET(request: NextRequest) {
         emailQuality: row['L2_email_quality'] || 'UNKNOWN',
         name: '',
         lastName: '',
-        hasCampaign: false,
-        hasFocusGroup: false,
-        campaignData: null,
-        cost: 0,
-        sessionDuration: 0,
-        tokensUsed: 0,
-        emailSequences: 0,
+        hasCampaign,
+        hasFocusGroup: !!campaignData?.focus_group_generated,
+        campaignData: campaignData || null,
+        cost: campaignData?.cost || 0,
+        sessionDuration: campaignData?.duration_minutes || 0,
+        tokensUsed: campaignData?.tokens || 0,
+        emailSequences: campaignData?.campaign_data?.email_sequences?.length || 0,
         notes: [],
       };
     });
     
-    // Debug contractor 3993
+    // Debug contractor 3993 and 1062
     const contractor3993 = contractors.find(c => c.id === '3993');
     if (contractor3993) {
       console.log('SIMPLE API - Contractor 3993:', {
         id: contractor3993.id,
         completionScore: contractor3993.completionScore,
         businessName: contractor3993.businessName
+      });
+    }
+
+    const contractor1062 = contractors.find(c => c.id === '1062');
+    if (contractor1062) {
+      console.log('SIMPLE API - Contractor 1062:', {
+        id: contractor1062.id,
+        hasCampaign: contractor1062.hasCampaign,
+        campaignData: !!contractor1062.campaignData,
+        businessName: contractor1062.businessName
       });
     }
     

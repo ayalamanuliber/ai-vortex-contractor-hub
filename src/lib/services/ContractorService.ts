@@ -1,0 +1,476 @@
+import Papa from 'papaparse';
+import type { Contractor, Campaign, MergedContractor, CampaignsDatabase } from '@/lib/types';
+
+export class ContractorService {
+  private csvData: Map<string, Contractor> = new Map();
+  private campaignData: Map<string, Campaign> = new Map();
+  private mergedData: Map<string, MergedContractor> = new Map();
+  private indexes = {
+    byState: new Map<string, Set<string>>(),
+    byCompletionScore: new Map<number, Set<string>>(),
+    byCampaignStatus: new Map<string, Set<string>>(),
+    byCategory: new Map<string, Set<string>>(),
+  };
+  
+  private isLoading = false;
+  private loadedChunks = new Set<number>();
+  private CHUNK_SIZE = 100;
+
+  // Normalize IDs for matching between CSV and JSON
+  private normalizeId(id: string | number): string {
+    return String(id).replace(/^0+/, '').trim();
+  }
+
+  // Load initial data chunk (first 100 records)
+  async loadInitialData(): Promise<MergedContractor[]> {
+    if (this.isLoading) return Array.from(this.mergedData.values());
+    this.isLoading = true;
+
+    try {
+      // Load CSV chunk
+      const csvChunk = await this.loadCSVChunk(0, this.CHUNK_SIZE);
+      
+      // Load all campaign data (smaller JSON file)
+      const campaignsResponse = await fetch('/api/campaigns');
+      const campaignsData: CampaignsDatabase = await campaignsResponse.json();
+      
+      // Process campaigns
+      Object.entries(campaignsData.contractors || {}).forEach(([key, campaign]: [string, any]) => {
+        const businessId = this.normalizeId(
+          campaign.campaign_data?.business_id || 
+          campaign.business_id || 
+          key
+        );
+        this.campaignData.set(businessId, campaign);
+      });
+
+      // Merge data
+      this.mergeData();
+      
+      this.isLoading = false;
+      return Array.from(this.mergedData.values()).slice(0, this.CHUNK_SIZE);
+    } catch (error) {
+      console.error('Error loading initial data:', error);
+      this.isLoading = false;
+      return [];
+    }
+  }
+
+  // Load CSV chunk from API
+  private async loadCSVChunk(start: number, limit: number): Promise<void> {
+    const chunkId = Math.floor(start / this.CHUNK_SIZE);
+    if (this.loadedChunks.has(chunkId)) return;
+
+    try {
+      const response = await fetch(`/api/contractors?start=${start}&limit=${limit}`);
+      const data = await response.json();
+      
+      data.contractors.forEach((contractor: any) => {
+        const id = this.normalizeId(contractor['Business ID'] || contractor.id);
+        this.csvData.set(id, this.parseContractorFromCSV(contractor));
+      });
+      
+      this.loadedChunks.add(chunkId);
+    } catch (error) {
+      console.error(`Error loading CSV chunk ${chunkId}:`, error);
+    }
+  }
+
+  // Parse contractor data from CSV row
+  private parseContractorFromCSV(row: any): Contractor {
+    const id = this.normalizeId(row['Business ID'] || row.id);
+    
+    return {
+      id,
+      businessName: row['Business Name'] || row.businessName || 'Unknown Business',
+      category: row['Category'] || this.determineCategory(row['Business Name']),
+      email: row['Email'] || 'contact@example.com',
+      phone: row['Phone'] || '(555) 000-0000',
+      website: row['Website'] || row['Domain'] || '',
+      address: row['Address'] || row['Location'] || 'Unknown Location',
+      city: row['City'] || '',
+      state: row['State'] || this.extractState(row['Address'] || row['Location']),
+      zipCode: row['Zip Code'] || '',
+      
+      // Scores
+      completionScore: parseInt(row['Completion Score']) || 0,
+      healthScore: parseInt(row['Health Score']) || 0,
+      trustScore: parseInt(row['Trust Score']) || 0,
+      googleRating: parseFloat(row['Google Rating']) || 0,
+      reviewsCount: parseInt(row['Reviews Count']) || 0,
+      
+      // Intelligence data
+      intelligence: {
+        websiteSpeed: {
+          mobile: parseInt(row['Mobile Speed']) || 0,
+          desktop: parseInt(row['Desktop Speed']) || 0,
+        },
+        reviewsRecency: this.categorizeReviewsRecency(row['Days Since Latest Review']),
+        daysSinceLatest: parseInt(row['Days Since Latest Review']) || 0,
+        platformDetection: row['Platform'] || 'Unknown',
+        domainAge: parseFloat(row['Domain Age']) || 0,
+        businessHours: row['Business Hours'] || 'Mon-Fri 8AM-5PM',
+      },
+      
+      // Classifications
+      businessHealth: this.classifyBusinessHealth(parseInt(row['Health Score']) || 0),
+      sophisticationTier: this.classifySophistication(parseInt(row['Trust Score']) || 0),
+      emailQuality: this.classifyEmailQuality(row['Email']),
+    };
+  }
+
+  // Merge CSV and Campaign data
+  private mergeData(): void {
+    // Start with CSV data
+    this.csvData.forEach((contractor, id) => {
+      const campaign = this.campaignData.get(id);
+      
+      const merged: MergedContractor = {
+        ...contractor,
+        hasCampaign: Boolean(campaign?.campaign_data?.email_sequences?.length > 0),
+        hasFocusGroup: Boolean(campaign?.focus_group_generated),
+        campaignData: campaign ? this.formatCampaignData(campaign) : null,
+        cost: campaign?.cost || 0,
+        sessionDuration: campaign?.duration_minutes || 0,
+        tokensUsed: campaign?.tokens || 0,
+        emailSequences: campaign?.campaign_data?.email_sequences?.length || 0,
+        notes: [],
+      };
+      
+      this.mergedData.set(id, merged);
+      this.updateIndexes(id, merged);
+    });
+
+    // Add campaigns without CSV match
+    this.campaignData.forEach((campaign, id) => {
+      if (!this.mergedData.has(id)) {
+        const merged: MergedContractor = this.createContractorFromCampaign(campaign);
+        this.mergedData.set(id, merged);
+        this.updateIndexes(id, merged);
+      }
+    });
+  }
+
+  // Format campaign data for easier use
+  private formatCampaignData(campaign: Campaign): any {
+    return {
+      businessId: campaign.campaign_data?.business_id || campaign.business_id,
+      companyName: campaign.campaign_data?.company_name || campaign.company_name,
+      contactTiming: campaign.campaign_data?.contact_timing,
+      emailSequences: (campaign.campaign_data?.email_sequences || []).map((seq: any) => ({
+        ...seq,
+        status: seq.status || 'pending',
+        sentDate: seq.sent_date || null,
+        openedDate: seq.opened_date || null,
+        respondedDate: seq.responded_date || null,
+      })),
+      messagingPreferences: campaign.campaign_data?.messaging_preferences,
+    };
+  }
+
+  // Helper functions for data classification
+  private categorizeReviewsRecency(days: string | number): 'ACTIVE' | 'MODERATE' | 'INACTIVE' | 'UNKNOWN' {
+    if (!days || days === 'N/A') return 'UNKNOWN';
+    const d = typeof days === 'string' ? parseInt(days) : days;
+    if (d <= 30) return 'ACTIVE';
+    if (d <= 90) return 'MODERATE';
+    return 'INACTIVE';
+  }
+
+  private determineCategory(businessName: string): string {
+    const name = (businessName || '').toLowerCase();
+    if (name.includes('roof')) return 'Roofing';
+    if (name.includes('electric')) return 'Electrical';
+    if (name.includes('plumb')) return 'Plumbing';
+    if (name.includes('hvac')) return 'HVAC';
+    if (name.includes('paint')) return 'Painting';
+    if (name.includes('floor')) return 'Flooring';
+    return 'General Contractor';
+  }
+
+  private extractState(address: string): string {
+    if (!address) return 'Unknown';
+    const stateMatch = address.match(/\b([A-Z]{2})\b/);
+    return stateMatch ? stateMatch[1] : 'Unknown';
+  }
+
+  private classifyBusinessHealth(score: number): 'HEALTHY' | 'EMERGING' | 'NEEDS_ATTENTION' {
+    if (score >= 90) return 'HEALTHY';
+    if (score >= 70) return 'EMERGING';
+    return 'NEEDS_ATTENTION';
+  }
+
+  private classifySophistication(score: number): 'Professional' | 'Growing' | 'Amateur' {
+    if (score >= 80) return 'Professional';
+    if (score >= 60) return 'Growing';
+    return 'Amateur';
+  }
+
+  private classifyEmailQuality(email: string): 'PROFESSIONAL_DOMAIN' | 'PERSONAL_DOMAIN' | 'UNKNOWN' {
+    if (!email) return 'UNKNOWN';
+    if (email.includes('gmail') || email.includes('yahoo') || email.includes('hotmail')) {
+      return 'PERSONAL_DOMAIN';
+    }
+    return 'PROFESSIONAL_DOMAIN';
+  }
+
+  // Update search indexes
+  private updateIndexes(id: string, contractor: MergedContractor): void {
+    // Index by state
+    const state = contractor.state || 'Unknown';
+    if (!this.indexes.byState.has(state)) {
+      this.indexes.byState.set(state, new Set());
+    }
+    this.indexes.byState.get(state)!.add(id);
+
+    // Index by completion score range
+    const scoreRange = Math.floor(contractor.completionScore / 10) * 10;
+    if (!this.indexes.byCompletionScore.has(scoreRange)) {
+      this.indexes.byCompletionScore.set(scoreRange, new Set());
+    }
+    this.indexes.byCompletionScore.get(scoreRange)!.add(id);
+
+    // Index by campaign status
+    const campaignStatus = contractor.hasCampaign ? 'active' : 'none';
+    if (!this.indexes.byCampaignStatus.has(campaignStatus)) {
+      this.indexes.byCampaignStatus.set(campaignStatus, new Set());
+    }
+    this.indexes.byCampaignStatus.get(campaignStatus)!.add(id);
+
+    // Index by category
+    if (!this.indexes.byCategory.has(contractor.category)) {
+      this.indexes.byCategory.set(contractor.category, new Set());
+    }
+    this.indexes.byCategory.get(contractor.category)!.add(id);
+  }
+
+  // Create contractor from campaign data (when no CSV match)
+  private createContractorFromCampaign(campaign: Campaign): MergedContractor {
+    return {
+      id: this.normalizeId(campaign.campaign_data?.business_id || campaign.business_id || ''),
+      businessName: campaign.campaign_data?.company_name || campaign.company_name || 'Unknown',
+      category: campaign.trade || 'General Contractor',
+      email: 'contact@example.com',
+      phone: '(555) 000-0000',
+      website: '',
+      address: campaign.location || 'Unknown',
+      city: '',
+      state: this.extractState(campaign.location || ''),
+      zipCode: '',
+      completionScore: 0,
+      healthScore: 0,
+      trustScore: 0,
+      googleRating: 0,
+      reviewsCount: 0,
+      intelligence: {
+        websiteSpeed: { mobile: 0, desktop: 0 },
+        reviewsRecency: 'UNKNOWN',
+        daysSinceLatest: 0,
+        platformDetection: 'Unknown',
+        domainAge: 0,
+        businessHours: 'Unknown',
+      },
+      businessHealth: 'NEEDS_ATTENTION',
+      sophisticationTier: 'Amateur',
+      emailQuality: 'UNKNOWN',
+      hasCampaign: true,
+      hasFocusGroup: Boolean(campaign.focus_group_generated),
+      campaignData: this.formatCampaignData(campaign),
+      cost: campaign.cost || 0,
+      sessionDuration: campaign.duration_minutes || 0,
+      tokensUsed: campaign.tokens || 0,
+      emailSequences: campaign.campaign_data?.email_sequences?.length || 0,
+      notes: [],
+    };
+  }
+
+  // Search contractors with filters using indexes
+  async searchContractors(filters: string[]): Promise<MergedContractor[]> {
+    if (!filters || filters.length === 0) {
+      return Array.from(this.mergedData.values());
+    }
+
+    let resultIds: Set<string> | null = null;
+
+    for (const filter of filters) {
+      let filterIds = new Set<string>();
+
+      switch (filter) {
+        // Completion score filters
+        case 'completion-85-100':
+          for (const [range, ids] of this.indexes.byCompletionScore) {
+            if (range >= 85) {
+              ids.forEach(id => filterIds.add(id));
+            }
+          }
+          break;
+        case 'completion-70-84':
+          for (const [range, ids] of this.indexes.byCompletionScore) {
+            if (range >= 70 && range < 85) {
+              ids.forEach(id => filterIds.add(id));
+            }
+          }
+          break;
+        
+        // State filters
+        case 'idaho':
+          this.indexes.byState.get('ID')?.forEach(id => filterIds.add(id));
+          break;
+        case 'kansas':
+          this.indexes.byState.get('KS')?.forEach(id => filterIds.add(id));
+          break;
+        case 'colorado':
+          this.indexes.byState.get('CO')?.forEach(id => filterIds.add(id));
+          break;
+        case 'texas':
+          this.indexes.byState.get('TX')?.forEach(id => filterIds.add(id));
+          break;
+        
+        // Category filters
+        case 'roofing':
+          this.indexes.byCategory.get('Roofing')?.forEach(id => filterIds.add(id));
+          break;
+        case 'hvac':
+          this.indexes.byCategory.get('HVAC')?.forEach(id => filterIds.add(id));
+          break;
+        case 'electrical':
+          this.indexes.byCategory.get('Electrical')?.forEach(id => filterIds.add(id));
+          break;
+        
+        // Campaign filters
+        case 'campaign-ready':
+          this.indexes.byCampaignStatus.get('active')?.forEach(id => filterIds.add(id));
+          break;
+        case 'no-campaign':
+          this.indexes.byCampaignStatus.get('none')?.forEach(id => filterIds.add(id));
+          break;
+        
+        // Complex filters (need manual check)
+        default:
+          for (const [id, contractor] of this.mergedData) {
+            if (this.matchesComplexFilter(contractor, filter)) {
+              filterIds.add(id);
+            }
+          }
+          break;
+      }
+
+      // Intersect results
+      if (resultIds === null) {
+        resultIds = filterIds;
+      } else {
+        resultIds = new Set([...resultIds].filter(id => filterIds.has(id)));
+      }
+    }
+
+    return Array.from(resultIds || [])
+      .map(id => this.mergedData.get(id))
+      .filter((c): c is MergedContractor => c !== undefined);
+  }
+
+  // Match complex filters that require data inspection
+  private matchesComplexFilter(contractor: MergedContractor, filter: string): boolean {
+    switch(filter) {
+      case 'high-psi':
+        return contractor.intelligence.websiteSpeed.mobile >= 85;
+      case 'medium-psi':
+        return contractor.intelligence.websiteSpeed.mobile >= 60 && 
+               contractor.intelligence.websiteSpeed.mobile < 85;
+      case 'low-psi':
+        return contractor.intelligence.websiteSpeed.mobile < 60;
+      case 'inactive-reviews':
+        return contractor.intelligence.reviewsRecency === 'INACTIVE';
+      case 'high-rating':
+        return contractor.googleRating >= 4.5;
+      case 'low-rating':
+        return contractor.googleRating < 4.0;
+      case 'professional-email':
+        return contractor.emailQuality === 'PROFESSIONAL_DOMAIN';
+      case 'personal-email':
+        return contractor.emailQuality === 'PERSONAL_DOMAIN';
+      default:
+        return false;
+    }
+  }
+
+  // Load more data (lazy loading)
+  async loadMore(page: number): Promise<MergedContractor[]> {
+    const start = page * this.CHUNK_SIZE;
+    await this.loadCSVChunk(start, this.CHUNK_SIZE);
+    this.mergeData();
+    
+    return Array.from(this.mergedData.values())
+      .slice(start, start + this.CHUNK_SIZE);
+  }
+
+  // Update campaign status
+  async updateCampaignStatus(
+    businessId: string, 
+    emailNumber: number, 
+    status: 'pending' | 'scheduled' | 'sent' | 'opened' | 'responded'
+  ): Promise<void> {
+    const normalizedId = this.normalizeId(businessId);
+    const contractor = this.mergedData.get(normalizedId);
+    
+    if (contractor?.campaignData?.emailSequences) {
+      const email = contractor.campaignData.emailSequences.find(
+        (e: any) => e.email_number === emailNumber
+      );
+      
+      if (email) {
+        email.status = status;
+        const today = new Date().toISOString().split('T')[0];
+        
+        switch(status) {
+          case 'sent':
+            email.sentDate = today;
+            break;
+          case 'opened':
+            email.openedDate = today;
+            break;
+          case 'responded':
+            email.respondedDate = today;
+            break;
+        }
+        
+        // Update backend
+        await fetch('/api/campaigns/update', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            businessId: normalizedId,
+            emailNumber,
+            status,
+            date: today
+          })
+        });
+      }
+    }
+  }
+
+  // Get all contractors (for export)
+  getAllContractors(): MergedContractor[] {
+    return Array.from(this.mergedData.values());
+  }
+
+  // Get contractor by ID
+  getContractorById(id: string): MergedContractor | undefined {
+    return this.mergedData.get(this.normalizeId(id));
+  }
+
+  // Get stats
+  getStats() {
+    const contractors = Array.from(this.mergedData.values());
+    return {
+      total: contractors.length,
+      withCampaigns: contractors.filter(c => c.hasCampaign).length,
+      avgCompletionScore: Math.round(
+        contractors.reduce((sum, c) => sum + c.completionScore, 0) / contractors.length
+      ),
+      highCompletion: contractors.filter(c => c.completionScore >= 85).length,
+    };
+  }
+}
+
+// Singleton instance
+export const contractorService = new ContractorService();

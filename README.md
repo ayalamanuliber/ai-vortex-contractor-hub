@@ -1,50 +1,160 @@
-# Contractor Intelligence Hub V4
+# AI Vortex - Contractor Intelligence Hub
 
-🚀 **Final Dossier Intelligence Hub** - Complete contractor intelligence system with 4000+ real contractor profiles.
+A complete Next.js application for contractor intelligence analysis and campaign execution.
 
-## Features
+## 🚀 Features
 
-- **🎯 4000+ Real Contractors**: Complete intelligence data from CSV
-- **📊 Smart Filtering**: L1-L5 intelligence layers
-- **📄 Pagination**: Smooth performance with large datasets  
-- **🔍 Full-text Search**: Search across all contractor data
-- **📱 Responsive Design**: Works on all devices
-- **⚡ Real-time Updates**: Campaign execution tracking
+- **Intelligence Mode**: View contractor completion scores, website performance, and business insights
+- **Execution Mode**: Manage email campaigns, track progress, and monitor responses
+- **Real-time Data**: CSV/JSON integration with bidirectional sync
+- **Advanced Filtering**: Filter by location, scores, categories, and campaign status
+- **Campaign Calendar**: Visual campaign scheduling and tracking
+- **Responsive Design**: Glassmorphism UI with dark theme
 
-## Tech Stack
+## 📊 Data Integration
 
-- Pure HTML5/CSS3/JavaScript
-- Tailwind CSS for styling
-- Lucide Icons
-- CSV data processing
-- Local storage caching
+- **CSV Integration**: Contractor master sheet (46MB+) with lazy loading
+- **Campaign Data**: JSON database with email sequences and timing
+- **Business ID Matching**: Automatic sync between CSV and campaign data
 
-## Intelligence Layers
+## 🛠 Tech Stack
 
-- **L1**: Basic business info (name, email, phone, website)
-- **L2**: Digital presence (Google rating, reviews, website speed)
-- **L3**: Advanced analytics (domain age, platform detection)
-- **L4**: Market intelligence (opportunities, competition)
-- **L5**: Business intelligence (targeting, psychology)
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with custom glassmorphism design
+- **State Management**: Zustand
+- **Data Processing**: PapaParse for CSV handling
+- **UI Components**: Custom built with Lucide React icons
+- **Deployment**: Optimized for Vercel
 
-## Data Sources
+## 🚀 Quick Start
 
-- **CSV**: 4000+ contractor intelligence profiles (176 fields)
-- **JSON**: Campaign execution database
-- **Real-time**: App-level modifications and tracking
+### Prerequisites
 
-## Live Demo
+- Node.js 18+ 
+- npm or yarn
 
-🌐 [View Live Demo](https://contractor-intelligence-hub.vercel.app)
+### Installation
 
-## Development
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd contractor-intelligence-hub-v4
+   ```
 
-1. Clone the repository
-2. Serve via HTTP (required for CSV loading)
-3. Access via `http://localhost:8000`
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-**Note**: Must use HTTP server due to browser CORS restrictions on local files.
+3. **Add your data files:**
+   - Place your contractor CSV file in `public/data/contractors.csv`
+   - Place your campaign JSON file in `public/data/campaigns.json`
+
+4. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open in browser:**
+   - Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 🚀 Deployment to Vercel
+
+### Option 1: Direct Import from Git
+
+1. **Initialize Git repository:**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit - AI Vortex Contractor Hub"
+   ```
+
+2. **Push to GitHub:**
+   ```bash
+   git remote add origin https://github.com/ayalamanuliber/contractor-intelligence-hub.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+3. **Import to Vercel:**
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project"
+   - Import from GitHub repository
+   - Deploy automatically!
+
+### Option 2: Vercel CLI
+
+```bash
+npm install -g vercel
+vercel login
+vercel --prod
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                 # Next.js App Router
+│   ├── api/            # API routes
+│   │   ├── contractors/
+│   │   └── campaigns/
+│   ├── globals.css     # Global styles
+│   ├── layout.tsx      # Root layout
+│   └── page.tsx        # Home page
+├── components/          # React components
+│   ├── Navigation/     # Top navigation
+│   ├── Sidebar/        # Filter sidebar
+│   ├── ContractorCard/ # Intelligence & execution cards
+│   ├── Calendar/       # Campaign calendar
+│   └── ProfileModal/   # Contractor profiles
+├── lib/                # Utilities and services
+│   ├── services/       # Data services
+│   ├── types/          # TypeScript types
+│   └── utils/          # Helper functions
+└── stores/             # Zustand stores
+```
+
+## 🎨 Features
+
+### Intelligence Mode
+- Completion score visualization
+- Website performance metrics
+- Business health indicators
+- Review activity analysis
+
+### Execution Mode
+- Campaign progress tracking
+- Email sequence management
+- Timing optimization
+- Status monitoring
+
+### Advanced Filtering
+- Location-based filtering
+- Score range selection
+- Category grouping
+- Campaign status sorting
+
+## 📈 Performance Optimizations
+
+- **Lazy Loading**: Load contractors in chunks of 100
+- **Caching**: API response caching (5 minutes)
+- **Memory Management**: Efficient data structures
+- **Infinite Scroll**: Load more data on demand
+
+## 🔧 Configuration
+
+The app works with your existing data files:
+- `CONTRACTORS - Master_Sheet.csv` (46MB contractor database)
+- `MASTER_CAMPAIGN_DATABASE.json` (campaign data)
+
+No additional configuration needed - just deploy and go!
+
+## 📧 Contact
+
+**GitHub**: ayalamanuliber  
+**Email**: canoes.aprons.0k@icloud.com
 
 ---
 
-Built with ❤️ for contractor outreach intelligence.
+**Ready for Vercel deployment! 🚀**

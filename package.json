@@ -1,32 +1,38 @@
 {
-  "name": "contractor-intelligence-hub-v4",
+  "name": "contractor-intelligence-hub",
   "version": "1.0.0",
-  "description": "Data-driven operations center for managing contractor campaigns with adaptive scaling",
-  "main": "backend/adaptive-server.js",
+  "private": true,
   "scripts": {
-    "start": "node backend/adaptive-server.js",
-    "dev": "nodemon backend/adaptive-server.js",
-    "setup": "npm install && node integration/data-migration-tools.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prepare-data": "node scripts/prepare-data.js",
+    "sync-data": "node scripts/sync-data.js",
+    "check-types": "tsc --noEmit"
   },
-  "keywords": [
-    "contractor-management",
-    "campaign-automation",
-    "business-intelligence",
-    "glassmorphism-ui",
-    "adaptive-scaling"
-  ],
-  "author": "The Doc - Code Doctor",
-  "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "multer": "^1.4.5-lts.1",
-    "csv-parse": "^5.5.2",
-    "csv-stringify": "^6.4.4",
-    "fs-extra": "^11.1.1",
-    "date-fns": "^2.30.0"
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "papaparse": "^5.4.1",
+    "lucide-react": "^0.400.0",
+    "zustand": "^4.5.2",
+    "@tanstack/react-query": "^5.45.1",
+    "react-intersection-observer": "^9.10.3",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/papaparse": "^5",
+    "typescript": "^5",
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5"
   }
 }

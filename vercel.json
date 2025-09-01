@@ -1,19 +1,30 @@
 {
+  "functions": {
+    "src/app/api/contractors/route.ts": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "src/app/api/campaigns/route.ts": {
+      "maxDuration": 10,
+      "memory": 512
+    }
+  },
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
       "headers": [
         {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
+          "key": "Cache-Control",
+          "value": "s-maxage=60, stale-while-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/data/(.*)",
+      "headers": [
         {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "X-Requested-With, Content-Type, Authorization"
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
         }
       ]
     }

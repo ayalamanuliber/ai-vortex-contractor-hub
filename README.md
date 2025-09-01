@@ -72,7 +72,7 @@ A complete Next.js application for contractor intelligence analysis and campaign
 
 2. **Push to GitHub:**
    ```bash
-   git remote add origin https://github.com/ayalamanuliber/contractor-intelligence-hub.git
+   git remote add origin https://github.com/ayalamanuliber/ai-vortex-contractor-hub.git
    git branch -M main
    git push -u origin main
    ```

@@ -78,10 +78,25 @@ export async function GET(request: NextRequest) {
       });
     }
     
+    const searchParams = request.nextUrl.searchParams;
+    const searchId = searchParams.get('id');
+    const limit = parseInt(searchParams.get('limit') || '500'); // Increase to 500
+    
+    let filteredContractors = contractors;
+    
+    // If searching for specific ID, find it and put it first
+    if (searchId) {
+      const found = contractors.find(c => c.id === searchId);
+      if (found) {
+        filteredContractors = [found, ...contractors.filter(c => c.id !== searchId)];
+      }
+    }
+    
     return NextResponse.json({
-      contractors: contractors.slice(0, 100), // First 100 for now
+      contractors: filteredContractors.slice(0, limit),
       total: contractors.length,
-      message: 'Direct API - no service layer'
+      message: searchId ? `Found contractor ${searchId}` : 'Direct API - no service layer',
+      searchId: searchId || null
     });
     
   } catch (error) {

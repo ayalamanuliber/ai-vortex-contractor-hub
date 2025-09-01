@@ -61,8 +61,9 @@ export async function GET() {
       googleReviews: Number(row['L1_google_reviews_count']) || 0,
       mobileSpeed: Number(row['L1_psi_mobile_performance']) || 0,
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
-      websiteBuilder: row['L1_website_builder'] || 'UNKNOWN',
+      websiteBuilder: row['L1_builder_platform'] || 'UNKNOWN',
       lastReviewDate: row['L1_last_review_date'] || '',
+      domainAge: Number(row['L1_whois_domain_age_years']) || 0,
     }));
     
     // Calculate filter stats efficiently
@@ -71,10 +72,10 @@ export async function GET() {
       
       // Completion Score
       completion: {
-        high: contractors.filter(c => c.completionScore >= 85).length,
-        medium: contractors.filter(c => c.completionScore >= 70 && c.completionScore < 85).length,
-        low: contractors.filter(c => c.completionScore >= 50 && c.completionScore < 70).length,
-        veryLow: contractors.filter(c => c.completionScore < 50).length,
+        high: contractors.filter(c => c.completionScore >= 80).length,
+        medium: contractors.filter(c => c.completionScore >= 60 && c.completionScore < 80).length,
+        low: contractors.filter(c => c.completionScore >= 35 && c.completionScore < 60).length,
+        veryLow: contractors.filter(c => c.completionScore < 35).length,
       },
       
       // Real states from your data
@@ -139,7 +140,7 @@ export async function GET() {
         highRating: contractors.filter(c => c.googleRating >= 4.5).length,
         lowRating: contractors.filter(c => c.googleRating > 0 && c.googleRating < 4.0).length,
         manyReviews: contractors.filter(c => c.googleReviews >= 50).length,
-        fewReviews: contractors.filter(c => c.googleReviews > 0 && c.googleReviews < 10).length,
+        fewReviews: contractors.filter(c => c.googleReviews > 0 && c.googleReviews < 20).length,
         activeReviews: contractors.filter(c => {
           if (!c.lastReviewDate) return false;
           const sixMonthsAgo = new Date();
@@ -157,17 +158,44 @@ export async function GET() {
         noReviews: contractors.filter(c => c.googleReviews === 0).length,
       },
       
-      // Website Builder Statistics
+      // Website Builder Statistics  
       builders: {
-        wix: contractors.filter(c => c.websiteBuilder.toLowerCase().includes('wix')).length,
-        godaddy: contractors.filter(c => c.websiteBuilder.toLowerCase().includes('godaddy')).length,
-        squarespace: contractors.filter(c => c.websiteBuilder.toLowerCase().includes('squarespace')).length,
-        custom: contractors.filter(c => 
-          !c.websiteBuilder.toLowerCase().includes('wix') &&
-          !c.websiteBuilder.toLowerCase().includes('godaddy') &&
-          !c.websiteBuilder.toLowerCase().includes('squarespace') &&
-          c.websiteBuilder !== 'UNKNOWN'
-        ).length,
+        wix: contractors.filter(c => {
+          const builder = c.websiteBuilder.toLowerCase();
+          return builder.includes('wix');
+        }).length,
+        godaddy: contractors.filter(c => {
+          const builder = c.websiteBuilder.toLowerCase();
+          return builder.includes('godaddy') || builder.includes('go daddy');
+        }).length,
+        squarespace: contractors.filter(c => {
+          const builder = c.websiteBuilder.toLowerCase();
+          return builder.includes('squarespace');
+        }).length,
+        custom: contractors.filter(c => {
+          const builder = c.websiteBuilder.toLowerCase();
+          // WordPress, custom, or other non-builder platforms are considered custom
+          return (builder.includes('wordpress') || 
+                  builder.includes('custom') || 
+                  builder === 'unknown' ||
+                  (!builder.includes('wix') && 
+                   !builder.includes('godaddy') && 
+                   !builder.includes('go daddy') && 
+                   !builder.includes('squarespace') &&
+                   !builder.includes('facebook'))) &&
+                 builder !== '';
+        }).length,
+      },
+      
+      // Domain Age Statistics
+      domain: {
+        established: contractors.filter(c => c.domainAge >= 5).length,
+        new: contractors.filter(c => c.domainAge > 0 && c.domainAge < 2).length,
+        expiringSoon: contractors.filter(c => {
+          // This would need domain expiration data from whois
+          // For now, using a placeholder calculation
+          return false;
+        }).length,
       },
     };
     

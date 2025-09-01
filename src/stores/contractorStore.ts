@@ -99,7 +99,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     // Define mutually exclusive filter groups
     const mutuallyExclusiveGroups = [
       // Completion score ranges
-      ['completion-85-100', 'completion-70-84', 'completion-50-69', 'completion-0-49'],
+      ['completion-80-100', 'completion-60-79', 'completion-35-59', 'completion-0-34'],
       // States (only one state at a time)
       ['alabama', 'arkansas', 'idaho', 'kansas', 'kentucky', 'mississippi', 'montana', 'newMexico', 'oklahoma', 'southDakota', 'utah', 'westVirginia'],
       // Categories (only one category at a time)
@@ -140,7 +140,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     try {
       set({ isLoading: true });
       
-      let url = '/api/simple-contractors?start=0&limit=100';
+      let url = '/api/simple-contractors?start=0&limit=99';
       if (newFilters.length > 0) {
         url += `&filters=${newFilters.join(',')}`;
       }
@@ -170,7 +170,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     try {
       set({ isLoading: true });
       
-      let url = '/api/simple-contractors?start=0&limit=100';
+      let url = '/api/simple-contractors?start=0&limit=99';
       if (searchQuery.trim()) {
         url += `&search=${encodeURIComponent(searchQuery)}`;
       }
@@ -316,14 +316,14 @@ function applyFiltersAndSearch(
       return filters.every(filter => {
         switch (filter) {
           // Completion score filters
-          case 'completion-85-100':
-            return contractor.completionScore >= 85;
-          case 'completion-70-84':
-            return contractor.completionScore >= 70 && contractor.completionScore < 85;
-          case 'completion-50-69':
-            return contractor.completionScore >= 50 && contractor.completionScore < 70;
-          case 'completion-0-49':
-            return contractor.completionScore < 50;
+          case 'completion-80-100':
+            return contractor.completionScore >= 80;
+          case 'completion-60-79':
+            return contractor.completionScore >= 60 && contractor.completionScore < 80;
+          case 'completion-35-59':
+            return contractor.completionScore >= 35 && contractor.completionScore < 60;
+          case 'completion-0-34':
+            return contractor.completionScore < 35;
           
           // State filters - Real states from data
           case 'alabama':
@@ -420,7 +420,7 @@ function applyFiltersAndSearch(
           case 'many-reviews':
             return contractor.reviewsCount >= 50;
           case 'few-reviews':
-            return contractor.reviewsCount > 0 && contractor.reviewsCount < 10;
+            return contractor.reviewsCount > 0 && contractor.reviewsCount < 20;
           case 'no-reviews':
             return contractor.reviewsCount === 0;
           case 'active-reviews':

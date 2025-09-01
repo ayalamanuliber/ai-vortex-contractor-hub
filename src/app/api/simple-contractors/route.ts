@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
           domainAge: Number(row['L1_whois_domain_age_years']) || 0,
           businessHours: row['L1_weekday_hours'] || 'Mon-Fri 8AM-5PM',
           lastReviewDate: row['L1_last_review_date'] || '',
-          websiteBuilder: row['L1_website_builder'] || 'Unknown',
+          websiteBuilder: row['L1_builder_platform'] || 'Unknown',
         },
         businessHealth: 'NEEDS_ATTENTION' as const,
         sophisticationTier: 'Amateur' as const,
@@ -95,14 +95,14 @@ export async function GET(request: NextRequest) {
         return filters.every(filter => {
           switch (filter) {
             // Completion score filters
-            case 'completion-85-100':
-              return contractor.completionScore >= 85;
-            case 'completion-70-84':
-              return contractor.completionScore >= 70 && contractor.completionScore < 85;
-            case 'completion-50-69':
-              return contractor.completionScore >= 50 && contractor.completionScore < 70;
-            case 'completion-0-49':
-              return contractor.completionScore < 50;
+            case 'completion-80-100':
+              return contractor.completionScore >= 80;
+            case 'completion-60-79':
+              return contractor.completionScore >= 60 && contractor.completionScore < 80;
+            case 'completion-35-59':
+              return contractor.completionScore >= 35 && contractor.completionScore < 60;
+            case 'completion-0-34':
+              return contractor.completionScore < 35;
             
             // State filters
             case 'alabama': return contractor.state === 'AL';
@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
             
             // Review filters
             case 'many-reviews': return contractor.reviewsCount >= 50;
-            case 'few-reviews': return contractor.reviewsCount > 0 && contractor.reviewsCount < 10;
+            case 'few-reviews': return contractor.reviewsCount > 0 && contractor.reviewsCount < 20;
             case 'no-reviews': return contractor.reviewsCount === 0;
             case 'active-reviews': 
               if (!contractor.intelligence.lastReviewDate) return false;
@@ -152,15 +152,23 @@ export async function GET(request: NextRequest) {
               return lastReviewInactive <= sixMonthsAgoInactive;
               
             // Website builder filters
-            case 'wix-site': return contractor.intelligence.websiteBuilder?.toLowerCase().includes('wix') || false;
-            case 'godaddy-site': return contractor.intelligence.websiteBuilder?.toLowerCase().includes('godaddy') || false;
-            case 'squarespace-site': return contractor.intelligence.websiteBuilder?.toLowerCase().includes('squarespace') || false;
+            case 'wix-site': 
+              return contractor.intelligence.websiteBuilder?.toLowerCase().includes('wix') || false;
+            case 'godaddy-site': 
+              const goDaddyBuilder = contractor.intelligence.websiteBuilder?.toLowerCase() || '';
+              return goDaddyBuilder.includes('godaddy') || goDaddyBuilder.includes('go daddy');
+            case 'squarespace-site': 
+              return contractor.intelligence.websiteBuilder?.toLowerCase().includes('squarespace') || false;
             case 'custom-site': 
               const builder = contractor.intelligence.websiteBuilder?.toLowerCase() || '';
-              return !builder.includes('wix') && 
-                     !builder.includes('godaddy') && 
-                     !builder.includes('squarespace') &&
-                     builder !== 'unknown' &&
+              return (builder.includes('wordpress') || 
+                      builder.includes('custom') || 
+                      builder === 'unknown' ||
+                      (!builder.includes('wix') && 
+                       !builder.includes('godaddy') && 
+                       !builder.includes('go daddy') && 
+                       !builder.includes('squarespace') &&
+                       !builder.includes('facebook'))) &&
                      builder !== '';
                      
             // Email quality

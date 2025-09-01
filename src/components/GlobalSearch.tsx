@@ -16,7 +16,7 @@ export function GlobalSearch() {
   const performSearch = async (searchTerm: string) => {
     if (!searchTerm.trim()) {
       // Clear search - reload initial data
-      const response = await fetch('/api/simple-contractors?start=0&limit=100');
+      const response = await fetch('/api/simple-contractors?start=0&limit=99');
       const result = await response.json();
       setContractors(result.contractors || []);
       setResults([]);

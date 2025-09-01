@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Filter, X, ChevronDown, ChevronRight, Loader2,
-  Target, MapPin, Building2, Zap, Star, Globe, TrendingUp
+  Target, MapPin, Building2, Zap, Star, Globe, TrendingUp, Calendar
 } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 
@@ -77,6 +77,11 @@ interface FilterStats {
     squarespace: number;
     custom: number;
   };
+  domain: {
+    expiringSoon: number;
+    new: number;
+    established: number;
+  };
 }
 
 export function ModernFilters() {
@@ -90,6 +95,7 @@ export function ModernFilters() {
     performance: false,
     reviews: false,
     builders: false,
+    domain: false,
   });
   
   // Load filter stats
@@ -228,10 +234,10 @@ export function ModernFilters() {
         <SectionHeader section="completion" title="Completion Score" icon={<Target className="h-4 w-4" />} />
         {expandedSections.completion && (
           <div className="space-y-1 pl-2">
-            <FilterButton filter="completion-85-100" label="85-100% (Excellent)" count={stats.completion.high} color="green" />
-            <FilterButton filter="completion-70-84" label="70-84% (Good)" count={stats.completion.medium} color="yellow" />
-            <FilterButton filter="completion-50-69" label="50-69% (Fair)" count={stats.completion.low} color="orange" />
-            <FilterButton filter="completion-0-49" label="0-49% (Poor)" count={stats.completion.veryLow} color="red" />
+            <FilterButton filter="completion-80-100" label="80-100% (Excellent)" count={stats.completion.high} color="green" />
+            <FilterButton filter="completion-60-79" label="60-79% (Good)" count={stats.completion.medium} color="yellow" />
+            <FilterButton filter="completion-35-59" label="35-59% (Fair)" count={stats.completion.low} color="orange" />
+            <FilterButton filter="completion-0-34" label="0-34% (Poor)" count={stats.completion.veryLow} color="red" />
           </div>
         )}
       </div>
@@ -300,7 +306,7 @@ export function ModernFilters() {
             <FilterButton filter="high-rating" label="High Rating (4.5+)" count={stats.reviews.highRating} color="green" />
             <FilterButton filter="low-rating" label="Low Rating (<4.0)" count={stats.reviews.lowRating} color="red" />
             <FilterButton filter="many-reviews" label="Many Reviews (50+)" count={stats.reviews.manyReviews} color="blue" />
-            <FilterButton filter="few-reviews" label="Few Reviews (<10)" count={stats.reviews.fewReviews} color="orange" />
+            <FilterButton filter="few-reviews" label="Few Reviews (<20)" count={stats.reviews.fewReviews} color="orange" />
             <FilterButton filter="active-reviews" label="Active (Recent)" count={stats.reviews.activeReviews} color="green" />
             <FilterButton filter="inactive-reviews" label="Inactive (6mo+)" count={stats.reviews.inactiveReviews} color="yellow" />
             <FilterButton filter="no-reviews" label="No Reviews" count={stats.reviews.noReviews} color="red" />
@@ -317,6 +323,18 @@ export function ModernFilters() {
             <FilterButton filter="wix-site" label="Wix" count={stats.builders.wix} color="blue" />
             <FilterButton filter="godaddy-site" label="GoDaddy" count={stats.builders.godaddy} color="orange" />
             <FilterButton filter="squarespace-site" label="Squarespace" count={stats.builders.squarespace} color="purple" />
+          </div>
+        )}
+      </div>
+      
+      {/* Domain Age */}
+      <div className="space-y-2">
+        <SectionHeader section="domain" title="Domain Age" icon={<Calendar className="h-4 w-4" />} />
+        {expandedSections.domain && (
+          <div className="space-y-1 pl-2">
+            <FilterButton filter="established-domain" label="Established (5+ years)" count={stats.domain.established} color="green" />
+            <FilterButton filter="new-domain" label="New Domain (<2 years)" count={stats.domain.new} color="blue" />
+            <FilterButton filter="expiring-domain" label="Expiring Soon (3mo)" count={stats.domain.expiringSoon} color="red" />
           </div>
         )}
       </div>

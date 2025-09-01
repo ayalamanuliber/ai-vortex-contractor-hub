@@ -43,12 +43,15 @@ export function ContractorGrid() {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      const data = await contractorService.loadInitialData();
+      // SIMPLE DIRECT FETCH - NO SERVICE
+      const response = await fetch('/api/simple-contractors');
+      const result = await response.json();
+      const data = result.contractors || [];
       
-      // Debug what comes from service
+      // Debug what comes from direct API
       const contractor3993 = data.find((c: any) => c.id === '3993');
       if (contractor3993) {
-        console.log('GRID DEBUG - from service 3993:', {
+        console.log('DIRECT API - Contractor 3993:', {
           id: contractor3993.id,
           completionScore: contractor3993.completionScore,
           businessName: contractor3993.businessName

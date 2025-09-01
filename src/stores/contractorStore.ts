@@ -142,7 +142,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     try {
       set({ isLoading: true });
       
-      let url = '/api/simple-contractors?start=0&limit=99';
+      let url = '/api/simple-contractors?start=0&limit=5000';
       if (newFilters.length > 0) {
         url += `&filters=${newFilters.join(',')}`;
       }
@@ -172,7 +172,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     try {
       set({ isLoading: true });
       
-      let url = '/api/simple-contractors?start=0&limit=99';
+      let url = '/api/simple-contractors?start=0&limit=5000';
       if (searchQuery.trim()) {
         url += `&search=${encodeURIComponent(searchQuery)}`;
       }

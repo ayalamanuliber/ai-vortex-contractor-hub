@@ -44,7 +44,7 @@ export function ContractorGrid() {
     setLoading(true);
     try {
       // SIMPLE DIRECT FETCH - NO SERVICE  
-      const response = await fetch('/api/simple-contractors?start=0&limit=99');
+      const response = await fetch('/api/simple-contractors?start=0&limit=5000');
       const result = await response.json();
       const data = result.contractors || [];
       
@@ -78,8 +78,8 @@ export function ContractorGrid() {
     
     setLoading(true);
     try {
-      const start = page * 99; // page starts at 1, so page 1 = start 99
-      const response = await fetch(`/api/simple-contractors?start=${start}&limit=99`);
+      const start = page * 5000; // page starts at 1, so page 1 = start 5000
+      const response = await fetch(`/api/simple-contractors?start=${start}&limit=5000`);
       const result = await response.json();
       const newData = result.contractors || [];
       

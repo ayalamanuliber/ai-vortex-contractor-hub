@@ -108,12 +108,15 @@ class ContractorServiceClass {
           reviewsCount: contractor['L1_google_reviews_count'] || 0,
           
           intelligence: {
-            websiteSpeed: { mobile: 50, desktop: 50 },
+            websiteSpeed: { mobile: 50, desktop: 50, average: 50 },
             reviewsRecency: 'UNKNOWN' as 'ACTIVE' | 'MODERATE' | 'INACTIVE' | 'UNKNOWN',
             daysSinceLatest: 0,
             platformDetection: 'Unknown',
             domainAge: 0,
             businessHours: 'Mon-Fri 8AM-5PM',
+            lastReviewDate: '',
+            websiteBuilder: '',
+            expiringSoon: 0,
           },
           
           businessHealth: 'NEEDS_ATTENTION' as 'HEALTHY' | 'EMERGING' | 'NEEDS_ATTENTION',
@@ -189,12 +192,16 @@ class ContractorServiceClass {
         websiteSpeed: {
           mobile: parseInt(row['L1_psi_mobile_performance']) || 0,
           desktop: parseInt(row['L1_psi_desktop_performance']) || 0,
+          average: parseInt(row['L1_psi_avg_performance']) || 0,
         },
-        reviewsRecency: row['L2_reviews_recency_bucket'] || 'UNKNOWN',
+        reviewsRecency: row['L1_review_frequency'] || 'UNKNOWN',
         daysSinceLatest: parseInt(row['L1_days_since_latest_review']) || 0,
         platformDetection: row['L1_builder_platform'] || 'Unknown',
         domainAge: parseFloat(row['L1_whois_domain_age_years']) || 0,
         businessHours: row['L1_weekday_hours'] || 'Mon-Fri 8AM-5PM',
+        lastReviewDate: row['L1_last_review_date'] || '',
+        websiteBuilder: row['L1_builder_platform'] || '',
+        expiringSoon: parseInt(row['L1_whois_expiring_soon']) || 0,
       },
       
       // Classifications - using L1 targeting fields
@@ -396,12 +403,15 @@ class ContractorServiceClass {
       googleRating: 0,
       reviewsCount: 0,
       intelligence: {
-        websiteSpeed: { mobile: 0, desktop: 0 },
+        websiteSpeed: { mobile: 0, desktop: 0, average: 0 },
         reviewsRecency: 'UNKNOWN',
         daysSinceLatest: 0,
         platformDetection: 'Unknown',
         domainAge: 0,
         businessHours: 'Unknown',
+        lastReviewDate: '',
+        websiteBuilder: '',
+        expiringSoon: 0,
       },
       businessHealth: 'NEEDS_ATTENTION',
       sophisticationTier: 'Amateur',

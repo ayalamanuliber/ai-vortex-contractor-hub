@@ -115,7 +115,9 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
       // Website builders
       ['wix-site', 'godaddy-site', 'squarespace-site', 'custom-site'],
       // Email quality
-      ['professional-email', 'personal-email']
+      ['professional-email', 'personal-email'],
+      // Domain age
+      ['established-domain', 'new-domain', 'expiring-domain']
     ];
     
     let newFilters;

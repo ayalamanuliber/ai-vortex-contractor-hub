@@ -22,6 +22,7 @@ export interface Contractor {
     websiteSpeed: {
       mobile: number;
       desktop: number;
+      average: number;
     };
     reviewsRecency: 'ACTIVE' | 'MODERATE' | 'INACTIVE' | 'UNKNOWN';
     daysSinceLatest: number;
@@ -30,6 +31,7 @@ export interface Contractor {
     businessHours: string;
     lastReviewDate?: string;
     websiteBuilder?: string;
+    expiringSoon?: number;
   };
   
   // Classifications

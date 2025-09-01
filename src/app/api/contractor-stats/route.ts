@@ -8,25 +8,27 @@ let statsCache: any = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Function to categorize contractors based on keywords
+// Function to categorize contractors based on exact mapping
 function getMegaCategory(category: string): string {
   if (!category) return 'Other';
   
   const cat = category.toLowerCase();
   
-  if (cat.includes('roofing') || cat.includes('roofer') || cat.includes('skylight')) return 'Roofing';
-  if (cat.includes('hvac') || cat.includes('heating') || cat.includes('air conditioning') || cat.includes('air duct')) return 'HVAC';
-  if (cat.includes('plumber') || cat.includes('plumbing') || cat.includes('septic')) return 'Plumbing';
-  if (cat.includes('electric') || cat.includes('electrical') || cat.includes('lighting') || cat.includes('solar')) return 'Electrical';
-  if (cat.includes('remodel') || cat.includes('kitchen') || cat.includes('bathroom') || cat.includes('paint') || cat.includes('cabinet') || cat.includes('countertop') || cat.includes('floor') || cat.includes('tile') || cat.includes('carpet') || cat.includes('furniture')) return 'Remodeling & Finishing';
-  if (cat.includes('siding') || cat.includes('gutter') || cat.includes('landscap') || cat.includes('lawn') || cat.includes('deck') || cat.includes('fence') || cat.includes('pond')) return 'Exterior & Landscaping';
-  if (cat.includes('pav') || cat.includes('asphalt') || cat.includes('excavat') || cat.includes('demolition') || cat.includes('concrete') || cat.includes('masonry') || cat.includes('road construction') || cat.includes('dock') || cat.includes('logging')) return 'Heavy & Civil Work';
-  if (cat.includes('home builder') || cat.includes('log home') || cat.includes('custom home') || cat.includes('modular home') || cat.includes('portable building')) return 'Home Building';
-  if (cat.includes('handyman') || cat.includes('handywoman') || cat.includes('handyperson') || cat.includes('carpent') || cat.includes('woodworker') || cat.includes('weld') || cat.includes('drilling') || cat.includes('insulation') || cat.includes('swimming pool') || cat.includes('hot tub') || cat.includes('appliance')) return 'Specialty Trades & Handyman';
-  if (cat.includes('supply') || cat.includes('supplier') || cat.includes('store') || cat.includes('shop') || cat.includes('wholesaler') || cat.includes('materials') || cat.includes('sand & gravel') || cat.includes('stone')) return 'Suppliers & Materials';
-  if (cat.includes('architect') || cat.includes('design') || cat.includes('designer') || cat.includes('engineer') || cat.includes('consultant') || cat.includes('water damage') || cat.includes('waterproofing') || cat.includes('fire') || cat.includes('restoration') || cat.includes('home inspector') || cat.includes('land surveyor')) return 'Ancillary Services';
-  if (cat.includes('construction') || cat.includes('contractor') || cat.includes('general contractor') || cat.includes('civil') || cat.includes('utility')) return 'General Construction';
-  if (cat.includes('window') || cat.includes('door') || cat.includes('glass & mirror')) return 'Window & Door';
+  // Exact mapping as specified
+  if (cat.includes('roofing') || cat.includes('roof')) return 'Roofing';
+  if (cat.includes('hvac') || cat.includes('heating') || cat.includes('cooling') || cat.includes('air conditioning')) return 'HVAC';
+  if (cat.includes('plumber') || cat.includes('plumbing')) return 'Plumbing';
+  if (cat.includes('electrician') || cat.includes('electric')) return 'Electrical';
+  if (cat.includes('remodeling') || cat.includes('drywall') || cat.includes('carpet') || cat.includes('floor') || cat.includes('tile') || cat.includes('counter')) return 'Remodeling & Finishing';
+  if (cat.includes('landscap') || cat.includes('lawn') || cat.includes('siding')) return 'Exterior & Landscaping';
+  if (cat.includes('concrete')) return 'Heavy & Civil Work';
+  if (cat.includes('home builder') || cat.includes('custom home')) return 'Home Building';
+  if (cat.includes('handyman')) return 'Specialty Trades & Handyman';
+  if (cat.includes('supplier')) return 'Suppliers & Materials';
+  if (cat.includes('interior designer') || cat.includes('waterproofing')) return 'Ancillary Services';
+  if (cat.includes('general contractor') || cat.includes('construction company')) return 'General Construction';
+  if (cat.includes('window') || cat.includes('door') || cat.includes('glass')) return 'Window & Door';
+  if (cat.includes('association') || cat.includes('organization')) return 'Other';
   
   return 'Other';
 }
@@ -56,14 +58,15 @@ export async function GET() {
     const contractors = parsed.data.map((row: any) => ({
       completionScore: Number(row['data_completion_score']) || 0,
       state: row['L1_state_code'] || '',
-      category: getMegaCategory(row['L1_category'] || ''),
+      category: row['L1_category'] || '',
       googleRating: Number(row['L1_google_rating']) || 0,
       googleReviews: Number(row['L1_google_reviews_count']) || 0,
-      mobileSpeed: Number(row['L1_psi_mobile_performance']) || 0,
+      avgSpeed: Number(row['L1_psi_avg_performance']) || 0,
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
-      websiteBuilder: row['L1_builder_platform'] || 'UNKNOWN',
-      lastReviewDate: row['L1_last_review_date'] || '',
+      websiteBuilder: row['L1_builder_platform'] || '',
+      reviewFrequency: row['L1_review_frequency'] || '',
       domainAge: Number(row['L1_whois_domain_age_years']) || 0,
+      expiringSoon: Number(row['L1_whois_expiring_soon']) || 0,
     }));
     
     // Calculate filter stats efficiently
@@ -96,27 +99,27 @@ export async function GET() {
       
       // 14 Real Mega Categories
       categories: {
-        roofing: contractors.filter(c => c.category === 'Roofing').length,
-        hvac: contractors.filter(c => c.category === 'HVAC').length,
-        plumbing: contractors.filter(c => c.category === 'Plumbing').length,
-        electrical: contractors.filter(c => c.category === 'Electrical').length,
-        remodeling: contractors.filter(c => c.category === 'Remodeling & Finishing').length,
-        exterior: contractors.filter(c => c.category === 'Exterior & Landscaping').length,
-        heavyCivil: contractors.filter(c => c.category === 'Heavy & Civil Work').length,
-        homeBuilding: contractors.filter(c => c.category === 'Home Building').length,
-        specialty: contractors.filter(c => c.category === 'Specialty Trades & Handyman').length,
-        suppliers: contractors.filter(c => c.category === 'Suppliers & Materials').length,
-        ancillary: contractors.filter(c => c.category === 'Ancillary Services').length,
-        construction: contractors.filter(c => c.category === 'General Construction').length,
-        windowDoor: contractors.filter(c => c.category === 'Window & Door').length,
-        other: contractors.filter(c => c.category === 'Other').length,
+        roofing: contractors.filter(c => getMegaCategory(c.category) === 'Roofing').length,
+        hvac: contractors.filter(c => getMegaCategory(c.category) === 'HVAC').length,
+        plumbing: contractors.filter(c => getMegaCategory(c.category) === 'Plumbing').length,
+        electrical: contractors.filter(c => getMegaCategory(c.category) === 'Electrical').length,
+        remodeling: contractors.filter(c => getMegaCategory(c.category) === 'Remodeling & Finishing').length,
+        exterior: contractors.filter(c => getMegaCategory(c.category) === 'Exterior & Landscaping').length,
+        heavyCivil: contractors.filter(c => getMegaCategory(c.category) === 'Heavy & Civil Work').length,
+        homeBuilding: contractors.filter(c => getMegaCategory(c.category) === 'Home Building').length,
+        specialty: contractors.filter(c => getMegaCategory(c.category) === 'Specialty Trades & Handyman').length,
+        suppliers: contractors.filter(c => getMegaCategory(c.category) === 'Suppliers & Materials').length,
+        ancillary: contractors.filter(c => getMegaCategory(c.category) === 'Ancillary Services').length,
+        construction: contractors.filter(c => getMegaCategory(c.category) === 'General Construction').length,
+        windowDoor: contractors.filter(c => getMegaCategory(c.category) === 'Window & Door').length,
+        other: contractors.filter(c => getMegaCategory(c.category) === 'Other').length,
       },
       
-      // Website Speed (PSI)
+      // Website Speed (PSI Average)
       speed: {
-        high: contractors.filter(c => c.mobileSpeed >= 85).length,
-        medium: contractors.filter(c => c.mobileSpeed >= 60 && c.mobileSpeed < 85).length,
-        low: contractors.filter(c => c.mobileSpeed < 60).length,
+        high: contractors.filter(c => c.avgSpeed >= 85).length,
+        medium: contractors.filter(c => c.avgSpeed >= 60 && c.avgSpeed < 85).length,
+        low: contractors.filter(c => c.avgSpeed < 60).length,
       },
       
       // Google Rating
@@ -141,49 +144,25 @@ export async function GET() {
         lowRating: contractors.filter(c => c.googleRating > 0 && c.googleRating < 4.0).length,
         manyReviews: contractors.filter(c => c.googleReviews >= 50).length,
         fewReviews: contractors.filter(c => c.googleReviews > 0 && c.googleReviews < 20).length,
-        activeReviews: contractors.filter(c => {
-          if (!c.lastReviewDate) return false;
-          const sixMonthsAgo = new Date();
-          sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-          const lastReview = new Date(c.lastReviewDate);
-          return lastReview > sixMonthsAgo;
-        }).length,
-        inactiveReviews: contractors.filter(c => {
-          if (!c.lastReviewDate) return false;
-          const sixMonthsAgo = new Date();
-          sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-          const lastReview = new Date(c.lastReviewDate);
-          return lastReview <= sixMonthsAgo;
-        }).length,
-        noReviews: contractors.filter(c => c.googleReviews === 0).length,
+        activeReviews: contractors.filter(c => c.reviewFrequency === 'ACTIVE').length,
+        inactiveReviews: contractors.filter(c => c.reviewFrequency === 'INACTIVE').length,
+        noReviews: contractors.filter(c => c.googleReviews === 0 || c.googleReviews === null).length,
       },
       
       // Website Builder Statistics  
       builders: {
-        wix: contractors.filter(c => {
-          const builder = c.websiteBuilder.toLowerCase();
-          return builder.includes('wix');
-        }).length,
-        godaddy: contractors.filter(c => {
-          const builder = c.websiteBuilder.toLowerCase();
-          return builder.includes('godaddy') || builder.includes('go daddy');
-        }).length,
-        squarespace: contractors.filter(c => {
-          const builder = c.websiteBuilder.toLowerCase();
-          return builder.includes('squarespace');
-        }).length,
+        wix: contractors.filter(c => c.websiteBuilder === 'Wix').length,
+        godaddy: contractors.filter(c => c.websiteBuilder === 'GoDaddy').length,
+        squarespace: contractors.filter(c => c.websiteBuilder === 'Squarespace').length,
         custom: contractors.filter(c => {
-          const builder = c.websiteBuilder.toLowerCase();
-          // WordPress, custom, or other non-builder platforms are considered custom
-          return (builder.includes('wordpress') || 
-                  builder.includes('custom') || 
-                  builder === 'unknown' ||
-                  (!builder.includes('wix') && 
-                   !builder.includes('godaddy') && 
-                   !builder.includes('go daddy') && 
-                   !builder.includes('squarespace') &&
-                   !builder.includes('facebook'))) &&
-                 builder !== '';
+          // Custom/WordPress: NULL, "WordPress", "Apache", "Nginx", "Unknown", "ERROR" or empty
+          return !c.websiteBuilder || 
+                 c.websiteBuilder === '' || 
+                 c.websiteBuilder === 'WordPress' || 
+                 c.websiteBuilder === 'Apache' || 
+                 c.websiteBuilder === 'Nginx' || 
+                 c.websiteBuilder === 'Unknown' || 
+                 c.websiteBuilder === 'ERROR';
         }).length,
       },
       
@@ -191,11 +170,7 @@ export async function GET() {
       domain: {
         established: contractors.filter(c => c.domainAge >= 5).length,
         new: contractors.filter(c => c.domainAge > 0 && c.domainAge < 2).length,
-        expiringSoon: contractors.filter(c => {
-          // This would need domain expiration data from whois
-          // For now, using a placeholder calculation
-          return false;
-        }).length,
+        expiringSoon: contractors.filter(c => c.expiringSoon === 1).length,
       },
     };
     

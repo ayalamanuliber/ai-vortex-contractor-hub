@@ -3,6 +3,31 @@ import Papa from 'papaparse';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Function to categorize contractors based on exact mapping
+function getMegaCategory(category: string): string {
+  if (!category) return 'Other';
+  
+  const cat = category.toLowerCase();
+  
+  // Exact mapping as specified
+  if (cat.includes('roofing') || cat.includes('roof')) return 'Roofing';
+  if (cat.includes('hvac') || cat.includes('heating') || cat.includes('cooling') || cat.includes('air conditioning')) return 'HVAC';
+  if (cat.includes('plumber') || cat.includes('plumbing')) return 'Plumbing';
+  if (cat.includes('electrician') || cat.includes('electric')) return 'Electrical';
+  if (cat.includes('remodeling') || cat.includes('drywall') || cat.includes('carpet') || cat.includes('floor') || cat.includes('tile') || cat.includes('counter')) return 'Remodeling & Finishing';
+  if (cat.includes('landscap') || cat.includes('lawn') || cat.includes('siding')) return 'Exterior & Landscaping';
+  if (cat.includes('concrete')) return 'Heavy & Civil Work';
+  if (cat.includes('home builder') || cat.includes('custom home')) return 'Home Building';
+  if (cat.includes('handyman')) return 'Specialty Trades & Handyman';
+  if (cat.includes('supplier')) return 'Suppliers & Materials';
+  if (cat.includes('interior designer') || cat.includes('waterproofing')) return 'Ancillary Services';
+  if (cat.includes('general contractor') || cat.includes('construction company')) return 'General Construction';
+  if (cat.includes('window') || cat.includes('door') || cat.includes('glass')) return 'Window & Door';
+  if (cat.includes('association') || cat.includes('organization')) return 'Other';
+  
+  return 'Other';
+}
+
 export async function GET(request: NextRequest) {
   try {
     const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_original.csv');
@@ -45,14 +70,16 @@ export async function GET(request: NextRequest) {
           websiteSpeed: {
             mobile: Number(row['L1_psi_mobile_performance']) || 0,
             desktop: Number(row['L1_psi_desktop_performance']) || 0,
+            average: Number(row['L1_psi_avg_performance']) || 0,
           },
-          reviewsRecency: 'UNKNOWN' as const,
+          reviewsRecency: row['L1_review_frequency'] || 'UNKNOWN',
           daysSinceLatest: Number(row['L1_days_since_latest_review']) || 0,
           platformDetection: row['L1_builder_platform'] || 'Unknown',
           domainAge: Number(row['L1_whois_domain_age_years']) || 0,
           businessHours: row['L1_weekday_hours'] || 'Mon-Fri 8AM-5PM',
           lastReviewDate: row['L1_last_review_date'] || '',
-          websiteBuilder: row['L1_builder_platform'] || 'Unknown',
+          websiteBuilder: row['L1_builder_platform'] || '',
+          expiringSoon: Number(row['L1_whois_expiring_soon']) || 0,
         },
         businessHealth: 'NEEDS_ATTENTION' as const,
         sophisticationTier: 'Amateur' as const,
@@ -118,67 +145,56 @@ export async function GET(request: NextRequest) {
             case 'utah': return contractor.state === 'UT';
             case 'westVirginia': return contractor.state === 'WV';
             
-            // Category filters  
-            case 'roofing': return contractor.category.toLowerCase().includes('roofing');
-            case 'hvac': return contractor.category.toLowerCase().includes('hvac');
-            case 'plumbing': return contractor.category.toLowerCase().includes('plumbing');
-            case 'electrical': return contractor.category.toLowerCase().includes('electrical');
-            case 'remodeling': return contractor.category.toLowerCase().includes('remodeling') || contractor.category.toLowerCase().includes('finishing');
-            case 'exterior': return contractor.category.toLowerCase().includes('exterior') || contractor.category.toLowerCase().includes('landscaping');
-            case 'heavyCivil': return contractor.category.toLowerCase().includes('heavy') || contractor.category.toLowerCase().includes('civil');
-            case 'homeBuilding': return contractor.category.toLowerCase().includes('home building') || contractor.category.toLowerCase().includes('builder');
-            case 'specialty': return contractor.category.toLowerCase().includes('specialty') || contractor.category.toLowerCase().includes('handyman');
-            case 'suppliers': return contractor.category.toLowerCase().includes('suppliers') || contractor.category.toLowerCase().includes('materials');
-            case 'ancillary': return contractor.category.toLowerCase().includes('ancillary') || contractor.category.toLowerCase().includes('services');
-            case 'construction': return contractor.category.toLowerCase().includes('construction') || contractor.category.toLowerCase().includes('contractor');
-            case 'windowDoor': return contractor.category.toLowerCase().includes('window') || contractor.category.toLowerCase().includes('door');
-            case 'other': return contractor.category.toLowerCase().includes('other') || contractor.category === '';
+            // Category filters using exact mapping
+            case 'roofing': return getMegaCategory(contractor.category) === 'Roofing';
+            case 'hvac': return getMegaCategory(contractor.category) === 'HVAC';
+            case 'plumbing': return getMegaCategory(contractor.category) === 'Plumbing';
+            case 'electrical': return getMegaCategory(contractor.category) === 'Electrical';
+            case 'remodeling': return getMegaCategory(contractor.category) === 'Remodeling & Finishing';
+            case 'exterior': return getMegaCategory(contractor.category) === 'Exterior & Landscaping';
+            case 'heavyCivil': return getMegaCategory(contractor.category) === 'Heavy & Civil Work';
+            case 'homeBuilding': return getMegaCategory(contractor.category) === 'Home Building';
+            case 'specialty': return getMegaCategory(contractor.category) === 'Specialty Trades & Handyman';
+            case 'suppliers': return getMegaCategory(contractor.category) === 'Suppliers & Materials';
+            case 'ancillary': return getMegaCategory(contractor.category) === 'Ancillary Services';
+            case 'construction': return getMegaCategory(contractor.category) === 'General Construction';
+            case 'windowDoor': return getMegaCategory(contractor.category) === 'Window & Door';
+            case 'other': return getMegaCategory(contractor.category) === 'Other';
             
             // Review filters
             case 'many-reviews': return contractor.reviewsCount >= 50;
             case 'few-reviews': return contractor.reviewsCount > 0 && contractor.reviewsCount < 20;
-            case 'no-reviews': return contractor.reviewsCount === 0;
-            case 'active-reviews': 
-              if (!contractor.intelligence.lastReviewDate) return false;
-              const sixMonthsAgo = new Date();
-              sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-              const lastReview = new Date(contractor.intelligence.lastReviewDate);
-              return lastReview > sixMonthsAgo;
-            case 'inactive-reviews':
-              if (!contractor.intelligence.lastReviewDate) return false;
-              const sixMonthsAgoInactive = new Date();
-              sixMonthsAgoInactive.setMonth(sixMonthsAgoInactive.getMonth() - 6);
-              const lastReviewInactive = new Date(contractor.intelligence.lastReviewDate);
-              return lastReviewInactive <= sixMonthsAgoInactive;
+            case 'no-reviews': return contractor.reviewsCount === 0 || contractor.reviewsCount === null;
+            case 'active-reviews': return contractor.intelligence.reviewsRecency === 'ACTIVE';
+            case 'inactive-reviews': return contractor.intelligence.reviewsRecency === 'INACTIVE';
               
-            // Website builder filters
-            case 'wix-site': 
-              return contractor.intelligence.websiteBuilder?.toLowerCase().includes('wix') || false;
-            case 'godaddy-site': 
-              const goDaddyBuilder = contractor.intelligence.websiteBuilder?.toLowerCase() || '';
-              return goDaddyBuilder.includes('godaddy') || goDaddyBuilder.includes('go daddy');
-            case 'squarespace-site': 
-              return contractor.intelligence.websiteBuilder?.toLowerCase().includes('squarespace') || false;
+            // Website builder filters using exact mapping
+            case 'wix-site': return contractor.intelligence.websiteBuilder === 'Wix';
+            case 'godaddy-site': return contractor.intelligence.websiteBuilder === 'GoDaddy';
+            case 'squarespace-site': return contractor.intelligence.websiteBuilder === 'Squarespace';
             case 'custom-site': 
-              const builder = contractor.intelligence.websiteBuilder?.toLowerCase() || '';
-              return (builder.includes('wordpress') || 
-                      builder.includes('custom') || 
-                      builder === 'unknown' ||
-                      (!builder.includes('wix') && 
-                       !builder.includes('godaddy') && 
-                       !builder.includes('go daddy') && 
-                       !builder.includes('squarespace') &&
-                       !builder.includes('facebook'))) &&
-                     builder !== '';
+              const builder = contractor.intelligence.websiteBuilder;
+              return !builder || 
+                     builder === '' || 
+                     builder === 'WordPress' || 
+                     builder === 'Apache' || 
+                     builder === 'Nginx' || 
+                     builder === 'Unknown' || 
+                     builder === 'ERROR';
                      
             // Email quality
             case 'professional-email': return contractor.emailQuality === 'PROFESSIONAL_DOMAIN';
             case 'personal-email': return contractor.emailQuality === 'PERSONAL_DOMAIN';
             
-            // PSI performance
-            case 'high-psi': return contractor.intelligence.websiteSpeed.mobile >= 85;
-            case 'medium-psi': return contractor.intelligence.websiteSpeed.mobile >= 60 && contractor.intelligence.websiteSpeed.mobile < 85;
-            case 'low-psi': return contractor.intelligence.websiteSpeed.mobile < 60;
+            // PSI performance using average
+            case 'high-psi': return contractor.intelligence.websiteSpeed.average >= 85;
+            case 'medium-psi': return contractor.intelligence.websiteSpeed.average >= 60 && contractor.intelligence.websiteSpeed.average < 85;
+            case 'low-psi': return contractor.intelligence.websiteSpeed.average < 60;
+            
+            // Domain age filters
+            case 'established-domain': return contractor.intelligence.domainAge >= 5;
+            case 'new-domain': return contractor.intelligence.domainAge > 0 && contractor.intelligence.domainAge < 2;
+            case 'expiring-domain': return contractor.intelligence.expiringSoon === 1;
             
             // Rating filters
             case 'high-rating': return contractor.googleRating >= 4.5;

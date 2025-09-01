@@ -49,7 +49,28 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
   // Actions
   setContractors: (contractors) => {
     const { filters, searchQuery } = get();
+    
+    // Debug contractor 3993
+    const contractor3993 = contractors.find(c => c.id === '3993');
+    if (contractor3993) {
+      console.log('STORE DEBUG - setContractors 3993:', {
+        id: contractor3993.id,
+        completionScore: contractor3993.completionScore,
+        businessName: contractor3993.businessName
+      });
+    }
+    
     const filtered = applyFiltersAndSearch(contractors, filters, searchQuery);
+    
+    // Debug after filtering
+    const filtered3993 = filtered.find(c => c.id === '3993');
+    if (filtered3993) {
+      console.log('STORE DEBUG - after filtering 3993:', {
+        id: filtered3993.id,
+        completionScore: filtered3993.completionScore,
+        businessName: filtered3993.businessName
+      });
+    }
     
     set({ 
       contractors, 

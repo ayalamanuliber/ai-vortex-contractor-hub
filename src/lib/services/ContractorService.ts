@@ -42,6 +42,7 @@ export class ContractorService {
     
     // Clear cache to ensure fresh data
     this.clearCache();
+    console.log('🩺 EMERGENCY FIX: Cache cleared, loading fresh data...');
     this.isLoading = true;
 
     try {
@@ -211,18 +212,16 @@ export class ContractorService {
     this.campaignData.forEach((campaign, id) => {
       if (!this.mergedData.has(id)) {
         const merged: MergedContractor = this.createContractorFromCampaign(campaign);
-        
-        // Debug if overwriting 3993
-        if (id === '3993') {
-          console.log(`OVERWRITE DEBUG 3993 - Creating from campaign:`, {
-            completionScore: merged.completionScore,
-            businessName: merged.businessName,
-            overwroteCSV: true
-          });
-        }
-        
         this.mergedData.set(id, merged);
         this.updateIndexes(id, merged);
+      } else {
+        // Debug: Campaign trying to overwrite existing CSV data
+        if (id === '3993') {
+          console.log(`PREVENTED OVERWRITE 3993 - CSV data protected:`, {
+            existingScore: this.mergedData.get(id)?.completionScore,
+            campaignWouldSet: 0
+          });
+        }
       }
     });
   }

@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { IntelligenceCard } from './ContractorCard/IntelligenceCard';
-import { ExecutionCard } from './ContractorCard/ExecutionCard';
+import { UnifiedCard } from './ContractorCard/UnifiedCard';
 import { contractorService } from '@/lib/services/ContractorService';
 import { useContractorStore } from '@/stores/contractorStore';
 import { Loader2 } from 'lucide-react';
@@ -18,7 +17,6 @@ export function ContractorGrid() {
   
   const { 
     filteredContractors, 
-    currentMode, 
     setContractors, 
     addContractors,
     isLoading,
@@ -133,21 +131,13 @@ export function ContractorGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {filteredContractors.map((contractor, index) => (
-          <div key={contractor.id}>
-            {currentMode === 'intelligence' ? (
-              <IntelligenceCard 
-                contractor={contractor} 
-                onClick={() => openProfile(contractor)}
-              />
-            ) : (
-              <ExecutionCard 
-                contractor={contractor} 
-                onClick={() => openProfile(contractor)}
-              />
-            )}
-          </div>
+          <UnifiedCard 
+            key={contractor.id}
+            contractor={contractor} 
+            onClick={() => openProfile(contractor)}
+          />
         ))}
       </div>
       

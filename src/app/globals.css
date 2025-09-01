@@ -4,6 +4,17 @@
 
 /* AI Vortex Dark Theme - Preserving your original design */
 @layer base {
+  :root {
+    /* AI Vortex Unified Card Colors */
+    --green: #22c55e;
+    --yellow: #facc15;
+    --orange: #fb923c;
+    --red: #f87171;
+    --blue: #3b82f6;
+    --purple: #a78bfa;
+    --pink: #ec4899;
+  }
+
   body {
     @apply bg-background text-foreground;
     background-image: 

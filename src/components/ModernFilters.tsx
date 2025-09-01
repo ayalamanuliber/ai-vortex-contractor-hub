@@ -82,6 +82,12 @@ interface FilterStats {
     new: number;
     established: number;
   };
+  campaigns: {
+    ready: number;
+    processing: number;
+    notSetup: number;
+    failed: number;
+  };
 }
 
 export function ModernFilters() {
@@ -96,6 +102,7 @@ export function ModernFilters() {
     reviews: false,
     builders: false,
     domain: false,
+    campaigns: false,
   });
   
   // Load filter stats
@@ -335,6 +342,19 @@ export function ModernFilters() {
             <FilterButton filter="established-domain" label="Established (5+ years)" count={stats.domain.established} color="green" />
             <FilterButton filter="new-domain" label="New Domain (<2 years)" count={stats.domain.new} color="blue" />
             <FilterButton filter="expiring-domain" label="Expiring Soon (3mo)" count={stats.domain.expiringSoon} color="red" />
+          </div>
+        )}
+      </div>
+
+      {/* Campaign Status */}
+      <div className="space-y-2">
+        <SectionHeader section="campaigns" title="Campaign Status" icon={<Target className="h-4 w-4" />} />
+        {expandedSections.campaigns && (
+          <div className="space-y-1 pl-2">
+            <FilterButton filter="campaign-ready" label="Ready" count={stats.campaigns.ready} color="green" />
+            <FilterButton filter="campaign-processing" label="Processing" count={stats.campaigns.processing} color="yellow" />
+            <FilterButton filter="campaign-not-setup" label="Not Setup" count={stats.campaigns.notSetup} color="default" />
+            <FilterButton filter="campaign-failed" label="Failed" count={stats.campaigns.failed} color="red" />
           </div>
         )}
       </div>

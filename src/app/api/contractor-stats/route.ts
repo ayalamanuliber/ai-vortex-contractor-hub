@@ -53,21 +53,57 @@ export async function GET() {
       skipEmptyLines: true,
       transformHeader: (header) => header.trim(),
     });
+
+    // Load campaigns JSON data
+    let campaignsData = null;
+    try {
+      const campaignsPath = path.join(process.cwd(), 'public', 'data', 'campaigns.json');
+      const campaignsContent = await fs.readFile(campaignsPath, 'utf-8');
+      campaignsData = JSON.parse(campaignsContent);
+    } catch (error) {
+      console.log('No campaigns data found, using default stats');
+      campaignsData = { contractors: {} };
+    }
     
     // Process contractors for stats (faster processing)
-    const contractors = parsed.data.map((row: any) => ({
-      completionScore: Number(row['data_completion_score']) || 0,
-      state: row['L1_state_code'] || '',
-      category: row['L1_category'] || '',
-      googleRating: Number(row['L1_google_rating']) || 0,
-      googleReviews: Number(row['L1_google_reviews_count']) || 0,
-      avgSpeed: Number(row['L1_psi_avg_performance']) || 0,
-      emailQuality: row['L2_email_quality'] || 'UNKNOWN',
-      websiteBuilder: row['L1_builder_platform'] || '',
-      reviewFrequency: row['L1_review_frequency'] || '',
-      domainAge: Number(row['L1_whois_domain_age_years']) || 0,
-      expiringSoon: Number(row['L1_whois_expiring_soon']) || 0,
-    }));
+    const contractors = parsed.data.map((row: any) => {
+      const businessId = String(row['business_id']).replace(/^0+/, '').trim();
+      const campaignData = campaignsData.contractors[businessId];
+      
+      // Determine campaign status
+      let campaignStatus = 'NOT_SETUP';
+      if (campaignData) {
+        switch (campaignData.processing_status) {
+          case 'completed':
+            campaignStatus = 'READY';
+            break;
+          case 'pending':
+            campaignStatus = 'PROCESSING';
+            break;
+          case 'failed':
+            campaignStatus = 'FAILED';
+            break;
+          default:
+            campaignStatus = 'NOT_SETUP';
+        }
+      }
+
+      return {
+        businessId,
+        completionScore: Number(row['data_completion_score']) || 0,
+        state: row['L1_state_code'] || '',
+        category: row['L1_category'] || '',
+        googleRating: Number(row['L1_google_rating']) || 0,
+        googleReviews: Number(row['L1_google_reviews_count']) || 0,
+        avgSpeed: Number(row['L1_psi_avg_performance']) || 0,
+        emailQuality: row['L2_email_quality'] || 'UNKNOWN',
+        websiteBuilder: row['L1_builder_platform'] || '',
+        reviewFrequency: row['L1_review_frequency'] || '',
+        domainAge: Number(row['L1_whois_domain_age_years']) || 0,
+        expiringSoon: Number(row['L1_whois_expiring_soon']) || 0,
+        campaignStatus,
+      };
+    });
     
     // Calculate filter stats efficiently
     const stats = {
@@ -171,6 +207,14 @@ export async function GET() {
         established: contractors.filter(c => c.domainAge >= 5).length,
         new: contractors.filter(c => c.domainAge > 0 && c.domainAge < 2).length,
         expiringSoon: contractors.filter(c => c.expiringSoon === 1).length,
+      },
+
+      // Campaign Status Statistics
+      campaigns: {
+        ready: contractors.filter(c => c.campaignStatus === 'READY').length,
+        processing: contractors.filter(c => c.campaignStatus === 'PROCESSING').length,
+        notSetup: contractors.filter(c => c.campaignStatus === 'NOT_SETUP').length,
+        failed: contractors.filter(c => c.campaignStatus === 'FAILED').length,
       },
     };
     

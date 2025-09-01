@@ -200,6 +200,12 @@ export async function GET(request: NextRequest) {
             case 'high-rating': return contractor.googleRating >= 4.5;
             case 'low-rating': return contractor.googleRating < 4.0;
             
+            // Campaign Status filters
+            case 'campaign-ready': return contractor.hasCampaign && contractor.campaignData;
+            case 'campaign-processing': return false; // Will implement when we have status in data
+            case 'campaign-not-setup': return !contractor.hasCampaign;
+            case 'campaign-failed': return false; // Will implement when we have status in data
+            
             default:
               return true;
           }

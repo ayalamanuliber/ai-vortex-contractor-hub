@@ -117,7 +117,9 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
       // Email quality
       ['professional-email', 'personal-email'],
       // Domain age
-      ['established-domain', 'new-domain', 'expiring-domain']
+      ['established-domain', 'new-domain', 'expiring-domain'],
+      // Campaign status
+      ['campaign-ready', 'campaign-processing', 'campaign-not-setup', 'campaign-failed']
     ];
     
     let newFilters;
@@ -452,6 +454,18 @@ function applyFiltersAndSearch(
                    !builder.includes('squarespace') &&
                    builder !== 'unknown' &&
                    builder !== '';
+          
+          // Campaign Status filters
+          case 'campaign-ready':
+            return contractor.hasCampaign && contractor.campaignData;
+          case 'campaign-processing':
+            // For now, we'll treat this as false since we don't have processing status in MergedContractor yet
+            return false;
+          case 'campaign-not-setup':
+            return !contractor.hasCampaign;
+          case 'campaign-failed':
+            // For now, we'll treat this as false since we don't have failed status in MergedContractor yet
+            return false;
           
           default:
             return true;

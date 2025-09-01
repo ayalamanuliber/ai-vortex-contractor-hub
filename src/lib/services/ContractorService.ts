@@ -82,6 +82,17 @@ export class ContractorService {
   private parseContractorFromCSV(row: any): Contractor {
     const id = this.normalizeId(row['business_id'] || row.id);
     
+    // Debug specific contractor
+    if (id === '3993') {
+      console.log('DEBUG 3993 - Raw row:', {
+        business_id: row['business_id'],
+        data_completion_score: row['data_completion_score'],
+        L1_company_name: row['L1_company_name'],
+        L1_google_rating: row['L1_google_rating'],
+        L1_psi_mobile_performance: row['L1_psi_mobile_performance']
+      });
+    }
+    
     return {
       id,
       businessName: row['L1_company_name'] || 'Unknown Business',

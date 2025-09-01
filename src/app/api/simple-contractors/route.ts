@@ -79,24 +79,36 @@ export async function GET(request: NextRequest) {
     }
     
     const searchParams = request.nextUrl.searchParams;
-    const searchId = searchParams.get('id');
-    const limit = parseInt(searchParams.get('limit') || '500'); // Increase to 500
+    const start = parseInt(searchParams.get('start') || '0');
+    const limit = parseInt(searchParams.get('limit') || '100');
+    const search = searchParams.get('search') || '';
     
     let filteredContractors = contractors;
     
-    // If searching for specific ID, find it and put it first
-    if (searchId) {
-      const found = contractors.find(c => c.id === searchId);
-      if (found) {
-        filteredContractors = [found, ...contractors.filter(c => c.id !== searchId)];
-      }
+    // Search functionality - search through ALL contractors
+    if (search.trim()) {
+      const query = search.toLowerCase();
+      filteredContractors = contractors.filter(contractor => 
+        contractor.businessName.toLowerCase().includes(query) ||
+        contractor.category.toLowerCase().includes(query) ||
+        contractor.state.toLowerCase().includes(query) ||
+        contractor.id.includes(query) ||
+        contractor.city.toLowerCase().includes(query)
+      );
     }
     
+    // Pagination
+    const paginatedContractors = filteredContractors.slice(start, start + limit);
+    
     return NextResponse.json({
-      contractors: filteredContractors.slice(0, limit),
-      total: contractors.length,
-      message: searchId ? `Found contractor ${searchId}` : 'Direct API - no service layer',
-      searchId: searchId || null
+      contractors: paginatedContractors,
+      total: filteredContractors.length,
+      totalAll: contractors.length,
+      hasMore: start + limit < filteredContractors.length,
+      message: search ? `Found ${filteredContractors.length} results for "${search}"` : `Page ${Math.floor(start/limit) + 1} of contractors`,
+      search: search || null,
+      start,
+      limit
     });
     
   } catch (error) {

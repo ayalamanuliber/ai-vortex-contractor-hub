@@ -43,8 +43,8 @@ export function ContractorGrid() {
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      // SIMPLE DIRECT FETCH - NO SERVICE
-      const response = await fetch('/api/simple-contractors');
+      // SIMPLE DIRECT FETCH - NO SERVICE  
+      const response = await fetch('/api/simple-contractors?start=0&limit=100');
       const result = await response.json();
       const data = result.contractors || [];
       
@@ -59,6 +59,7 @@ export function ContractorGrid() {
       }
       
       setContractors(data);
+      setHasMore(result.hasMore);
       setPage(1);
       
       // Check if there's more data
@@ -73,19 +74,21 @@ export function ContractorGrid() {
   };
 
   const loadMore = async () => {
-    if (isLoading) return;
+    if (isLoading || !hasMore) return;
     
     setLoading(true);
     try {
-      const newData = await contractorService.loadMore(page);
+      const start = page * 100; // page starts at 1, so page 1 = start 100
+      const response = await fetch(`/api/simple-contractors?start=${start}&limit=100`);
+      const result = await response.json();
+      const newData = result.contractors || [];
       
       if (newData.length === 0) {
         setHasMore(false);
       } else {
         addContractors(newData);
+        setHasMore(result.hasMore);
         setPage(prev => prev + 1);
-        
-        // Check if this might be the last batch
         if (newData.length < 100) {
           setHasMore(false);
         }

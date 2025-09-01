@@ -250,6 +250,8 @@ function applyFiltersAndSearch(
             return contractor.completionScore >= 70 && contractor.completionScore < 85;
           case 'completion-50-69':
             return contractor.completionScore >= 50 && contractor.completionScore < 70;
+          case 'completion-0-49':
+            return contractor.completionScore < 50;
           
           // State filters
           case 'kansas':

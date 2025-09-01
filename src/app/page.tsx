@@ -1,7 +1,8 @@
 'use client';
 
 import { TopNav } from '@/components/Navigation/TopNav';
-import { FilterSidebar } from '@/components/Sidebar/FilterSidebar';
+import { GlobalSearch } from '@/components/GlobalSearch';
+import { ModernFilters } from '@/components/ModernFilters';
 import { ContractorGrid } from '@/components/ContractorGrid';
 import { CampaignCalendar } from '@/components/Calendar/CampaignCalendar';
 import { ProfileModal } from '@/components/ProfileModal/ProfileModal';
@@ -32,26 +33,35 @@ export default function HomePage() {
       
       {/* Main Content */}
       <div className="pt-16 flex">
-        {/* Left Sidebar - Filters */}
-        <FilterSidebar />
+        {/* Left Sidebar - Modern Filters */}
+        <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-80 bg-background/95 backdrop-blur-md border-r border-border/50 p-6 overflow-y-auto">
+          <ModernFilters />
+        </div>
         
         {/* Main Content Area */}
         <div className="ml-80 flex-1 p-6">
           {/* Header Section */}
           <div className="mb-8">
-            <div className="mb-6">
-              <h2 className="text-3xl font-bold text-foreground mb-2">
-                {currentMode === 'intelligence' 
-                  ? 'Final Dossier Intelligence Hub'
-                  : 'Campaign Execution Center'
-                }
-              </h2>
-              <p className="text-muted-foreground text-sm">
-                {currentMode === 'intelligence'
-                  ? 'Complete intelligence profiles • Performance analytics • Business insights'
-                  : 'Campaign management • Email execution • Activity tracking'
-                }
-              </p>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-2">
+                  {currentMode === 'intelligence' 
+                    ? 'Final Dossier Intelligence Hub'
+                    : 'Campaign Execution Center'
+                  }
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  {currentMode === 'intelligence'
+                    ? 'Complete intelligence profiles • Performance analytics • Business insights'
+                    : 'Campaign management • Email execution • Activity tracking'
+                  }
+                </p>
+              </div>
+              
+              {/* Global Search */}
+              <div className="w-96">
+                <GlobalSearch />
+              </div>
             </div>
 
             {/* Operations Dashboard */}

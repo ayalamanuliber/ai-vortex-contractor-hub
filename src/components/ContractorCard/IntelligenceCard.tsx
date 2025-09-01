@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Brain } from 'lucide-react';
+import { Star } from 'lucide-react';
 import type { MergedContractor } from '@/lib/types';
 
 interface IntelligenceCardProps {
@@ -8,130 +8,157 @@ interface IntelligenceCardProps {
   onClick: () => void;
 }
 
-export function IntelligenceCard({ contractor, onClick }: IntelligenceCardProps) {
-  const campaignReady = contractor.hasFocusGroup && contractor.hasCampaign;
-  
-  // Debug for specific contractor
-  if (contractor.id === '3993') {
-    console.log('COMPONENT DEBUG 3993:', {
-      id: contractor.id,
-      completionScore: contractor.completionScore,
-      type: typeof contractor.completionScore,
-      businessName: contractor.businessName,
-      stack: new Error().stack?.split('\n').slice(1, 4)
-    });
+// Helper function to get builder display name
+function getBuilderDisplay(builder: string | undefined): string {
+  if (!builder || builder === '' || builder === 'WordPress' || builder === 'Apache' || builder === 'Nginx' || builder === 'Unknown' || builder === 'ERROR') {
+    return 'Custom';
   }
+  return builder;
+}
+
+// Helper function to get mega category
+function getMegaCategory(category: string): string {
+  if (!category) return 'Other';
+  
+  const cat = category.toLowerCase();
+  
+  if (cat.includes('roofing') || cat.includes('roof')) return 'Roofing';
+  if (cat.includes('hvac') || cat.includes('heating') || cat.includes('cooling') || cat.includes('air conditioning')) return 'HVAC';
+  if (cat.includes('plumber') || cat.includes('plumbing')) return 'Plumbing';
+  if (cat.includes('electrician') || cat.includes('electric')) return 'Electrical';
+  if (cat.includes('remodeling') || cat.includes('drywall') || cat.includes('carpet') || cat.includes('floor') || cat.includes('tile') || cat.includes('counter')) return 'Remodeling';
+  if (cat.includes('landscap') || cat.includes('lawn') || cat.includes('siding')) return 'Exterior';
+  if (cat.includes('concrete')) return 'Heavy Civil';
+  if (cat.includes('home builder') || cat.includes('custom home')) return 'Home Building';
+  if (cat.includes('handyman')) return 'Handyman';
+  if (cat.includes('supplier')) return 'Suppliers';
+  if (cat.includes('interior designer') || cat.includes('waterproofing')) return 'Services';
+  if (cat.includes('general contractor') || cat.includes('construction company')) return 'Construction';
+  if (cat.includes('window') || cat.includes('door') || cat.includes('glass')) return 'Windows';
+  if (cat.includes('association') || cat.includes('organization')) return 'Other';
+  
+  return 'Other';
+}
+
+// Helper function to calculate days until domain expires
+function getDaysUntilExpiration(expiringSoon: number): string {
+  if (expiringSoon === 1) {
+    return 'Expiring soon ⚠️';
+  }
+  // Placeholder - in real implementation you'd calculate from expiration date
+  return '183 days left';
+}
+
+export function IntelligenceCard({ contractor, onClick }: IntelligenceCardProps) {
+  const { intelligence, completionScore, googleRating, reviewsCount } = contractor;
+  
+  // Get PSI scores
+  const mobileScore = intelligence.websiteSpeed.mobile || 0;
+  const desktopScore = intelligence.websiteSpeed.desktop || 0;
+  const avgScore = intelligence.websiteSpeed.average || 0;
+  
+  // Get review activity status
+  const reviewStatus = intelligence.reviewsRecency === 'ACTIVE' ? 'ACTIVE' : 
+                      intelligence.reviewsRecency === 'INACTIVE' ? 'INACTIVE' : 'UNKNOWN';
+  
+  // Get builder info
+  const builderName = getBuilderDisplay(intelligence.websiteBuilder);
+  const domainAge = intelligence.domainAge || 0;
+  const domainExpiration = getDaysUntilExpiration(intelligence.expiringSoon || 0);
+  
+  // Get completion score color
+  const getCompletionColor = (score: number) => {
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-yellow-400'; 
+    if (score >= 35) return 'text-orange-400';
+    return 'text-red-400';
+  };
+  
+  // Get PSI color indicator
+  const getPSIColor = (avg: number) => {
+    if (avg >= 85) return '🟢';
+    if (avg >= 60) return '🟡';
+    return '🔴';
+  };
 
   return (
-    <div className="intelligence-card p-6 cursor-pointer" onClick={onClick}>
-      {/* Header with Prominent Completion Score Circle - exact match to HTML */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center space-x-4">
-          {/* Prominent Completion Score Circle */}
-          <div className="relative">
-            <div className={`w-20 h-20 rounded-full border-4 flex items-center justify-center shadow-lg ${
-              contractor.completionScore >= 85 
-                ? "border-green-500/30 bg-green-500/10 shadow-green-500/20"
-                : contractor.completionScore >= 70
-                ? "border-yellow-500/30 bg-yellow-500/10 shadow-yellow-500/20" 
-                : contractor.completionScore >= 50
-                ? "border-orange-500/30 bg-orange-500/10 shadow-orange-500/20"
-                : "border-red-500/30 bg-red-500/10 shadow-red-500/20"
-            }`}>
-              <span className={`text-2xl font-bold ${
-                contractor.completionScore >= 85 ? "text-green-400"
-                : contractor.completionScore >= 70 ? "text-yellow-400"
-                : contractor.completionScore >= 50 ? "text-orange-400"
-                : "text-red-400"
-              }`}>
-                {contractor.completionScore}
-              </span>
-            </div>
-            <div className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${
-              contractor.completionScore >= 85 ? "bg-green-500"
-              : contractor.completionScore >= 70 ? "bg-yellow-500"
-              : contractor.completionScore >= 50 ? "bg-orange-500"
-              : "bg-red-500"
-            }`}>
-              <span className="text-sm font-bold text-white">%</span>
-            </div>
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-foreground text-lg mb-1">{contractor.businessName}</h3>
-            <div className="flex items-center space-x-2 text-sm mb-2">
-              <span className="text-muted-foreground">{contractor.category}</span>
-              <span className="text-muted-foreground">•</span>
-              <span className="text-primary font-medium">ID: {contractor.id}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="flex items-center text-yellow-400">
-                <Star className="w-4 h-4 fill-current" />
-                <span className="ml-1 font-medium">{contractor.googleRating}</span>
-                <span className="text-muted-foreground ml-1">({contractor.reviewsCount})</span>
-              </div>
-              <div className="h-1 w-1 bg-muted-foreground rounded-full"></div>
-              <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">Intelligence Ready</span>
-              <div className="h-1 w-1 bg-muted-foreground rounded-full"></div>
-              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                campaignReady ? 'text-green-400 bg-green-400/10' : 'text-orange-400 bg-orange-400/10'
-              }`}>
-                {campaignReady ? 'Exec Ready' : 'Setup Req'}
-              </span>
-            </div>
-          </div>
+    <div 
+      className="bg-card border border-border rounded-lg p-4 cursor-pointer hover:bg-muted/50 transition-colors space-y-3"
+      onClick={onClick}
+      data-contractor-id={contractor.id}
+    >
+      {/* Header Line: 55% #3092 Remodeling • KS */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <span className={`text-xl font-bold ${getCompletionColor(completionScore)}`}>
+            {completionScore}%
+          </span>
+          <span className="text-sm text-muted-foreground">
+            #{contractor.id}
+          </span>
+          <span className="text-sm font-medium text-foreground">
+            {getMegaCategory(contractor.category)}
+          </span>
+          <span className="text-muted-foreground">•</span>
+          <span className="text-sm font-medium text-foreground">
+            {contractor.state}
+          </span>
         </div>
       </div>
-      
-      {/* Intelligence Metrics Grid - exact match to HTML */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-card/40 rounded-lg p-3 border border-border/40">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground uppercase tracking-wide">Website Speed</span>
-            <span className={`text-sm font-bold ${
-              contractor.intelligence.websiteSpeed.mobile >= 80 ? 'text-green-400' 
-              : contractor.intelligence.websiteSpeed.mobile >= 60 ? 'text-yellow-400' 
-              : 'text-red-400'
-            }`}>
-              {contractor.intelligence.websiteSpeed.mobile}
-            </span>
-          </div>
-          <div className="mt-1 w-full bg-muted/20 rounded-full h-1.5">
-            <div 
-              className={`h-1.5 rounded-full ${
-                contractor.intelligence.websiteSpeed.mobile >= 80 ? 'bg-green-400' 
-                : contractor.intelligence.websiteSpeed.mobile >= 60 ? 'bg-yellow-400' 
-                : 'bg-red-400'
-              }`}
-              style={{ width: `${contractor.intelligence.websiteSpeed.mobile}%` }}
-            ></div>
-          </div>
-        </div>
-        <div className="bg-card/40 rounded-lg p-3 border border-border/40">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground uppercase tracking-wide">Reviews</span>
-            <span className={`text-xs font-bold ${
-              contractor.intelligence.reviewsRecency === 'ACTIVE' ? 'text-green-400' 
-              : contractor.intelligence.reviewsRecency === 'MODERATE' ? 'text-yellow-400' 
-              : 'text-red-400'
-            }`}>
-              {contractor.intelligence.reviewsRecency}
-            </span>
-          </div>
-          <div className="text-xs text-muted-foreground mt-1">{contractor.intelligence.platformDetection}</div>
-        </div>
+
+      {/* Divider */}
+      <div className="border-t border-border"></div>
+
+      {/* PSI Line: PSI: 45/73 (59 avg) 🟡 */}
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-medium text-muted-foreground">PSI:</span>
+        <span className="text-sm text-foreground">
+          {mobileScore}/{desktopScore} ({avgScore} avg)
+        </span>
+        <span className="text-base">{getPSIColor(avgScore)}</span>
       </div>
-      
-      {/* Intelligence Insights - exact match to HTML */}
-      <div className="bg-card/20 rounded-lg p-3 border border-border/30">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-muted-foreground uppercase tracking-wide">Key Insights</span>
-          <Brain className="w-4 h-4 text-primary" />
+
+      {/* Reviews Line: Reviews: 3.7⭐(3) • ACTIVE */}
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-medium text-muted-foreground">Reviews:</span>
+        <div className="flex items-center space-x-1">
+          <span className="text-sm text-foreground">{googleRating}</span>
+          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+          <span className="text-sm text-muted-foreground">({reviewsCount})</span>
         </div>
-        <div className="space-y-1">
-          <div className="text-xs text-foreground">• High completion score indicates strong digital presence</div>
-          <div className="text-xs text-foreground">• {contractor.intelligence.reviewsRecency.toLowerCase()} review activity detected</div>
-          <div className="text-xs text-primary">• Ready for intelligence analysis</div>
-        </div>
+        <span className="text-muted-foreground">•</span>
+        <span className={`text-sm font-medium ${
+          reviewStatus === 'ACTIVE' ? 'text-green-400' : 
+          reviewStatus === 'INACTIVE' ? 'text-orange-400' : 'text-muted-foreground'
+        }`}>
+          {reviewStatus}
+        </span>
+      </div>
+
+      {/* Builder Line: Builder: Custom • 6.5yrs */}
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-medium text-muted-foreground">Builder:</span>
+        <span className="text-sm text-foreground">{builderName}</span>
+        <span className="text-muted-foreground">•</span>
+        <span className="text-sm text-foreground">{domainAge}yrs</span>
+      </div>
+
+      {/* Domain Line: Domain: 183 days left */}
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-medium text-muted-foreground">Domain:</span>
+        <span className={`text-sm ${
+          intelligence.expiringSoon === 1 ? 'text-red-400 font-medium' : 'text-foreground'
+        }`}>
+          {domainExpiration}
+        </span>
+      </div>
+
+      {/* Location Line: Location: Tonganoxie, KS 66086 */}
+      <div className="flex items-center space-x-2">
+        <span className="text-sm font-medium text-muted-foreground">Location:</span>
+        <span className="text-sm text-foreground">
+          {contractor.city}, {contractor.state} {contractor.zipCode}
+        </span>
       </div>
     </div>
   );

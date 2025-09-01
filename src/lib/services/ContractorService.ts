@@ -16,6 +16,19 @@ export class ContractorService {
   private loadedChunks = new Set<number>();
   private CHUNK_SIZE = 100;
 
+  // Clear all caches - force reload
+  clearCache(): void {
+    this.csvData.clear();
+    this.campaignData.clear();
+    this.mergedData.clear();
+    this.indexes.byState.clear();
+    this.indexes.byCompletionScore.clear();
+    this.indexes.byCampaignStatus.clear();
+    this.indexes.byCategory.clear();
+    this.loadedChunks.clear();
+    this.isLoading = false;
+  }
+
   // Normalize IDs for matching between CSV and JSON
   private normalizeId(id: string | number): string {
     const cleaned = String(id).replace(/^0+/, '').trim();
@@ -26,6 +39,9 @@ export class ContractorService {
   // Load initial data chunk (first 100 records)
   async loadInitialData(): Promise<MergedContractor[]> {
     if (this.isLoading) return Array.from(this.mergedData.values());
+    
+    // Clear cache to ensure fresh data
+    this.clearCache();
     this.isLoading = true;
 
     try {

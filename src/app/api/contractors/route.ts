@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
     // Check cache
     const now = Date.now();
     if (!csvCache || now - cacheTimestamp > CACHE_DURATION) {
-      // Use the fixed CSV file without column alignment issues
-      const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_fixed.csv');
+      // Use the original master CSV file directly
+      const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_original.csv');
       
       try {
         await fs.access(csvPath);
@@ -34,12 +34,16 @@ export async function GET(request: NextRequest) {
       
       const csvContent = await fs.readFile(csvPath, 'utf-8');
       
-      // Parse CSV
+      // Parse CSV with proper quote handling for complex fields
       const parsed = Papa.parse(csvContent, {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
         transformHeader: (header) => header.trim(),
+        quoteChar: '"',
+        escapeChar: '"',
+        delimiter: ',',
+        newline: '\n'
       });
       
       if (parsed.errors.length > 0) {

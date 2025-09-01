@@ -127,7 +127,7 @@ export class ContractorService {
       
       const merged: MergedContractor = {
         ...contractor,
-        hasCampaign: Boolean(campaign?.campaign_data?.email_sequences?.length > 0),
+        hasCampaign: Boolean(campaign?.campaign_data?.email_sequences && campaign.campaign_data.email_sequences.length > 0),
         hasFocusGroup: Boolean(campaign?.focus_group_generated),
         campaignData: campaign ? this.formatCampaignData(campaign) : null,
         cost: campaign?.cost || 0,
@@ -300,14 +300,14 @@ export class ContractorService {
         case 'completion-85-100':
           for (const [range, ids] of this.indexes.byCompletionScore) {
             if (range >= 85) {
-              ids.forEach(id => filterIds.add(id));
+              ids.forEach((id: string) => filterIds.add(id));
             }
           }
           break;
         case 'completion-70-84':
           for (const [range, ids] of this.indexes.byCompletionScore) {
             if (range >= 70 && range < 85) {
-              ids.forEach(id => filterIds.add(id));
+              ids.forEach((id: string) => filterIds.add(id));
             }
           }
           break;
@@ -359,7 +359,7 @@ export class ContractorService {
       if (resultIds === null) {
         resultIds = filterIds;
       } else {
-        resultIds = new Set([...resultIds].filter(id => filterIds.has(id)));
+        resultIds = new Set([...resultIds].filter((id: string) => filterIds.has(id)));
       }
     }
 

@@ -54,12 +54,11 @@ export async function GET(request: NextRequest) {
       cacheTimestamp = now;
     }
     
-    // Paginate and process data
-    const rawData = csvCache.slice(start, start + limit);
-    const processedData = rawData.map(row => processContractorRow(row));
+    // Paginate
+    const paginatedData = csvCache.slice(start, start + limit);
     
     return NextResponse.json({
-      contractors: processedData,
+      contractors: paginatedData,
       total: csvCache.length,
       hasMore: start + limit < csvCache.length,
     });
@@ -127,61 +126,6 @@ function generateMockData(count: number) {
   }
   
   return mockData;
-}
-
-// Process contractor row with proper completion score parsing
-function processContractorRow(row: any) {
-  const id = String(row['business_id'] || row.id).replace(/^0+/, '').trim().replace(/_[A-Z]*$/, '');
-  
-  // Better parsing for completion score
-  const rawScore = row['data_completion_score'];
-  let completionScore = 0;
-  
-  if (rawScore !== null && rawScore !== undefined && rawScore !== '') {
-    const parsed = parseFloat(String(rawScore));
-    if (!isNaN(parsed) && parsed >= 0 && parsed <= 100) {
-      completionScore = Math.round(parsed);
-    }
-  }
-  
-  return {
-    'business_id': id,
-    'Business ID': id,
-    'Business Name': row['L1_company_name'] || 'Unknown Business',
-    'Category': row['L1_category'] || 'General Contractor',
-    'Email': row['L1_primary_email'] || 'contact@example.com',
-    'Phone': row['L1_phone'] || '(555) 000-0000',
-    'Website': row['L1_website'] || '',
-    'Address': row['L1_address_full'] || 'Unknown Location',
-    'City': row['L1_city'] || '',
-    'State': row['L1_state_code'] || 'Unknown',
-    'Zip Code': row['L1_postal_code'] || '',
-    'Completion Score': completionScore,
-    'Health Score': calculateHealthScore(row, completionScore),
-    'Trust Score': Math.round(parseFloat(row['L2_trust_score']) * 100) || 0,
-    'Google Rating': parseFloat(row['L1_google_rating']) || 0,
-    'Reviews Count': parseInt(row['L1_google_reviews_count']) || 0,
-    'Mobile Speed': parseInt(row['L1_psi_mobile_performance']) || 0,
-    'Desktop Speed': parseInt(row['L1_psi_desktop_performance']) || 0,
-    'Days Since Latest Review': parseInt(row['L1_days_since_latest_review']) || 0,
-    'Platform': row['L1_builder_platform'] || 'Unknown',
-    'Domain Age': parseFloat(row['L1_whois_domain_age_years']) || 0,
-    'Business Hours': row['L1_weekday_hours'] || 'Mon-Fri 8AM-5PM'
-  };
-}
-
-function calculateHealthScore(row: any, completionScore: number): number {
-  const googleRating = parseFloat(row['L1_google_rating']) || 0;
-  const reviewsCount = parseInt(row['L1_google_reviews_count']) || 0;
-  const sophisticationScore = parseInt(row['L2_sophistication_score']) || 0;
-  
-  let healthScore = 0;
-  healthScore += completionScore * 0.4;
-  healthScore += (googleRating * 20) * 0.3;
-  healthScore += Math.min(reviewsCount * 2, 20) * 0.2;
-  healthScore += sophisticationScore * 0.1;
-  
-  return Math.round(Math.min(healthScore, 100));
 }
 
 // PATCH method for updating NAME and LAST_NAME fields

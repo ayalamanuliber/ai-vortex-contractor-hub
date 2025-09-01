@@ -610,4 +610,4 @@ class ContractorServiceClass {
 }
 
 // Singleton instance
-export const contractorService = new ContractorService();
+export const contractorService = new ContractorServiceClass();

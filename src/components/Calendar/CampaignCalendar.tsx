@@ -1,36 +1,144 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Calendar, Minimize2, Maximize2 } from 'lucide-react';
+import { ChevronDown, Calendar, X } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
-import { cn } from '@/lib/utils/cn';
+import { WeekView } from './WeekView';
+
+interface CampaignDay {
+  ready: number;
+  scheduled: number;
+  sent: number;
+}
+
+interface DayDetail {
+  date: string;
+  dayName: string;
+  weekNumber: number;
+  campaigns: {
+    ready: Array<{
+      id: string;
+      name: string;
+      businessId: string;
+      location: string;
+      completionScore: number;
+    }>;
+    scheduled: Array<{
+      id: string;
+      name: string;
+      businessId: string;
+      location: string;
+      emailNumber: number;
+      time: string;
+    }>;
+    sent: Array<{
+      id: string;
+      name: string;
+      businessId: string;
+      location: string;
+      emailNumber: number;
+      sentDate: string;
+    }>;
+  };
+}
+
+// Mock data generator for campaigns
+const generateMockCampaignData = (): { [key: string]: CampaignDay } => {
+  const data: { [key: string]: CampaignDay } = {};
+  const today = new Date();
+  
+  for (let i = 0; i < 31; i++) {
+    const date = new Date(today.getFullYear(), today.getMonth(), i + 1);
+    const dateKey = date.toISOString().split('T')[0];
+    
+    // Generate realistic campaign numbers
+    const dayOfWeek = date.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    
+    if (isWeekend) {
+      data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
+    } else {
+      const ready = Math.floor(Math.random() * 25) + 5;
+      const scheduled = Math.floor(Math.random() * 8) + 2;
+      const sent = Math.floor(Math.random() * 6);
+      data[dateKey] = { ready, scheduled, sent };
+    }
+  }
+  
+  return data;
+};
+
+// Generate week data for WeekView
+const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: CampaignDay }) => {
+  const weekData = [];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  
+  // Find the start of the week (Sunday)
+  const startOfWeek = new Date(selectedDate);
+  startOfWeek.setDate(selectedDate.getDate() - selectedDate.getDay());
+  
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(startOfWeek);
+    day.setDate(startOfWeek.getDate() + i);
+    const dateKey = day.toISOString().split('T')[0];
+    const dayData = campaignData[dateKey] || { ready: 0, scheduled: 0, sent: 0 };
+    
+    weekData.push({
+      day: dayNames[i],
+      total: dayData.ready + dayData.scheduled + dayData.sent,
+      ready: dayData.ready,
+      scheduled: dayData.scheduled,
+      sent: dayData.sent
+    });
+  }
+  
+  return weekData;
+};
+
+// Mock detailed day data
+const generateMockDayDetail = (dateKey: string, campaignDay: CampaignDay): DayDetail => {
+  const date = new Date(dateKey);
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  
+  return {
+    date: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+    dayName: dayNames[date.getDay()],
+    weekNumber: Math.ceil(date.getDate() / 7) + 35,
+    campaigns: {
+      ready: Array.from({ length: campaignDay.ready }, (_, i) => ({
+        id: `ready-${i}`,
+        name: ['Meridian Roofing Solutions', '1 Core Construction LLC', 'DL Granite & Design', 'Elite Home Solutions', 'AllStar Heating'][i % 5],
+        businessId: `#${Math.floor(Math.random() * 5000)}`,
+        location: ['Topeka, KS', 'Kansas City, KS', 'Tonganoxie, KS', 'Wichita, KS', 'Lawrence, KS'][i % 5],
+        completionScore: Math.floor(Math.random() * 40) + 60
+      })),
+      scheduled: Array.from({ length: campaignDay.scheduled }, (_, i) => ({
+        id: `scheduled-${i}`,
+        name: ['Kaw Valley HVAC', 'SKY Engineering', 'Wilson Roofing Inc'][i % 3],
+        businessId: `#${Math.floor(Math.random() * 5000)}`,
+        location: ['Topeka, KS', 'Bowling Green, KY', 'Pocatello, ID'][i % 3],
+        emailNumber: (i % 3) + 1,
+        time: [`7:00 AM`, `9:30 AM`, `2:00 PM`, `4:15 PM`][i % 4]
+      })),
+      sent: Array.from({ length: campaignDay.sent }, (_, i) => ({
+        id: `sent-${i}`,
+        name: ['Crown Roofing', 'Elite Construction'][i % 2],
+        businessId: `#${Math.floor(Math.random() * 5000)}`,
+        location: ['Kansas', 'Oklahoma'][i % 2],
+        emailNumber: (i % 3) + 1,
+        sentDate: 'Today'
+      }))
+    }
+  };
+};
 
 export function CampaignCalendar() {
-  const { isCalendarMinimized, toggleCalendar, filteredContractors } = useContractorStore();
+  const { isCalendarMinimized, toggleCalendar } = useContractorStore();
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  if (isCalendarMinimized) {
-    return (
-      <div className="mb-6">
-        <button
-          onClick={toggleCalendar}
-          className="w-full glass-surface rounded-lg p-4 border border-border/40 hover:border-primary/40 transition-colors group"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Calendar className="w-5 h-5 text-primary" />
-              <span className="text-foreground font-medium">Campaign Calendar</span>
-              <span className="text-xs text-muted-foreground">
-                Click to expand
-              </span>
-            </div>
-            <Maximize2 className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-          </div>
-        </button>
-      </div>
-    );
-  }
-
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  
+  const campaignData = generateMockCampaignData();
+  
   const today = new Date();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -55,152 +163,332 @@ export function CampaignCalendar() {
     setCurrentDate(new Date(year, month + 1, 1));
   };
 
-  // Get campaign activities for each day (mock data for now)
-  const getCampaignActivities = (day: number) => {
-    const activities = [];
-    
-    // Mock some scheduled emails
-    if (day === today.getDate() && month === today.getMonth()) {
-      activities.push({ type: 'email', status: 'scheduled', count: 2 });
-    }
-    if (day === today.getDate() + 1 && month === today.getMonth()) {
-      activities.push({ type: 'email', status: 'pending', count: 1 });
-    }
-    if (day === today.getDate() + 3 && month === today.getMonth()) {
-      activities.push({ type: 'follow-up', status: 'scheduled', count: 3 });
-    }
-    
-    return activities;
+  // Calculate month statistics
+  const monthStats = Object.values(campaignData).reduce(
+    (acc, day) => ({
+      ready: acc.ready + day.ready,
+      scheduled: acc.scheduled + day.scheduled,
+      sent: acc.sent + day.sent
+    }),
+    { ready: 0, scheduled: 0, sent: 0 }
+  );
+
+  const handleDayClick = (day: number) => {
+    const dateKey = new Date(year, month, day).toISOString().split('T')[0];
+    setSelectedDay(dateKey);
   };
+
+  const selectedDayData = selectedDay ? campaignData[selectedDay] : null;
+  const selectedDayDetail = selectedDay && selectedDayData ? generateMockDayDetail(selectedDay, selectedDayData) : null;
+  
+  // Generate week data if a day is selected
+  const weekData = selectedDay ? generateWeekData(new Date(selectedDay), campaignData) : null;
+  const selectedDate = selectedDay ? new Date(selectedDay) : null;
+
+  if (isCalendarMinimized) {
+    return (
+      <div className="mb-6">
+        <button
+          onClick={toggleCalendar}
+          className="w-full bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-4 hover:bg-[#111113] hover:border-white/10 transition-colors group"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Calendar className="w-5 h-5 text-blue-400" />
+              <span className="text-white/95 font-medium">Campaign Calendar</span>
+              <span className="text-xs text-white/50">Click to expand</span>
+            </div>
+            <ChevronDown className="w-4 h-4 text-white/50 group-hover:text-white/70 transition-colors transform rotate-90" />
+          </div>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-6">
-      <div className="glass-surface rounded-lg border border-border/40">
-        {/* Calendar Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border/20">
-          <div className="flex items-center space-x-3">
-            <Calendar className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-foreground">Campaign Calendar</h3>
-          </div>
-          <button
-            onClick={toggleCalendar}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/40 transition-colors"
-            title="Minimize Calendar"
-          >
-            <Minimize2 className="w-4 h-4" />
-          </button>
-        </div>
-        
-        {/* Month Navigation */}
-        <div className="flex items-center justify-between p-4 border-b border-border/20">
-          <button
-            onClick={previousMonth}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/40 transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          
-          <h4 className="text-xl font-bold text-foreground">
-            {monthNames[month]} {year}
-          </h4>
-          
-          <button
-            onClick={nextMonth}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/40 transition-colors"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-        
-        {/* Calendar Grid */}
-        <div className="p-4">
-          {/* Days of week header */}
-          <div className="grid grid-cols-7 gap-1 mb-2">
-            {daysOfWeek.map((day) => (
-              <div
-                key={day}
-                className="p-2 text-center text-sm font-medium text-muted-foreground"
-              >
-                {day}
+      <div className="flex gap-4">
+        {/* Main Calendar */}
+        <div className="flex-1">
+          <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl overflow-hidden">
+            {/* Collapsible Header */}
+            <div 
+              className="p-4 flex justify-between items-center cursor-pointer bg-gradient-to-b from-white/[0.02] to-transparent hover:from-white/[0.03] hover:to-white/[0.01] transition-all"
+              onClick={toggleCalendar}
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-5 h-5 flex items-center justify-center transition-transform">
+                  <ChevronDown className="w-3 h-3 text-white/95" />
+                </div>
+                <h3 className="text-[14px] font-semibold text-white/95">Campaign Calendar</h3>
+                <div className="flex gap-1">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); previousMonth(); }}
+                    className="w-7 h-7 rounded-md bg-[#050505] border border-white/[0.06] text-white/50 hover:bg-[#111113] hover:border-white/10 hover:text-white/70 flex items-center justify-center transition-all text-xs"
+                  >
+                    ←
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); nextMonth(); }}
+                    className="w-7 h-7 rounded-md bg-[#050505] border border-white/[0.06] text-white/50 hover:bg-[#111113] hover:border-white/10 hover:text-white/70 flex items-center justify-center transition-all text-xs"
+                  >
+                    →
+                  </button>
+                </div>
+                <span className="text-[13px] text-white/50">{monthNames[month]} {year}</span>
               </div>
-            ))}
-          </div>
-          
-          {/* Calendar days */}
-          <div className="grid grid-cols-7 gap-1">
-            {/* Empty cells for days before month starts */}
-            {Array.from({ length: firstDayOfWeek }, (_, index) => (
-              <div key={`empty-${index}`} className="p-2 h-20" />
-            ))}
-            
-            {/* Days of the month */}
-            {Array.from({ length: daysInMonth }, (_, index) => {
-              const day = index + 1;
-              const isToday = day === today.getDate() && 
-                             month === today.getMonth() && 
-                             year === today.getFullYear();
-              const activities = getCampaignActivities(day);
-              
-              return (
-                <div
-                  key={day}
-                  className={cn(
-                    "p-2 h-20 border border-border/20 rounded-lg cursor-pointer transition-all duration-200 relative overflow-hidden",
-                    isToday 
-                      ? "bg-primary/20 border-primary/40" 
-                      : "bg-card/20 hover:bg-card/40 hover:border-border/60"
-                  )}
-                >
-                  <div className={cn(
-                    "font-semibold text-sm mb-1",
-                    isToday ? "text-primary" : "text-foreground"
-                  )}>
+              <div className="flex gap-5 text-[12px]">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#facc15] opacity-80"></div>
+                  <span className="text-white/70 font-semibold">{monthStats.ready}</span>
+                  <span className="text-white/30">ready</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] opacity-80"></div>
+                  <span className="text-white/70 font-semibold">{monthStats.scheduled}</span>
+                  <span className="text-white/30">scheduled</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e] opacity-80"></div>
+                  <span className="text-white/70 font-semibold">{monthStats.sent}</span>
+                  <span className="text-white/30">sent</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Calendar Content */}
+            <div className="p-px bg-[#050505]">
+              {/* Weekdays */}
+              <div className="grid grid-cols-7 gap-px mb-px">
+                {daysOfWeek.map((day) => (
+                  <div
+                    key={day}
+                    className="bg-[#0a0a0b] p-2.5 text-center text-[10px] font-semibold uppercase tracking-wider text-white/30"
+                  >
                     {day}
                   </div>
+                ))}
+              </div>
+
+              {/* Days Grid */}
+              <div className="grid grid-cols-7 gap-px">
+                {/* Empty cells for days before month starts */}
+                {Array.from({ length: firstDayOfWeek }, (_, index) => (
+                  <div key={`empty-${index}`} className="bg-[#0a0a0b] h-[90px] p-2 opacity-30 pointer-events-none" />
+                ))}
+                
+                {/* Days of the month */}
+                {Array.from({ length: daysInMonth }, (_, index) => {
+                  const day = index + 1;
+                  const dateKey = new Date(year, month, day).toISOString().split('T')[0];
+                  const isToday = day === today.getDate() && 
+                                 month === today.getMonth() && 
+                                 year === today.getFullYear();
+                  const dayData = campaignData[dateKey] || { ready: 0, scheduled: 0, sent: 0 };
+                  const total = dayData.ready + dayData.scheduled + dayData.sent;
                   
-                  {/* Campaign activities */}
-                  <div className="space-y-1">
-                    {activities.map((activity, actIndex) => (
-                      <div
-                        key={actIndex}
-                        className={cn(
-                          "text-xs px-1 py-0.5 rounded text-center font-medium",
-                          activity.type === 'email' 
-                            ? "bg-blue-500/20 text-blue-300" 
-                            : "bg-green-500/20 text-green-300"
+                  return (
+                    <div
+                      key={day}
+                      className={`bg-[#0a0a0b] h-[90px] p-2 transition-all cursor-pointer hover:bg-[#111113] relative flex flex-col ${
+                        isToday ? 'before:absolute before:top-0 before:left-0 before:right-0 before:h-0.5 before:bg-[#3b82f6] before:opacity-60' : ''
+                      }`}
+                      onClick={() => handleDayClick(day)}
+                    >
+                      <div className={`text-[13px] font-semibold mb-2 ${isToday ? 'text-white/95' : 'text-white/70'}`}>
+                        {day}
+                      </div>
+                      
+                      {total > 0 && (
+                        <div className="absolute top-2 right-2 text-[9px] font-semibold text-white/50 px-1.5 py-0.5 rounded-[10px] bg-[#050505] border border-white/[0.06]">
+                          {total}
+                        </div>
+                      )}
+                      
+                      <div className="flex-1 flex flex-col justify-center gap-1.5">
+                        {dayData.ready > 0 && (
+                          <div className="flex items-center gap-1.5 text-[11px]">
+                            <div className="w-1.25 h-1.25 rounded-full bg-[#facc15] opacity-80 flex-shrink-0"></div>
+                            <span className="text-white/30 text-[9px] uppercase tracking-wider min-w-[28px]">RDY</span>
+                            <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.ready}</span>
+                          </div>
                         )}
-                      >
-                        {activity.count} {activity.type}
+                        {dayData.scheduled > 0 && (
+                          <div className="flex items-center gap-1.5 text-[11px]">
+                            <div className="w-1.25 h-1.25 rounded-full bg-[#3b82f6] opacity-80 flex-shrink-0"></div>
+                            <span className="text-white/30 text-[9px] uppercase tracking-wider min-w-[28px]">SCH</span>
+                            <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.scheduled}</span>
+                          </div>
+                        )}
+                        {dayData.sent > 0 && (
+                          <div className="flex items-center gap-1.5 text-[11px]">
+                            <div className="w-1.25 h-1.25 rounded-full bg-[#22c55e] opacity-80 flex-shrink-0"></div>
+                            <span className="text-white/30 text-[9px] uppercase tracking-wider min-w-[28px]">SNT</span>
+                            <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.sent}</span>
+                          </div>
+                        )}
+                        {total === 0 && (
+                          <div className="flex-1 flex items-center justify-center text-white/30 text-[10px]">
+                            —
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-3 bg-[#0a0a0b] border-t border-white/[0.06] flex justify-between items-center text-[11px] text-white/50">
+              <span>Click any day to filter contractors</span>
+              <div className="flex gap-2">
+                <button className="px-2.5 py-1 rounded-md bg-[#050505] border border-white/[0.06] text-white/70 hover:bg-[#111113] hover:border-white/10 font-medium transition-all">
+                  Export CSV
+                </button>
+                <button className="px-2.5 py-1 rounded-md bg-[#050505] border border-white/[0.06] text-white/70 hover:bg-[#111113] hover:border-white/10 font-medium transition-all">
+                  Bulk Actions
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Day Detail Panel */}
+        {selectedDay && selectedDayDetail && (
+          <div className="w-[420px] bg-[#0a0a0b] border border-white/[0.06] rounded-xl overflow-hidden animate-in slide-in-from-right duration-300">
+            {/* Panel Header */}
+            <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex justify-between items-center">
+              <div className="flex flex-col gap-0.5">
+                <div className="text-[18px] font-semibold text-white/95">{selectedDayDetail.date}</div>
+                <div className="text-[11px] text-white/50 uppercase tracking-wider">
+                  {selectedDayDetail.dayName} · Week {selectedDayDetail.weekNumber}
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedDay(null)}
+                className="w-7 h-7 rounded-md bg-[#050505] border border-white/[0.06] text-white/50 hover:bg-[#111113] hover:border-white/10 hover:text-white/95 flex items-center justify-center transition-all"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Summary */}
+            <div className="p-4 bg-[#050505] flex justify-around border-b border-white/[0.06]">
+              <div className="text-center">
+                <div className="text-[24px] font-bold text-white/95 mb-1">{(selectedDayData?.ready || 0) + (selectedDayData?.scheduled || 0) + (selectedDayData?.sent || 0)}</div>
+                <div className="text-[10px] text-white/50 uppercase tracking-wider">Total</div>
+              </div>
+              <div className="text-center">
+                <div className="text-[24px] font-bold text-white/95 mb-1">{selectedDayData?.ready || 0}</div>
+                <div className="text-[10px] text-white/50 uppercase tracking-wider">Ready</div>
+              </div>
+              <div className="text-center">
+                <div className="text-[24px] font-bold text-white/95 mb-1">{selectedDayData?.scheduled || 0}</div>
+                <div className="text-[10px] text-white/50 uppercase tracking-wider">Scheduled</div>
+              </div>
+              <div className="text-center">
+                <div className="text-[24px] font-bold text-white/95 mb-1">{selectedDayData?.sent || 0}</div>
+                <div className="text-[10px] text-white/50 uppercase tracking-wider">Sent</div>
+              </div>
+            </div>
+
+            {/* Campaign Sections */}
+            <div className="max-h-[400px] overflow-y-auto">
+              {/* Ready Campaigns */}
+              {selectedDayDetail.campaigns.ready.length > 0 && (
+                <div>
+                  <div className="px-5 py-3 bg-gradient-to-r from-white/[0.01] via-white/[0.02] to-white/[0.01] border-b border-white/[0.06] flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#facc15]"></div>
+                      <span className="text-white/95">Ready to Schedule</span>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-[10px] bg-[#050505] text-[11px] font-semibold text-white/70">
+                      {selectedDayDetail.campaigns.ready.length}
+                    </span>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {selectedDayDetail.campaigns.ready.slice(0, 5).map((campaign, index) => (
+                      <div key={index} className="px-5 py-2.5 border-b border-white/[0.06] flex justify-between items-center hover:bg-[#111113] transition-all cursor-pointer">
+                        <div className="flex flex-col gap-0.5">
+                          <div className="text-[13px] font-medium text-white/95">{campaign.name}</div>
+                          <div className="text-[11px] text-white/50">{campaign.businessId} · {campaign.location} · {campaign.completionScore}% complete</div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="px-2 py-1 rounded bg-[#3b82f6] text-white text-[10px] font-medium hover:opacity-90 transition-opacity">
+                            Schedule
+                          </button>
+                          <button className="px-2 py-1 rounded bg-[#050505] border border-white/[0.06] text-white/50 text-[10px] font-medium hover:bg-[#111113] hover:border-white/10 hover:text-white/95 transition-all">
+                            View
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-        
-        {/* Calendar Footer - Quick Stats */}
-        <div className="flex items-center justify-between p-4 border-t border-border/20 bg-card/10">
-          <div className="flex items-center space-x-4 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-blue-500/40 rounded"></div>
-              <span className="text-muted-foreground">Scheduled: <span className="text-blue-400">2</span></span>
+              )}
+
+              {/* Scheduled Campaigns */}
+              {selectedDayDetail.campaigns.scheduled.length > 0 && (
+                <div>
+                  <div className="px-5 py-3 bg-gradient-to-r from-white/[0.01] via-white/[0.02] to-white/[0.01] border-b border-white/[0.06] flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wider">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                      <span className="text-white/95">Scheduled</span>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-[10px] bg-[#050505] text-[11px] font-semibold text-white/70">
+                      {selectedDayDetail.campaigns.scheduled.length}
+                    </span>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {selectedDayDetail.campaigns.scheduled.map((campaign, index) => (
+                      <div key={index} className="px-5 py-2.5 border-b border-white/[0.06] flex justify-between items-center hover:bg-[#111113] transition-all cursor-pointer">
+                        <div className="flex flex-col gap-0.5">
+                          <div className="text-[13px] font-medium text-white/95">{campaign.name}</div>
+                          <div className="text-[11px] text-white/50">{campaign.businessId} · Email {campaign.emailNumber}/3 · {campaign.location}</div>
+                        </div>
+                        <div className="text-[11px] text-white/70 font-medium">{campaign.time}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500/40 rounded"></div>
-              <span className="text-muted-foreground">Follow-ups: <span className="text-green-400">3</span></span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-yellow-500/40 rounded"></div>
-              <span className="text-muted-foreground">Pending: <span className="text-yellow-400">1</span></span>
+
+            {/* Footer */}
+            <div className="px-5 py-3 bg-[#0a0a0b] border-t border-white/[0.06] flex justify-between items-center">
+              <span className="text-[11px] text-white/50">
+                {(selectedDayData?.ready || 0) + (selectedDayData?.scheduled || 0) + (selectedDayData?.sent || 0)} campaigns for this day
+              </span>
+              <div className="flex gap-2">
+                <button className="px-3 py-1.5 rounded-md bg-[#050505] border border-white/[0.06] text-white/70 hover:bg-[#111113] hover:border-white/10 text-[11px] font-medium transition-all">
+                  Export Day
+                </button>
+                <button className="px-3 py-1.5 rounded-md bg-[#050505] border border-white/[0.06] text-white/70 hover:bg-[#111113] hover:border-white/10 text-[11px] font-medium transition-all">
+                  Schedule All
+                </button>
+              </div>
             </div>
           </div>
-          <div className="text-xs text-muted-foreground">
-            {filteredContractors.filter(c => c.hasCampaign).length} active campaigns
-          </div>
-        </div>
+        )}
       </div>
+      
+      {/* Week View */}
+      {weekData && selectedDate && (
+        <WeekView 
+          weekNumber={Math.ceil(selectedDate.getDate() / 7) + 35}
+          weekRange={`${monthNames[selectedDate.getMonth()]} ${selectedDate.getDate() - selectedDate.getDay()} - ${selectedDate.getDate() - selectedDate.getDay() + 6}, ${selectedDate.getFullYear()}`}
+          weekData={weekData}
+          onDayClick={(dayIndex) => {
+            const weekStart = new Date(selectedDate);
+            weekStart.setDate(selectedDate.getDate() - selectedDate.getDay());
+            const clickedDay = new Date(weekStart);
+            clickedDay.setDate(weekStart.getDate() + dayIndex);
+            const dateKey = clickedDay.toISOString().split('T')[0];
+            setSelectedDay(dateKey);
+          }}
+        />
+      )}
     </div>
   );
 }

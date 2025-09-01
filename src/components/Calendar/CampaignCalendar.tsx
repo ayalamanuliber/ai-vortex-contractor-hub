@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { ChevronDown, Calendar, X } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 import { WeekView } from './WeekView';
@@ -52,14 +52,20 @@ const generateRealCampaignData = (contractors: any[]): { [key: string]: Campaign
   // Get contractors with campaigns
   const contractorsWithCampaigns = contractors.filter(c => c.hasCampaign && c.campaignData);
   
+  
   // Day name mapping
   const dayMap: { [key: string]: number } = {
     'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 
     'thursday': 4, 'friday': 5, 'saturday': 6
   };
   
-  for (let i = 0; i < 31; i++) {
-    const date = new Date(today.getFullYear(), today.getMonth(), i + 1);
+  // Generate data for current month's days
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(currentYear, currentMonth, day);
     const dateKey = date.toISOString().split('T')[0];
     const dayOfWeek = date.getDay();
     
@@ -171,11 +177,27 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
 };
 
 export function CampaignCalendar() {
-  const { isCalendarMinimized, toggleCalendar, contractors } = useContractorStore();
+  const { isCalendarMinimized, toggleCalendar, contractors, filteredContractors, setContractors } = useContractorStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   
-  const campaignData = generateRealCampaignData(contractors);
+  // Load contractors data if empty
+  useEffect(() => {
+    if (!contractors || contractors.length === 0) {
+      const loadContractors = async () => {
+        try {
+          const response = await fetch('/api/simple-contractors?start=0&limit=200');
+          const result = await response.json();
+          setContractors(result.contractors || []);
+        } catch (error) {
+          console.error('Calendar failed to load contractors:', error);
+        }
+      };
+      loadContractors();
+    }
+  }, [contractors, setContractors]);
+  
+  const campaignData = useMemo(() => generateRealCampaignData(contractors), [contractors]);
   
   const today = new Date();
   const year = currentDate.getFullYear();

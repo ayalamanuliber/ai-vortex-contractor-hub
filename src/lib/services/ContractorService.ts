@@ -65,11 +65,16 @@ export class ContractorService {
       const response = await fetch(`/api/contractors?start=${start}&limit=${limit}`);
       const data = await response.json();
       
+      console.log(`Loading CSV chunk ${chunkId}, got ${data.contractors?.length} contractors`);
+      
       data.contractors.forEach((contractor: any) => {
-        const id = this.normalizeId(contractor['Business ID'] || contractor.id);
-        this.csvData.set(id, this.parseContractorFromCSV(contractor));
+        const id = this.normalizeId(contractor['business_id'] || contractor.id);
+        const parsed = this.parseContractorFromCSV(contractor);
+        this.csvData.set(id, parsed);
+        console.log(`Loaded contractor ${id}: ${parsed.businessName} (completion: ${parsed.completionScore})`);
       });
       
+      console.log(`CSV data size now: ${this.csvData.size}`);
       this.loadedChunks.add(chunkId);
     } catch (error) {
       console.error(`Error loading CSV chunk ${chunkId}:`, error);
@@ -121,6 +126,8 @@ export class ContractorService {
 
   // Merge CSV and Campaign data
   private mergeData(): void {
+    console.log(`Starting merge - CSV: ${this.csvData.size}, Campaigns: ${this.campaignData.size}`);
+    
     // Start with CSV data
     this.csvData.forEach((contractor, id) => {
       const campaign = this.campaignData.get(id);
@@ -139,6 +146,10 @@ export class ContractorService {
       
       this.mergedData.set(id, merged);
       this.updateIndexes(id, merged);
+      
+      if (campaign) {
+        console.log(`✅ Merged contractor ${id} WITH campaign: ${contractor.businessName}`);
+      }
     });
 
     // Add campaigns without CSV match
@@ -147,8 +158,11 @@ export class ContractorService {
         const merged: MergedContractor = this.createContractorFromCampaign(campaign);
         this.mergedData.set(id, merged);
         this.updateIndexes(id, merged);
+        console.log(`➕ Added campaign-only contractor ${id}: ${merged.businessName}`);
       }
     });
+    
+    console.log(`Merge complete - Total merged: ${this.mergedData.size}`);
   }
 
   // Format campaign data for easier use

@@ -311,6 +311,10 @@ export class ContractorService {
       tokensUsed: campaign.tokens || 0,
       emailSequences: campaign.campaign_data?.email_sequences?.length || 0,
       notes: [],
+      
+      // Editable fields (empty for campaign-only contractors)
+      name: '',
+      lastName: '',
     };
   }
 

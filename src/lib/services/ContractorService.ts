@@ -110,18 +110,13 @@ export class ContractorService {
     }
     
     // Debug for problematic contractor 3993
-    if (id === '3993') {
-      console.log(`DEBUG ${id} - ALL FIELDS:`, {
-        business_id: row['business_id'],
-        schema_version: row['schema_version'], 
-        processing_timestamp: row['processing_timestamp'],
+    if (id === '3993' || row['business_id'] === '3993' || row['business_id'] === 3993) {
+      console.log(`DEBUG CONTRACTOR - ID MATCHING:`, {
+        originalBusinessId: row['business_id'],
+        normalizedId: id,
         data_completion_score: row['data_completion_score'],
-        validation_flags: row['validation_flags'],
-        layers_present: row['layers_present'],
-        rawScore,
-        type: typeof rawScore,
         finalScore: completionScore,
-        allKeys: Object.keys(row).slice(0, 10)
+        contractorDataScore: undefined // will show after creation
       });
     }
     
@@ -167,6 +162,15 @@ export class ContractorService {
       name: '',
       lastName: '',
     };
+    
+    // Debug after creation
+    if (id === '3993' || row['business_id'] === '3993' || row['business_id'] === 3993) {
+      console.log(`DEBUG CONTRACTOR - AFTER CREATION:`, {
+        id: contractorData.id,
+        completionScore: contractorData.completionScore,
+        businessName: contractorData.businessName
+      });
+    }
     
     return contractorData;
   }

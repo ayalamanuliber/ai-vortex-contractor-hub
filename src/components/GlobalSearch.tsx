@@ -25,8 +25,8 @@ export function GlobalSearch() {
     
     setIsLoading(true);
     try {
-      // Search across ALL contractors
-      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(searchTerm)}&start=0&limit=500`);
+      // Search across ALL contractors (no limit for search)
+      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(searchTerm)}&start=0&limit=2000`);
       const result = await response.json();
       
       setResults(result.contractors || []);

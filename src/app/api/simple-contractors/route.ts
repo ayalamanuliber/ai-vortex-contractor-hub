@@ -55,17 +55,23 @@ export async function GET(request: NextRequest) {
       const id = String(row['business_id']).replace(/^0+/, '').trim();
       const originalId = String(row['business_id']).trim(); // Keep original with leading zeros
       
-      // Check campaign data using both formats
-      const campaignData = campaignsData.contractors[originalId] || campaignsData.contractors[id];
+      // Check campaign data using multiple ID formats
+      // Try: original, trimmed, padded with zero
+      const paddedId = id.padStart(5, '0'); // Convert "1062" to "01062"
+      const campaignData = campaignsData.contractors[originalId] || 
+                          campaignsData.contractors[id] || 
+                          campaignsData.contractors[paddedId];
       const hasCampaign = !!campaignData && campaignData.processing_status === 'completed';
       
       // Debug for contractor 1062
       if (id === '1062') {
         console.log('DEBUG 1062 Matching:', {
           id, 
-          originalId, 
+          originalId,
+          paddedId,
           foundWithOriginal: !!campaignsData.contractors[originalId],
           foundWithId: !!campaignsData.contractors[id],
+          foundWithPadded: !!campaignsData.contractors[paddedId],
           campaignData: !!campaignData,
           hasCampaign
         });

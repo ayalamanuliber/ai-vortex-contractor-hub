@@ -18,8 +18,8 @@ interface ContractorStore {
   setContractors: (contractors: MergedContractor[]) => void;
   addContractors: (contractors: MergedContractor[]) => void;
   setMode: (mode: 'intelligence' | 'execution') => void;
-  toggleFilter: (filter: string) => void;
-  clearFilters: () => void;
+  toggleFilter: (filter: string) => Promise<void>;
+  clearFilters: () => Promise<void>;
   setCurrentProfile: (contractor: MergedContractor | null) => void;
   toggleCalendar: () => void;
   setLoading: (loading: boolean) => void;
@@ -93,30 +93,102 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
   
   setMode: (mode) => set({ currentMode: mode }),
   
-  toggleFilter: (filter) => {
-    const { filters, contractors } = get();
-    const newFilters = filters.includes(filter)
-      ? filters.filter(f => f !== filter)
-      : [...filters, filter];
+  toggleFilter: async (filter) => {
+    const { filters, searchQuery } = get();
     
-    const filtered = applyFiltersAndSearch(contractors, newFilters, get().searchQuery);
+    // Define mutually exclusive filter groups
+    const mutuallyExclusiveGroups = [
+      // Completion score ranges
+      ['completion-85-100', 'completion-70-84', 'completion-50-69', 'completion-0-49'],
+      // States (only one state at a time)
+      ['alabama', 'arkansas', 'idaho', 'kansas', 'kentucky', 'mississippi', 'montana', 'newMexico', 'oklahoma', 'southDakota', 'utah', 'westVirginia'],
+      // Categories (only one category at a time)
+      ['roofing', 'hvac', 'plumbing', 'electrical', 'remodeling', 'exterior', 'heavyCivil', 'homeBuilding', 'specialty', 'suppliers', 'ancillary', 'construction', 'windowDoor', 'other'],
+      // PSI performance ranges
+      ['high-psi', 'medium-psi', 'low-psi'],
+      // Rating ranges
+      ['high-rating', 'low-rating'],
+      // Review volume
+      ['many-reviews', 'few-reviews', 'no-reviews'],
+      // Review activity
+      ['active-reviews', 'inactive-reviews'],
+      // Website builders
+      ['wix-site', 'godaddy-site', 'squarespace-site', 'custom-site'],
+      // Email quality
+      ['professional-email', 'personal-email']
+    ];
     
-    set({ 
-      filters: newFilters,
-      filteredContractors: filtered,
-      showingCount: filtered.length
-    });
+    let newFilters;
+    if (filters.includes(filter)) {
+      // Remove filter
+      newFilters = filters.filter(f => f !== filter);
+    } else {
+      // Add filter, but remove any conflicting filters from same group
+      const conflictingGroup = mutuallyExclusiveGroups.find(group => group.includes(filter));
+      if (conflictingGroup) {
+        // Remove any existing filters from this group
+        newFilters = filters.filter(f => !conflictingGroup.includes(f));
+        // Add the new filter
+        newFilters = [...newFilters, filter];
+      } else {
+        // No conflicts, just add
+        newFilters = [...filters, filter];
+      }
+    }
+    
+    // Fetch filtered data from API
+    try {
+      set({ isLoading: true });
+      
+      let url = '/api/simple-contractors?start=0&limit=100';
+      if (newFilters.length > 0) {
+        url += `&filters=${newFilters.join(',')}`;
+      }
+      if (searchQuery.trim()) {
+        url += `&search=${encodeURIComponent(searchQuery)}`;
+      }
+      
+      const response = await fetch(url);
+      const result = await response.json();
+      
+      set({ 
+        filters: newFilters,
+        contractors: result.contractors || [],
+        filteredContractors: result.contractors || [],
+        showingCount: result.total || 0,
+        isLoading: false
+      });
+    } catch (error) {
+      console.error('Filter error:', error);
+      set({ isLoading: false });
+    }
   },
   
-  clearFilters: () => {
-    const { contractors, searchQuery } = get();
-    const filtered = applyFiltersAndSearch(contractors, [], searchQuery);
+  clearFilters: async () => {
+    const { searchQuery } = get();
     
-    set({ 
-      filters: [],
-      filteredContractors: filtered,
-      showingCount: filtered.length
-    });
+    try {
+      set({ isLoading: true });
+      
+      let url = '/api/simple-contractors?start=0&limit=100';
+      if (searchQuery.trim()) {
+        url += `&search=${encodeURIComponent(searchQuery)}`;
+      }
+      
+      const response = await fetch(url);
+      const result = await response.json();
+      
+      set({ 
+        filters: [],
+        contractors: result.contractors || [],
+        filteredContractors: result.contractors || [],
+        showingCount: result.total || 0,
+        isLoading: false
+      });
+    } catch (error) {
+      console.error('Clear filters error:', error);
+      set({ isLoading: false });
+    }
   },
   
   setCurrentProfile: (contractor) => set({ currentProfile: contractor }),
@@ -343,6 +415,41 @@ function applyFiltersAndSearch(
             return contractor.emailQuality === 'PROFESSIONAL_DOMAIN';
           case 'personal-email':
             return contractor.emailQuality === 'PERSONAL_DOMAIN';
+          
+          // Review filters
+          case 'many-reviews':
+            return contractor.googleReviews >= 50;
+          case 'few-reviews':
+            return contractor.googleReviews > 0 && contractor.googleReviews < 10;
+          case 'no-reviews':
+            return contractor.googleReviews === 0;
+          case 'active-reviews':
+            if (!contractor.intelligence.lastReviewDate) return false;
+            const sixMonthsAgo = new Date();
+            sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+            const lastReview = new Date(contractor.intelligence.lastReviewDate);
+            return lastReview > sixMonthsAgo;
+          case 'inactive-reviews':
+            if (!contractor.intelligence.lastReviewDate) return false;
+            const sixMonthsAgoInactive = new Date();
+            sixMonthsAgoInactive.setMonth(sixMonthsAgoInactive.getMonth() - 6);
+            const lastReviewInactive = new Date(contractor.intelligence.lastReviewDate);
+            return lastReviewInactive <= sixMonthsAgoInactive;
+          
+          // Website builder filters
+          case 'wix-site':
+            return contractor.intelligence.websiteBuilder?.toLowerCase().includes('wix') || false;
+          case 'godaddy-site':
+            return contractor.intelligence.websiteBuilder?.toLowerCase().includes('godaddy') || false;
+          case 'squarespace-site':
+            return contractor.intelligence.websiteBuilder?.toLowerCase().includes('squarespace') || false;
+          case 'custom-site':
+            const builder = contractor.intelligence.websiteBuilder?.toLowerCase() || '';
+            return !builder.includes('wix') && 
+                   !builder.includes('godaddy') && 
+                   !builder.includes('squarespace') &&
+                   builder !== 'unknown' &&
+                   builder !== '';
           
           default:
             return true;

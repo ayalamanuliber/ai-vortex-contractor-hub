@@ -58,8 +58,11 @@ export async function GET() {
       state: row['L1_state_code'] || '',
       category: getMegaCategory(row['L1_category'] || ''),
       googleRating: Number(row['L1_google_rating']) || 0,
+      googleReviews: Number(row['L1_google_reviews']) || 0,
       mobileSpeed: Number(row['L1_psi_mobile_performance']) || 0,
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
+      websiteBuilder: row['L1_website_builder'] || 'UNKNOWN',
+      lastReviewDate: row['L1_last_review_date'] || '',
     }));
     
     // Calculate filter stats efficiently
@@ -129,6 +132,42 @@ export async function GET() {
         professional: contractors.filter(c => c.emailQuality === 'PROFESSIONAL_DOMAIN').length,
         personal: contractors.filter(c => c.emailQuality === 'PERSONAL_DOMAIN').length,
         unknown: contractors.filter(c => c.emailQuality === 'UNKNOWN').length,
+      },
+      
+      // Review Statistics
+      reviews: {
+        highRating: contractors.filter(c => c.googleRating >= 4.5).length,
+        lowRating: contractors.filter(c => c.googleRating > 0 && c.googleRating < 4.0).length,
+        manyReviews: contractors.filter(c => c.googleReviews >= 50).length,
+        fewReviews: contractors.filter(c => c.googleReviews > 0 && c.googleReviews < 10).length,
+        activeReviews: contractors.filter(c => {
+          if (!c.lastReviewDate) return false;
+          const sixMonthsAgo = new Date();
+          sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+          const lastReview = new Date(c.lastReviewDate);
+          return lastReview > sixMonthsAgo;
+        }).length,
+        inactiveReviews: contractors.filter(c => {
+          if (!c.lastReviewDate) return false;
+          const sixMonthsAgo = new Date();
+          sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+          const lastReview = new Date(c.lastReviewDate);
+          return lastReview <= sixMonthsAgo;
+        }).length,
+        noReviews: contractors.filter(c => c.googleReviews === 0).length,
+      },
+      
+      // Website Builder Statistics
+      builders: {
+        wix: contractors.filter(c => c.websiteBuilder.toLowerCase().includes('wix')).length,
+        godaddy: contractors.filter(c => c.websiteBuilder.toLowerCase().includes('godaddy')).length,
+        squarespace: contractors.filter(c => c.websiteBuilder.toLowerCase().includes('squarespace')).length,
+        custom: contractors.filter(c => 
+          !c.websiteBuilder.toLowerCase().includes('wix') &&
+          !c.websiteBuilder.toLowerCase().includes('godaddy') &&
+          !c.websiteBuilder.toLowerCase().includes('squarespace') &&
+          c.websiteBuilder !== 'UNKNOWN'
+        ).length,
       },
     };
     

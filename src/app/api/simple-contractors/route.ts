@@ -82,13 +82,66 @@ export async function GET(request: NextRequest) {
     const start = parseInt(searchParams.get('start') || '0');
     const limit = parseInt(searchParams.get('limit') || '100');
     const search = searchParams.get('search') || '';
+    const filtersParam = searchParams.get('filters') || '';
     
     let filteredContractors = contractors;
     
-    // Search functionality - search through ALL contractors
+    // Apply filters first
+    if (filtersParam) {
+      const filters = filtersParam.split(',').filter(f => f.trim());
+      filteredContractors = contractors.filter(contractor => {
+        return filters.every(filter => {
+          switch (filter) {
+            // Completion score filters
+            case 'completion-85-100':
+              return contractor.completionScore >= 85;
+            case 'completion-70-84':
+              return contractor.completionScore >= 70 && contractor.completionScore < 85;
+            case 'completion-50-69':
+              return contractor.completionScore >= 50 && contractor.completionScore < 70;
+            case 'completion-0-49':
+              return contractor.completionScore < 50;
+            
+            // State filters
+            case 'alabama': return contractor.state === 'AL';
+            case 'arkansas': return contractor.state === 'AR';
+            case 'idaho': return contractor.state === 'ID';
+            case 'kansas': return contractor.state === 'KS';
+            case 'kentucky': return contractor.state === 'KY';
+            case 'mississippi': return contractor.state === 'MS';
+            case 'montana': return contractor.state === 'MT';
+            case 'newMexico': return contractor.state === 'NM';
+            case 'oklahoma': return contractor.state === 'OK';
+            case 'southDakota': return contractor.state === 'SD';
+            case 'utah': return contractor.state === 'UT';
+            case 'westVirginia': return contractor.state === 'WV';
+            
+            // Category filters  
+            case 'roofing': return contractor.category.toLowerCase().includes('roofing');
+            case 'hvac': return contractor.category.toLowerCase().includes('hvac');
+            case 'plumbing': return contractor.category.toLowerCase().includes('plumbing');
+            case 'electrical': return contractor.category.toLowerCase().includes('electrical');
+            
+            // PSI performance
+            case 'high-psi': return contractor.intelligence.websiteSpeed.mobile >= 85;
+            case 'medium-psi': return contractor.intelligence.websiteSpeed.mobile >= 60 && contractor.intelligence.websiteSpeed.mobile < 85;
+            case 'low-psi': return contractor.intelligence.websiteSpeed.mobile < 60;
+            
+            // Rating filters
+            case 'high-rating': return contractor.googleRating >= 4.5;
+            case 'low-rating': return contractor.googleRating < 4.0;
+            
+            default:
+              return true;
+          }
+        });
+      });
+    }
+    
+    // Search functionality - search through filtered contractors
     if (search.trim()) {
       const query = search.toLowerCase();
-      filteredContractors = contractors.filter(contractor => 
+      filteredContractors = filteredContractors.filter(contractor => 
         contractor.businessName.toLowerCase().includes(query) ||
         contractor.category.toLowerCase().includes(query) ||
         contractor.state.toLowerCase().includes(query) ||

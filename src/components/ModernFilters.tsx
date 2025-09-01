@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Filter, X, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
+import { 
+  Filter, X, ChevronDown, ChevronRight, Loader2,
+  Target, MapPin, Building2, Zap, Star, Globe, TrendingUp
+} from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 
 interface FilterStats {
@@ -59,11 +62,20 @@ interface FilterStats {
     personal: number;
     unknown: number;
   };
-  health: {
-    healthy: number;
-    emerging: number;
-    needsAttention: number;
-    struggling: number;
+  reviews: {
+    highRating: number;
+    lowRating: number;
+    manyReviews: number;
+    fewReviews: number;
+    activeReviews: number;
+    inactiveReviews: number;
+    noReviews: number;
+  };
+  builders: {
+    wix: number;
+    godaddy: number;
+    squarespace: number;
+    custom: number;
   };
 }
 
@@ -76,7 +88,8 @@ export function ModernFilters() {
     location: false,
     category: false,
     performance: false,
-    quality: false,
+    reviews: false,
+    builders: false,
   });
   
   // Load filter stats
@@ -212,7 +225,7 @@ export function ModernFilters() {
       
       {/* Completion Score */}
       <div className="space-y-2">
-        <SectionHeader section="completion" title="Completion Score" />
+        <SectionHeader section="completion" title="Completion Score" icon={<Target className="h-4 w-4" />} />
         {expandedSections.completion && (
           <div className="space-y-1 pl-2">
             <FilterButton filter="completion-85-100" label="85-100% (Excellent)" count={stats.completion.high} color="green" />
@@ -225,7 +238,7 @@ export function ModernFilters() {
       
       {/* Location */}
       <div className="space-y-2">
-        <SectionHeader section="location" title="Location" />
+        <SectionHeader section="location" title="Location" icon={<MapPin className="h-4 w-4" />} />
         {expandedSections.location && (
           <div className="space-y-1 pl-2 max-h-48 overflow-y-auto">
             <FilterButton filter="alabama" label="Alabama (AL)" count={stats.states.alabama} color="blue" />
@@ -246,7 +259,7 @@ export function ModernFilters() {
       
       {/* Category - 14 Real Mega Categories */}
       <div className="space-y-2">
-        <SectionHeader section="category" title="Industry (14 Categories)" />
+        <SectionHeader section="category" title="Industry (14 Categories)" icon={<Building2 className="h-4 w-4" />} />
         {expandedSections.category && (
           <div className="space-y-1 pl-2 max-h-64 overflow-y-auto">
             <FilterButton filter="roofing" label="Roofing" count={stats.categories.roofing} color="purple" />
@@ -269,7 +282,7 @@ export function ModernFilters() {
       
       {/* Performance */}
       <div className="space-y-2">
-        <SectionHeader section="performance" title="Website Performance" />
+        <SectionHeader section="performance" title="Website Performance" icon={<Zap className="h-4 w-4" />} />
         {expandedSections.performance && (
           <div className="space-y-1 pl-2">
             <FilterButton filter="high-psi" label="High Speed (85+)" count={stats.speed.high} color="green" />
@@ -279,14 +292,31 @@ export function ModernFilters() {
         )}
       </div>
       
-      {/* Quality */}
+      {/* Reviews */}
       <div className="space-y-2">
-        <SectionHeader section="quality" title="Quality Indicators" />
-        {expandedSections.quality && (
+        <SectionHeader section="reviews" title="Review Quality" icon={<Star className="h-4 w-4" />} />
+        {expandedSections.reviews && (
           <div className="space-y-1 pl-2">
-            <FilterButton filter="high-rating" label="High Rating (4.5+)" count={stats.rating.high} color="green" />
-            <FilterButton filter="professional-email" label="Professional Email" count={stats.email.professional} color="blue" />
-            <FilterButton filter="personal-email" label="Personal Email" count={stats.email.personal} color="orange" />
+            <FilterButton filter="high-rating" label="High Rating (4.5+)" count={stats.reviews.highRating} color="green" />
+            <FilterButton filter="low-rating" label="Low Rating (<4.0)" count={stats.reviews.lowRating} color="red" />
+            <FilterButton filter="many-reviews" label="Many Reviews (50+)" count={stats.reviews.manyReviews} color="blue" />
+            <FilterButton filter="few-reviews" label="Few Reviews (<10)" count={stats.reviews.fewReviews} color="orange" />
+            <FilterButton filter="active-reviews" label="Active (Recent)" count={stats.reviews.activeReviews} color="green" />
+            <FilterButton filter="inactive-reviews" label="Inactive (6mo+)" count={stats.reviews.inactiveReviews} color="yellow" />
+            <FilterButton filter="no-reviews" label="No Reviews" count={stats.reviews.noReviews} color="red" />
+          </div>
+        )}
+      </div>
+      
+      {/* Website Builders */}
+      <div className="space-y-2">
+        <SectionHeader section="builders" title="Website Builder" icon={<Globe className="h-4 w-4" />} />
+        {expandedSections.builders && (
+          <div className="space-y-1 pl-2">
+            <FilterButton filter="custom-site" label="Custom/WordPress" count={stats.builders.custom} color="green" />
+            <FilterButton filter="wix-site" label="Wix" count={stats.builders.wix} color="blue" />
+            <FilterButton filter="godaddy-site" label="GoDaddy" count={stats.builders.godaddy} color="orange" />
+            <FilterButton filter="squarespace-site" label="Squarespace" count={stats.builders.squarespace} color="purple" />
           </div>
         )}
       </div>

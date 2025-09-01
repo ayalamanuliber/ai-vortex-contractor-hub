@@ -118,6 +118,10 @@ export class ContractorService {
       businessHealth: row['L1_targeting_business_health'] || 'NEEDS_ATTENTION',
       sophisticationTier: row['L3_sophistication_intelligence_tier'] || 'Amateur',
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
+      
+      // Editable fields
+      name: row['NAME'] || '',
+      lastName: row['LAST_NAME'] || '',
     };
   }
 

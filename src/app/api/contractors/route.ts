@@ -17,25 +17,19 @@ export async function GET(request: NextRequest) {
     // Check cache
     const now = Date.now();
     if (!csvCache || now - cacheTimestamp > CACHE_DURATION) {
-      // Try different possible paths for the CSV file
-      let csvPath = path.join(process.cwd(), 'public', 'data', 'contractors.csv');
+      // Use the full editable CSV file
+      const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_editable.csv');
       
       try {
         await fs.access(csvPath);
       } catch (error) {
-        // If file doesn't exist, try relative path
-        csvPath = path.join(process.cwd(), 'CONTRACTORS - Master_Sheet.csv');
-        try {
-          await fs.access(csvPath);
-        } catch (error2) {
-          // Return mock data if no CSV file found
-          return NextResponse.json({
-            contractors: generateMockData(limit),
-            total: 1000,
-            hasMore: start + limit < 1000,
-            message: 'Using mock data - CSV file not found'
-          });
-        }
+        // Return mock data if no CSV file found
+        return NextResponse.json({
+          contractors: generateMockData(limit),
+          total: 1000,
+          hasMore: start + limit < 1000,
+          message: 'Using mock data - CSV file not found'
+        });
       }
       
       const csvContent = await fs.readFile(csvPath, 'utf-8');
@@ -128,4 +122,58 @@ function generateMockData(count: number) {
   }
   
   return mockData;
+}
+
+// PATCH method for updating NAME and LAST_NAME fields
+export async function PATCH(request: NextRequest) {
+  try {
+    const { businessId, name, lastName } = await request.json();
+    
+    if (!businessId) {
+      return NextResponse.json({ error: 'Business ID required' }, { status: 400 });
+    }
+
+    const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_editable.csv');
+    const csvContent = await fs.readFile(csvPath, 'utf-8');
+    
+    // Parse CSV
+    const parsed = Papa.parse(csvContent, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (header) => header.trim(),
+    });
+    
+    // Find and update the contractor
+    const contractorIndex = parsed.data.findIndex((row: any) => 
+      String(row.business_id) === String(businessId)
+    );
+    
+    if (contractorIndex === -1) {
+      return NextResponse.json({ error: 'Contractor not found' }, { status: 404 });
+    }
+    
+    // Update the fields
+    (parsed.data[contractorIndex] as any).NAME = name || '';
+    (parsed.data[contractorIndex] as any).LAST_NAME = lastName || '';
+    
+    // Convert back to CSV
+    const updatedCsv = Papa.unparse(parsed.data);
+    
+    // Write back to file
+    await fs.writeFile(csvPath, updatedCsv, 'utf-8');
+    
+    // Clear cache to force reload
+    csvCache = null;
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Contractor updated successfully' 
+    });
+    
+  } catch (error) {
+    console.error('Error updating contractor:', error);
+    return NextResponse.json({ 
+      error: 'Failed to update contractor' 
+    }, { status: 500 });
+  }
 }

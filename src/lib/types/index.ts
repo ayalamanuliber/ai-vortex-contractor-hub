@@ -34,6 +34,10 @@ export interface Contractor {
   businessHealth: 'HEALTHY' | 'EMERGING' | 'NEEDS_ATTENTION';
   sophisticationTier: 'Professional' | 'Growing' | 'Amateur';
   emailQuality: 'PROFESSIONAL_DOMAIN' | 'PERSONAL_DOMAIN' | 'UNKNOWN';
+  
+  // Editable fields
+  name: string;
+  lastName: string;
 }
 
 export interface Campaign {

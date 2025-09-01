@@ -82,21 +82,31 @@ export class ContractorService {
   private parseContractorFromCSV(row: any): Contractor {
     const id = this.normalizeId(row['business_id'] || row.id);
     
-    const completionScore = parseInt(String(row['data_completion_score'])) || 0;
+    // Better parsing for completion score
+    const rawScore = row['data_completion_score'];
+    let completionScore = 0;
     
-    // Debug specific contractor - AFTER parsing
-    if (id === '3993') {
-      console.log(`DEBUG ${id} - FINAL CONTRACTOR OBJECT:`, {
-        id,
-        businessName: row['L1_company_name'],
-        completionScore,
-        rawScore: row['data_completion_score'],
-        googleRating: parseFloat(row['L1_google_rating']) || 0,
-        websiteSpeed: parseInt(row['L1_psi_mobile_performance']) || 0
+    if (rawScore !== null && rawScore !== undefined && rawScore !== '') {
+      const parsed = parseFloat(String(rawScore));
+      if (!isNaN(parsed) && parsed >= 0 && parsed <= 100) {
+        completionScore = Math.round(parsed);
+      }
+    }
+    
+    // Debug for multiple contractors
+    if (['3993', '1000', '1001', '1002'].includes(id)) {
+      console.log(`DEBUG ${id}:`, {
+        rawScore,
+        type: typeof rawScore,
+        stringValue: String(rawScore),
+        parsed: parseFloat(String(rawScore)),
+        isNaN: isNaN(parseFloat(String(rawScore))),
+        finalScore: completionScore
       });
     }
     
-    return {
+    // Create contractor object
+    const contractorData = {
       id,
       businessName: row['L1_company_name'] || 'Unknown Business',
       category: row['L1_category'] || 'General Contractor',
@@ -110,7 +120,7 @@ export class ContractorService {
       
       // Scores - using data_completion_score and other L2/L3 fields  
       completionScore: completionScore,
-      healthScore: this.calculateHealthScore(row),
+      healthScore: this.calculateHealthScore(row, completionScore),
       trustScore: Math.round(parseFloat(row['L2_trust_score']) * 100) || 0,
       googleRating: parseFloat(row['L1_google_rating']) || 0,
       reviewsCount: parseInt(row['L1_google_reviews_count']) || 0,
@@ -137,6 +147,8 @@ export class ContractorService {
       name: '',
       lastName: '',
     };
+    
+    return contractorData;
   }
 
   // Merge CSV and Campaign data
@@ -189,15 +201,15 @@ export class ContractorService {
   }
 
   // Calculate health score from various metrics
-  private calculateHealthScore(row: any): number {
-    const completionScore = parseInt(row['data_completion_score']) || 0;
+  private calculateHealthScore(row: any, completionScore?: number): number {
+    const completion = completionScore || parseInt(String(row['data_completion_score'])) || 0;
     const googleRating = parseFloat(row['L1_google_rating']) || 0;
     const reviewsCount = parseInt(row['L1_google_reviews_count']) || 0;
     const sophisticationScore = parseInt(row['L2_sophistication_score']) || 0;
     
     // Weighted calculation
     let healthScore = 0;
-    healthScore += completionScore * 0.4;  // Data completeness 40%
+    healthScore += completion * 0.4;  // Data completeness 40%
     healthScore += (googleRating * 20) * 0.3;  // Google rating 30%
     healthScore += Math.min(reviewsCount * 2, 20) * 0.2;  // Reviews count 20%
     healthScore += sophisticationScore * 0.1;  // Sophistication 10%

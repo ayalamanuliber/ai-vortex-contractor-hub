@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import type { Contractor, Campaign, MergedContractor, CampaignsDatabase } from '@/lib/types';
 
-export class ContractorService {
+class ContractorServiceClass {
   private csvData: Map<string, Contractor> = new Map();
   private campaignData: Map<string, Campaign> = new Map();
   private mergedData: Map<string, MergedContractor> = new Map();

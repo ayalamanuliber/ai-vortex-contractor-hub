@@ -17,7 +17,8 @@ export function IntelligenceCard({ contractor, onClick }: IntelligenceCardProps)
       id: contractor.id,
       completionScore: contractor.completionScore,
       type: typeof contractor.completionScore,
-      businessName: contractor.businessName
+      businessName: contractor.businessName,
+      stack: new Error().stack?.split('\n').slice(1, 4)
     });
   }
 

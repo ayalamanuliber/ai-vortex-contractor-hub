@@ -109,16 +109,16 @@ export class ContractorService {
           
           intelligence: {
             websiteSpeed: { mobile: 50, desktop: 50 },
-            reviewsRecency: 'UNKNOWN',
+            reviewsRecency: 'UNKNOWN' as 'ACTIVE' | 'MODERATE' | 'INACTIVE' | 'UNKNOWN',
             daysSinceLatest: 0,
             platformDetection: 'Unknown',
             domainAge: 0,
             businessHours: 'Mon-Fri 8AM-5PM',
           },
           
-          businessHealth: 'NEEDS_ATTENTION',
-          sophisticationTier: 'Amateur', 
-          emailQuality: 'UNKNOWN',
+          businessHealth: 'NEEDS_ATTENTION' as 'HEALTHY' | 'EMERGING' | 'NEEDS_ATTENTION',
+          sophisticationTier: 'Amateur' as 'Professional' | 'Growing' | 'Amateur', 
+          emailQuality: 'UNKNOWN' as 'PROFESSIONAL_DOMAIN' | 'PERSONAL_DOMAIN' | 'UNKNOWN',
           name: '',
           lastName: '',
         };

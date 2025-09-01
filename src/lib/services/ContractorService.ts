@@ -193,6 +193,16 @@ export class ContractorService {
         notes: [],
       };
       
+      // Debug for 3993
+      if (id === '3993') {
+        console.log(`MERGE DEBUG 3993:`, {
+          originalContractor: contractor.completionScore,
+          mergedContractor: merged.completionScore,
+          hasCampaign: merged.hasCampaign,
+          id: merged.id
+        });
+      }
+      
       this.mergedData.set(id, merged);
       this.updateIndexes(id, merged);
     });
@@ -201,6 +211,16 @@ export class ContractorService {
     this.campaignData.forEach((campaign, id) => {
       if (!this.mergedData.has(id)) {
         const merged: MergedContractor = this.createContractorFromCampaign(campaign);
+        
+        // Debug if overwriting 3993
+        if (id === '3993') {
+          console.log(`OVERWRITE DEBUG 3993 - Creating from campaign:`, {
+            completionScore: merged.completionScore,
+            businessName: merged.businessName,
+            overwroteCSV: true
+          });
+        }
+        
         this.mergedData.set(id, merged);
         this.updateIndexes(id, merged);
       }

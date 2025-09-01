@@ -78,44 +78,44 @@ export class ContractorService {
 
   // Parse contractor data from CSV row
   private parseContractorFromCSV(row: any): Contractor {
-    const id = this.normalizeId(row['Business ID'] || row.id);
+    const id = this.normalizeId(row['business_id'] || row.id);
     
     return {
       id,
-      businessName: row['Business Name'] || row.businessName || 'Unknown Business',
-      category: row['Category'] || this.determineCategory(row['Business Name']),
-      email: row['Email'] || 'contact@example.com',
-      phone: row['Phone'] || '(555) 000-0000',
-      website: row['Website'] || row['Domain'] || '',
-      address: row['Address'] || row['Location'] || 'Unknown Location',
-      city: row['City'] || '',
-      state: row['State'] || this.extractState(row['Address'] || row['Location']),
-      zipCode: row['Zip Code'] || '',
+      businessName: row['L1_company_name'] || 'Unknown Business',
+      category: row['L1_category'] || 'General Contractor',
+      email: row['L1_primary_email'] || 'contact@example.com',
+      phone: row['L1_phone'] || '(555) 000-0000',
+      website: row['L1_website'] || '',
+      address: row['L1_address_full'] || 'Unknown Location',
+      city: row['L1_city'] || '',
+      state: row['L1_state_code'] || 'Unknown',
+      zipCode: row['L1_postal_code'] || '',
       
-      // Scores
-      completionScore: parseInt(row['Completion Score']) || 0,
-      healthScore: parseInt(row['Health Score']) || 0,
-      trustScore: parseInt(row['Trust Score']) || 0,
-      googleRating: parseFloat(row['Google Rating']) || 0,
-      reviewsCount: parseInt(row['Reviews Count']) || 0,
+      // Scores - using data_completion_score and other L2/L3 fields
+      completionScore: parseInt(row['data_completion_score']) || 0,
+      healthScore: this.calculateHealthScore(row),
+      trustScore: Math.round(parseFloat(row['L2_trust_score']) * 100) || 0,
+      googleRating: parseFloat(row['L1_google_rating']) || 0,
+      reviewsCount: parseInt(row['L1_google_reviews_count']) || 0,
       
       // Intelligence data
       intelligence: {
         websiteSpeed: {
-          mobile: parseInt(row['Mobile Speed']) || 0,
-          desktop: parseInt(row['Desktop Speed']) || 0,
+          mobile: parseInt(row['L1_psi_mobile_performance']) || 0,
+          desktop: parseInt(row['L1_psi_desktop_performance']) || 0,
         },
-        reviewsRecency: this.categorizeReviewsRecency(row['Days Since Latest Review']),
-        daysSinceLatest: parseInt(row['Days Since Latest Review']) || 0,
-        platformDetection: row['Platform'] || 'Unknown',
-        domainAge: parseFloat(row['Domain Age']) || 0,
-        businessHours: row['Business Hours'] || 'Mon-Fri 8AM-5PM',
+        reviewsRecency: row['L2_reviews_recency_bucket'] || 'UNKNOWN',
+        daysSinceLatest: parseInt(row['L1_days_since_latest_review']) || 0,
+        platformDetection: row['L1_builder_platform'] || 'Unknown',
+        domainAge: parseFloat(row['L1_whois_domain_age_years']) || 0,
+        businessHours: row['L1_weekday_hours'] || 'Mon-Fri 8AM-5PM',
       },
       
-      // Classifications
-      businessHealth: this.classifyBusinessHealth(parseInt(row['Health Score']) || 0),
-      sophisticationTier: this.classifySophistication(parseInt(row['Trust Score']) || 0),
-      emailQuality: this.classifyEmailQuality(row['Email']),
+      // Classifications - using L1 targeting fields
+      businessHealth: row['L1_targeting_business_health'] || 'NEEDS_ATTENTION',
+      sophisticationTier: row['L3_sophistication_intelligence_tier'] || 'Amateur',
+      emailQuality: row['L2_email_quality'] || 'UNKNOWN',
     };
   }
 
@@ -168,6 +168,23 @@ export class ContractorService {
     };
   }
 
+  // Calculate health score from various metrics
+  private calculateHealthScore(row: any): number {
+    const completionScore = parseInt(row['data_completion_score']) || 0;
+    const googleRating = parseFloat(row['L1_google_rating']) || 0;
+    const reviewsCount = parseInt(row['L1_google_reviews_count']) || 0;
+    const sophisticationScore = parseInt(row['L2_sophistication_score']) || 0;
+    
+    // Weighted calculation
+    let healthScore = 0;
+    healthScore += completionScore * 0.4;  // Data completeness 40%
+    healthScore += (googleRating * 20) * 0.3;  // Google rating 30%
+    healthScore += Math.min(reviewsCount * 2, 20) * 0.2;  // Reviews count 20%
+    healthScore += sophisticationScore * 0.1;  // Sophistication 10%
+    
+    return Math.round(Math.min(healthScore, 100));
+  }
+
   // Helper functions for data classification
   private categorizeReviewsRecency(days: string | number): 'ACTIVE' | 'MODERATE' | 'INACTIVE' | 'UNKNOWN' {
     if (!days || days === 'N/A') return 'UNKNOWN';
@@ -194,15 +211,17 @@ export class ContractorService {
     return stateMatch ? stateMatch[1] : 'Unknown';
   }
 
-  private classifyBusinessHealth(score: number): 'HEALTHY' | 'EMERGING' | 'NEEDS_ATTENTION' {
+  private classifyBusinessHealth(score: number): 'HEALTHY' | 'EMERGING' | 'STRUGGLING' | 'NEEDS_ATTENTION' {
     if (score >= 90) return 'HEALTHY';
     if (score >= 70) return 'EMERGING';
+    if (score >= 50) return 'STRUGGLING';
     return 'NEEDS_ATTENTION';
   }
 
-  private classifySophistication(score: number): 'Professional' | 'Growing' | 'Amateur' {
+  private classifySophistication(score: number): 'Professional' | 'Growing' | 'Amateur' | 'Established' {
     if (score >= 80) return 'Professional';
     if (score >= 60) return 'Growing';
+    if (score >= 40) return 'Established';
     return 'Amateur';
   }
 
@@ -246,8 +265,13 @@ export class ContractorService {
 
   // Create contractor from campaign data (when no CSV match)
   private createContractorFromCampaign(campaign: Campaign): MergedContractor {
+    const businessId = this.normalizeId(
+      campaign.campaign_data?.business_id || 
+      campaign.business_id || 
+      ''
+    );
     return {
-      id: this.normalizeId(campaign.campaign_data?.business_id || campaign.business_id || ''),
+      id: businessId,
       businessName: campaign.campaign_data?.company_name || campaign.company_name || 'Unknown',
       category: campaign.trade || 'General Contractor',
       email: 'contact@example.com',

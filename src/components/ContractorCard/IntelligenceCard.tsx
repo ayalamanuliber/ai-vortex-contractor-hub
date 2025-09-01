@@ -18,10 +18,30 @@ export function IntelligenceCard({ contractor, onClick }: IntelligenceCardProps)
         <div className="flex items-center space-x-4">
           {/* Prominent Completion Score Circle */}
           <div className="relative">
-            <div className="w-20 h-20 rounded-full border-4 border-green-500/30 bg-green-500/10 flex items-center justify-center shadow-lg shadow-green-500/20">
-              <span className="text-2xl font-bold text-green-400">{contractor.completionScore}</span>
+            <div className={`w-20 h-20 rounded-full border-4 flex items-center justify-center shadow-lg ${
+              contractor.completionScore >= 85 
+                ? "border-green-500/30 bg-green-500/10 shadow-green-500/20"
+                : contractor.completionScore >= 70
+                ? "border-yellow-500/30 bg-yellow-500/10 shadow-yellow-500/20" 
+                : contractor.completionScore >= 50
+                ? "border-orange-500/30 bg-orange-500/10 shadow-orange-500/20"
+                : "border-red-500/30 bg-red-500/10 shadow-red-500/20"
+            }`}>
+              <span className={`text-2xl font-bold ${
+                contractor.completionScore >= 85 ? "text-green-400"
+                : contractor.completionScore >= 70 ? "text-yellow-400"
+                : contractor.completionScore >= 50 ? "text-orange-400"
+                : "text-red-400"
+              }`}>
+                {contractor.completionScore}
+              </span>
             </div>
-            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${
+              contractor.completionScore >= 85 ? "bg-green-500"
+              : contractor.completionScore >= 70 ? "bg-yellow-500"
+              : contractor.completionScore >= 50 ? "bg-orange-500"
+              : "bg-red-500"
+            }`}>
               <span className="text-sm font-bold text-white">%</span>
             </div>
           </div>

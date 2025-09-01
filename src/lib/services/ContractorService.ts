@@ -18,7 +18,9 @@ export class ContractorService {
 
   // Normalize IDs for matching between CSV and JSON
   private normalizeId(id: string | number): string {
-    return String(id).replace(/^0+/, '').trim();
+    const cleaned = String(id).replace(/^0+/, '').trim();
+    // Remove trailing underscore and suffix (like "_C")
+    return cleaned.replace(/_[A-Z]*$/, '');
   }
 
   // Load initial data chunk (first 100 records)

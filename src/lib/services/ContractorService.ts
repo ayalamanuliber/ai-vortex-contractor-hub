@@ -86,8 +86,52 @@ export class ContractorService {
       
       data.contractors.forEach((contractor: any) => {
         const id = this.normalizeId(contractor['business_id'] || contractor.id);
-        const parsed = this.parseContractorFromCSV(contractor);
-        this.csvData.set(id, parsed);
+        
+        // Simple direct conversion - NO parsing, use raw field names
+        const directContractor = {
+          id,
+          businessName: contractor['L1_company_name'] || 'Unknown Business',
+          category: contractor['L1_category'] || 'General Contractor', 
+          email: contractor['L1_primary_email'] || '',
+          phone: contractor['L1_phone'] || '',
+          website: contractor['L1_website'] || '',
+          address: contractor['L1_address_full'] || '',
+          city: contractor['L1_city'] || '',
+          state: contractor['L1_state_code'] || '',
+          zipCode: contractor['L1_postal_code'] || '',
+          
+          // DIRECT completion score - NO parsing
+          completionScore: contractor['data_completion_score'] || 0,
+          healthScore: 50,
+          trustScore: 50,
+          googleRating: contractor['L1_google_rating'] || 0,
+          reviewsCount: contractor['L1_google_reviews_count'] || 0,
+          
+          intelligence: {
+            websiteSpeed: { mobile: 50, desktop: 50 },
+            reviewsRecency: 'UNKNOWN',
+            daysSinceLatest: 0,
+            platformDetection: 'Unknown',
+            domainAge: 0,
+            businessHours: 'Mon-Fri 8AM-5PM',
+          },
+          
+          businessHealth: 'NEEDS_ATTENTION',
+          sophisticationTier: 'Amateur', 
+          emailQuality: 'UNKNOWN',
+          name: '',
+          lastName: '',
+        };
+        
+        // Debug
+        if (id === '3993') {
+          console.log('DIRECT 3993:', {
+            rawScore: contractor['data_completion_score'],
+            finalScore: directContractor.completionScore
+          });
+        }
+        
+        this.csvData.set(id, directContractor);
       });
       this.loadedChunks.add(chunkId);
     } catch (error) {

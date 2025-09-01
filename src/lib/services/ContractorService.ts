@@ -93,15 +93,19 @@ export class ContractorService {
       }
     }
     
-    // Debug for multiple contractors
-    if (['3993', '1000', '1001', '1002'].includes(id)) {
-      console.log(`DEBUG ${id}:`, {
+    // Debug for problematic contractor 3993
+    if (id === '3993') {
+      console.log(`DEBUG ${id} - ALL FIELDS:`, {
+        business_id: row['business_id'],
+        schema_version: row['schema_version'], 
+        processing_timestamp: row['processing_timestamp'],
+        data_completion_score: row['data_completion_score'],
+        validation_flags: row['validation_flags'],
+        layers_present: row['layers_present'],
         rawScore,
         type: typeof rawScore,
-        stringValue: String(rawScore),
-        parsed: parseFloat(String(rawScore)),
-        isNaN: isNaN(parseFloat(String(rawScore))),
-        finalScore: completionScore
+        finalScore: completionScore,
+        allKeys: Object.keys(row).slice(0, 10)
       });
     }
     

@@ -418,11 +418,11 @@ function applyFiltersAndSearch(
           
           // Review filters
           case 'many-reviews':
-            return contractor.googleReviews >= 50;
+            return contractor.reviewsCount >= 50;
           case 'few-reviews':
-            return contractor.googleReviews > 0 && contractor.googleReviews < 10;
+            return contractor.reviewsCount > 0 && contractor.reviewsCount < 10;
           case 'no-reviews':
-            return contractor.googleReviews === 0;
+            return contractor.reviewsCount === 0;
           case 'active-reviews':
             if (!contractor.intelligence.lastReviewDate) return false;
             const sixMonthsAgo = new Date();

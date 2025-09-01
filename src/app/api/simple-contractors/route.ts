@@ -51,10 +51,12 @@ export async function GET(request: NextRequest) {
           platformDetection: row['L1_builder_platform'] || 'Unknown',
           domainAge: Number(row['L1_whois_domain_age_years']) || 0,
           businessHours: row['L1_weekday_hours'] || 'Mon-Fri 8AM-5PM',
+          lastReviewDate: row['L1_last_review_date'] || '',
+          websiteBuilder: row['L1_website_builder'] || 'Unknown',
         },
         businessHealth: 'NEEDS_ATTENTION' as const,
         sophisticationTier: 'Amateur' as const,
-        emailQuality: 'UNKNOWN' as const,
+        emailQuality: row['L2_email_quality'] || 'UNKNOWN',
         name: '',
         lastName: '',
         hasCampaign: false,
@@ -121,6 +123,49 @@ export async function GET(request: NextRequest) {
             case 'hvac': return contractor.category.toLowerCase().includes('hvac');
             case 'plumbing': return contractor.category.toLowerCase().includes('plumbing');
             case 'electrical': return contractor.category.toLowerCase().includes('electrical');
+            case 'remodeling': return contractor.category.toLowerCase().includes('remodeling') || contractor.category.toLowerCase().includes('finishing');
+            case 'exterior': return contractor.category.toLowerCase().includes('exterior') || contractor.category.toLowerCase().includes('landscaping');
+            case 'heavyCivil': return contractor.category.toLowerCase().includes('heavy') || contractor.category.toLowerCase().includes('civil');
+            case 'homeBuilding': return contractor.category.toLowerCase().includes('home building') || contractor.category.toLowerCase().includes('builder');
+            case 'specialty': return contractor.category.toLowerCase().includes('specialty') || contractor.category.toLowerCase().includes('handyman');
+            case 'suppliers': return contractor.category.toLowerCase().includes('suppliers') || contractor.category.toLowerCase().includes('materials');
+            case 'ancillary': return contractor.category.toLowerCase().includes('ancillary') || contractor.category.toLowerCase().includes('services');
+            case 'construction': return contractor.category.toLowerCase().includes('construction') || contractor.category.toLowerCase().includes('contractor');
+            case 'windowDoor': return contractor.category.toLowerCase().includes('window') || contractor.category.toLowerCase().includes('door');
+            case 'other': return contractor.category.toLowerCase().includes('other') || contractor.category === '';
+            
+            // Review filters
+            case 'many-reviews': return contractor.reviewsCount >= 50;
+            case 'few-reviews': return contractor.reviewsCount > 0 && contractor.reviewsCount < 10;
+            case 'no-reviews': return contractor.reviewsCount === 0;
+            case 'active-reviews': 
+              if (!contractor.intelligence.lastReviewDate) return false;
+              const sixMonthsAgo = new Date();
+              sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+              const lastReview = new Date(contractor.intelligence.lastReviewDate);
+              return lastReview > sixMonthsAgo;
+            case 'inactive-reviews':
+              if (!contractor.intelligence.lastReviewDate) return false;
+              const sixMonthsAgoInactive = new Date();
+              sixMonthsAgoInactive.setMonth(sixMonthsAgoInactive.getMonth() - 6);
+              const lastReviewInactive = new Date(contractor.intelligence.lastReviewDate);
+              return lastReviewInactive <= sixMonthsAgoInactive;
+              
+            // Website builder filters
+            case 'wix-site': return contractor.intelligence.websiteBuilder?.toLowerCase().includes('wix') || false;
+            case 'godaddy-site': return contractor.intelligence.websiteBuilder?.toLowerCase().includes('godaddy') || false;
+            case 'squarespace-site': return contractor.intelligence.websiteBuilder?.toLowerCase().includes('squarespace') || false;
+            case 'custom-site': 
+              const builder = contractor.intelligence.websiteBuilder?.toLowerCase() || '';
+              return !builder.includes('wix') && 
+                     !builder.includes('godaddy') && 
+                     !builder.includes('squarespace') &&
+                     builder !== 'unknown' &&
+                     builder !== '';
+                     
+            // Email quality
+            case 'professional-email': return contractor.emailQuality === 'PROFESSIONAL_DOMAIN';
+            case 'personal-email': return contractor.emailQuality === 'PERSONAL_DOMAIN';
             
             // PSI performance
             case 'high-psi': return contractor.intelligence.websiteSpeed.mobile >= 85;

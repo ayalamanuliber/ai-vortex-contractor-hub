@@ -28,6 +28,8 @@ export interface Contractor {
     platformDetection: string;
     domainAge: number;
     businessHours: string;
+    lastReviewDate?: string;
+    websiteBuilder?: string;
   };
   
   // Classifications

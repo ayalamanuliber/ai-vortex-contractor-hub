@@ -58,7 +58,7 @@ export async function GET() {
       state: row['L1_state_code'] || '',
       category: getMegaCategory(row['L1_category'] || ''),
       googleRating: Number(row['L1_google_rating']) || 0,
-      googleReviews: Number(row['L1_google_reviews']) || 0,
+      googleReviews: Number(row['L1_google_reviews_count']) || 0,
       mobileSpeed: Number(row['L1_psi_mobile_performance']) || 0,
       emailQuality: row['L2_email_quality'] || 'UNKNOWN',
       websiteBuilder: row['L1_website_builder'] || 'UNKNOWN',

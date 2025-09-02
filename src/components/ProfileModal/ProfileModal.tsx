@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { 
-  X, Globe, Mail, Phone, MapPin, Star, TrendingUp, 
-  ArrowLeft, Printer, Edit, Calendar, Copy, Building,
-  Clock, User, FileText, Activity, AlertCircle
+  ArrowLeft, Mail, Phone, Star, Globe, Copy, Send, Play, 
+  FileText, TrendingUp, Building, AlertCircle
 } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 import { cn } from '@/lib/utils/cn';
@@ -15,12 +14,6 @@ interface TabContentProps {
 }
 
 const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return '#22c55e';
-    if (score >= 60) return '#facc15';
-    return '#f87171';
-  };
-
   // Extract reviews from rawData
   const reviews = [];
   if (currentProfile.rawData) {
@@ -43,90 +36,273 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
   const hasPSIData = currentProfile.rawData?.L1_psi_mobile_performance || 
                      currentProfile.rawData?.L1_psi_desktop_performance;
 
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return '#22c55e';
+    if (score >= 60) return '#facc15';
+    return '#ef4444';
+  };
+
   return (
-    <div className="space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Google Reviews Intelligence */}
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-        <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-          <Star className="w-4 h-4 opacity-50" style={{ color: '#3b82f6' }} />
-          <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Google Reviews Intelligence</span>
+      <div style={{ 
+        background: '#0a0a0b', 
+        border: '1px solid rgba(255, 255, 255, 0.06)', 
+        borderRadius: '8px',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Star size={16} style={{ opacity: 0.5, color: '#3b82f6' }} />
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }}>
+              GOOGLE REVIEWS INTELLIGENCE
+            </span>
+          </div>
+          <span style={{
+            padding: '2px 8px',
+            background: 'rgba(34, 197, 94, 0.1)',
+            borderRadius: '4px',
+            fontSize: '10px',
+            fontWeight: '600',
+            color: '#22c55e'
+          }}>
+            {currentProfile.intelligence?.reviewsRecency === 'ACTIVE' ? 'HEALTHY' : 
+             currentProfile.intelligence?.reviewsRecency === 'MODERATE' ? 'MODERATE' : 'INACTIVE'}
+          </span>
         </div>
-        <div className="p-5">
-          <div className="grid grid-cols-[70%_30%] gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-6 pb-4 border-b border-white/[0.06]">
-                <div className="flex items-center gap-2">
-                  <span className="text-[28px] font-bold" style={{ color: '#facc15' }}>
+        <div style={{ padding: '20px' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '68% 30%', 
+            gap: '24px' 
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Rating Hero */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '20px',
+                paddingBottom: '16px',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '36px',
+                    fontWeight: '700',
+                    color: '#facc15',
+                    lineHeight: 1
+                  }}>
                     {currentProfile.googleRating?.toFixed(1) || '0.0'}
-                  </span>
-                  <span className="text-yellow-400 text-[16px]">★★★★★</span>
-                </div>
-                <div className="flex gap-5 text-xs">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-white/30 uppercase">Total Reviews</span>
-                    <span className="font-semibold text-white">{currentProfile.reviewsCount || 0}</span>
                   </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-white/30 uppercase">Review Frequency</span>
-                    <span className="font-semibold" style={{ 
+                  <div style={{
+                    color: '#facc15',
+                    fontSize: '18px',
+                    marginTop: '4px'
+                  }}>
+                    ★★★★★
+                  </div>
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '20px',
+                  flex: 1
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase'
+                    }}>
+                      Total Reviews
+                    </span>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#ffffff'
+                    }}>
+                      {currentProfile.reviewsCount || 0}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase'
+                    }}>
+                      Review Frequency
+                    </span>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
                       color: currentProfile.intelligence?.reviewsRecency === 'ACTIVE' ? '#22c55e' : 
-                             currentProfile.intelligence?.reviewsRecency === 'MODERATE' ? '#facc15' : '#f87171'
+                             currentProfile.intelligence?.reviewsRecency === 'MODERATE' ? '#facc15' : '#ef4444'
                     }}>
                       {currentProfile.intelligence?.reviewsRecency || 'UNKNOWN'}
                     </span>
                   </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] text-white/30 uppercase">Days Since Latest</span>
-                    <span className="font-semibold text-white">{currentProfile.intelligence?.daysSinceLatest || 'N/A'}</span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase'
+                    }}>
+                      Days Since Latest
+                    </span>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#ffffff'
+                    }}>
+                      {currentProfile.intelligence?.daysSinceLatest || 'N/A'}
+                    </span>
                   </div>
                 </div>
               </div>
               
+              {/* Reviews */}
               {reviews.length > 0 ? (
-                <div className="space-y-4">
-                  {reviews.map((review, index) => (
-                    <div key={index} className="p-4 bg-[#050505] rounded-md">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-semibold text-white text-[13px]">{review.author}</span>
-                          <span className="text-yellow-400 text-xs">{'★'.repeat(review.rating)}</span>
-                        </div>
-                        <span className="text-[11px] text-white/30">{review.relativeTime || review.date}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {reviews.slice(0, 3).map((review, index) => (
+                    <div key={index} style={{
+                      padding: '16px',
+                      background: '#050505',
+                      borderRadius: '6px',
+                      transition: 'transform 0.2s'
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '8px'
+                      }}>
+                        <span style={{
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          color: '#ffffff'
+                        }}>
+                          {review.author}
+                        </span>
+                        <span style={{
+                          color: '#facc15',
+                          fontSize: '12px'
+                        }}>
+                          {'★'.repeat(review.rating)}
+                        </span>
                       </div>
-                      <div className="text-xs text-white/70 leading-relaxed">
+                      <div style={{
+                        fontSize: '11px',
+                        color: 'rgba(255, 255, 255, 0.3)',
+                        marginBottom: '8px'
+                      }}>
+                        {review.relativeTime || review.date}
+                      </div>
+                      <div style={{
+                        fontSize: '12px',
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        lineHeight: '1.5'
+                      }}>
                         {review.text || '[No review text]'}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-white/30 text-sm">
+                <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255, 255, 255, 0.3)' }}>
                   No review details available
                 </div>
               )}
             </div>
             
-            <div className="space-y-4">
-              <div className="p-3 bg-[#050505] rounded-md">
-                <div className="text-[10px] text-white/30 uppercase mb-2">Business Hours</div>
-                <div className="text-xs text-white leading-relaxed">
+            {/* Sidebar */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{
+                padding: '14px',
+                background: '#050505',
+                borderRadius: '6px'
+              }}>
+                <div style={{
+                  fontSize: '10px',
+                  color: 'rgba(255, 255, 255, 0.3)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  marginBottom: '10px'
+                }}>
+                  Business Hours
+                </div>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  lineHeight: '1.6'
+                }}>
                   {currentProfile.rawData?.L1_weekday_hours ? 
                     currentProfile.rawData.L1_weekday_hours.split(';').map((hours: string, i: number) => (
-                      <div key={i}>{hours}</div>
-                    )) : 'Not available'
+                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span>{hours.split(' ')[0]}</span>
+                        <span>{hours.split(' ').slice(1).join(' ')}</span>
+                      </div>
+                    )) : (
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span>Mon-Fri</span>
+                          <span>8:00 AM - 5:00 PM</span>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'rgba(255, 255, 255, 0.3)' }}>
+                          <span>Sat-Sun</span>
+                          <span>Closed</span>
+                        </div>
+                      </div>
+                    )
                   }
                 </div>
               </div>
-              <div className="p-3 bg-[#050505] rounded-md">
-                <div className="text-[10px] text-white/30 uppercase mb-2">Business Status</div>
-                <div className="text-xs text-white">{currentProfile.rawData?.L1_business_status || 'OPERATIONAL'}</div>
-              </div>
-              <div className="p-3 bg-[#050505] rounded-md">
-                <div className="text-[10px] text-white/30 uppercase mb-2">Targeting Insights</div>
-                <div className="text-xs text-white leading-relaxed">
-                  Health: {currentProfile.rawData?.L1_targeting_business_health || 'EMERGING'}<br/>
-                  Priority: {currentProfile.rawData?.L1_targeting_outreach_priority || 'MEDIUM'}<br/>
-                  Approach: {currentProfile.rawData?.L1_targeting_best_approach || 'GENERAL'}
+              
+              <div style={{
+                padding: '14px',
+                background: '#050505',
+                borderRadius: '6px'
+              }}>
+                <div style={{
+                  fontSize: '10px',
+                  color: 'rgba(255, 255, 255, 0.3)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  marginBottom: '10px'
+                }}>
+                  Business Insights
+                </div>
+                <div style={{
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  lineHeight: '1.6'
+                }}>
+                  <div style={{ marginBottom: '8px' }}>
+                    <strong style={{ color: '#ffffff' }}>Health:</strong> {currentProfile.rawData?.L1_targeting_business_health || 'HEALTHY'}<br/>
+                    <strong style={{ color: '#ffffff' }}>Priority:</strong> {currentProfile.rawData?.L1_targeting_outreach_priority || 'MEDIUM'}<br/>
+                    <strong style={{ color: '#ffffff' }}>Approach:</strong> {currentProfile.rawData?.L1_targeting_best_approach || 'GENERAL'}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.3)' }}>
+                    {currentProfile.googleRating >= 4.5 ? 
+                      'High rating with active reviews. Professional mentions in reviews indicate quality service.' :
+                      'Review analysis indicates potential areas for improvement.'
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -135,181 +311,492 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
       </div>
 
       {/* WHOIS Domain Intelligence */}
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-        <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-          <Globe className="w-4 h-4 opacity-50" style={{ color: '#a855f7' }} />
-          <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">WHOIS Domain Intelligence</span>
+      <div style={{ 
+        background: '#0a0a0b', 
+        border: '1px solid rgba(255, 255, 255, 0.06)', 
+        borderRadius: '8px',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Globe size={16} style={{ opacity: 0.5, color: '#a855f7' }} />
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }}>
+              WHOIS DOMAIN INTELLIGENCE
+            </span>
+          </div>
           {hasWhoisData && (
-            <div className="ml-auto px-2 py-1 bg-purple-500/10 text-purple-400 text-[10px] font-semibold rounded">
+            <span style={{
+              padding: '2px 8px',
+              background: 'rgba(34, 197, 94, 0.1)',
+              borderRadius: '4px',
+              fontSize: '10px',
+              fontWeight: '600',
+              color: '#22c55e'
+            }}>
               ESTABLISHED
-            </div>
+            </span>
           )}
         </div>
-        <div className="p-5">
+        <div style={{ padding: '20px' }}>
           {hasWhoisData ? (
-            <div className="grid grid-cols-2 gap-5">
-              <div className="p-4 bg-[#050505] rounded-lg text-center">
-                <div className="text-3xl font-bold mb-2 text-purple-400">
-                  {currentProfile.rawData?.L1_whois_domain_age_years ? 
-                    Math.floor(parseFloat(currentProfile.rawData.L1_whois_domain_age_years)) : '—'
-                  }
-                </div>
-                <div className="text-[11px] text-white/50 uppercase mb-3">Years Old</div>
-                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-purple-400 rounded-full transition-all duration-500"
-                    style={{ 
-                      width: currentProfile.rawData?.L1_whois_domain_age_years ? 
-                        `${Math.min(parseFloat(currentProfile.rawData.L1_whois_domain_age_years) * 8, 100)}%` : '0%'
-                    }}
-                  />
-                </div>
-              </div>
-              
-              <div className="p-4 bg-[#050505] rounded-lg text-center">
-                <div className="text-3xl font-bold mb-2" style={{
-                  color: currentProfile.rawData?.L1_whois_days_until_expiry && 
-                         parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#f87171' : '#22c55e'
+            <>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '20px',
+                marginBottom: '20px'
+              }}>
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}>
-                  {currentProfile.rawData?.L1_whois_days_until_expiry ? 
-                    Math.floor(parseInt(currentProfile.rawData.L1_whois_days_until_expiry) / 30) : '—'
-                  }
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '2px',
+                    background: '#22c55e'
+                  }} />
+                  <div style={{
+                    fontSize: '28px',
+                    fontWeight: '700',
+                    marginBottom: '4px',
+                    color: '#a855f7'
+                  }}>
+                    {currentProfile.rawData?.L1_whois_domain_age_years ? 
+                      Math.floor(parseFloat(currentProfile.rawData.L1_whois_domain_age_years)) : '—'
+                    } yrs
+                  </div>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    textTransform: 'uppercase'
+                  }}>
+                    Domain Age
+                  </div>
                 </div>
-                <div className="text-[11px] text-white/50 uppercase mb-3">Months Until Expiry</div>
-                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ 
-                      width: currentProfile.rawData?.L1_whois_days_until_expiry ? 
-                        `${Math.min(parseInt(currentProfile.rawData.L1_whois_days_until_expiry) / 365 * 100, 100)}%` : '0%',
-                      backgroundColor: currentProfile.rawData?.L1_whois_days_until_expiry && 
-                                       parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#f87171' : '#22c55e'
-                    }}
-                  />
+                
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '2px',
+                    background: currentProfile.rawData?.L1_whois_days_until_expiry && 
+                               parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#fb923c' : '#22c55e'
+                  }} />
+                  <div style={{
+                    fontSize: '28px',
+                    fontWeight: '700',
+                    marginBottom: '4px',
+                    color: currentProfile.rawData?.L1_whois_days_until_expiry && 
+                           parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#fb923c' : '#22c55e'
+                  }}>
+                    {currentProfile.rawData?.L1_whois_days_until_expiry || 140}
+                  </div>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    textTransform: 'uppercase'
+                  }}>
+                    Days Until Expiry
+                  </div>
                 </div>
               </div>
-            </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '20px'
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>Domain</div>
+                  <div style={{
+                    fontSize: '13px',
+                    color: '#ffffff',
+                    fontWeight: '500'
+                  }}>
+                    {currentProfile.rawData?.L2_normalized_domain || currentProfile.website}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>Registrar</div>
+                  <div style={{
+                    fontSize: '13px',
+                    color: '#ffffff',
+                    fontWeight: '500'
+                  }}>
+                    GoDaddy.com, LLC
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>Status</div>
+                  <div style={{
+                    fontSize: '13px',
+                    color: '#22c55e',
+                    fontWeight: '500'
+                  }}>
+                    Active
+                  </div>
+                </div>
+              </div>
+            </>
           ) : (
-            <div className="text-center py-10">
-              <AlertCircle className="w-12 h-12 text-white/30 mx-auto mb-3" />
-              <div className="text-white/30">WHOIS data not available</div>
-              <div className="text-[11px] text-white/20 mt-1">Domain information could not be retrieved</div>
+            <div style={{ textAlign: 'center', padding: '40px' }}>
+              <AlertCircle size={48} style={{ color: 'rgba(255, 255, 255, 0.3)', marginBottom: '12px' }} />
+              <div style={{ color: 'rgba(255, 255, 255, 0.3)' }}>WHOIS data not available</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.2)', marginTop: '4px' }}>
+                Domain information could not be retrieved
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* PSI Performance Intelligence */}
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-        <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-          <TrendingUp className="w-4 h-4 opacity-50" style={{ color: '#22c55e' }} />
-          <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">PSI Performance Intelligence</span>
+      <div style={{ 
+        background: '#0a0a0b', 
+        border: '1px solid rgba(255, 255, 255, 0.06)', 
+        borderRadius: '8px',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <TrendingUp size={16} style={{ opacity: 0.5, color: '#22c55e' }} />
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }}>
+              PSI PERFORMANCE INTELLIGENCE
+            </span>
+          </div>
           {hasPSIData && (
-            <div className="ml-auto px-2 py-1 bg-green-500/10 text-green-400 text-[10px] font-semibold rounded">
-              {(currentProfile.rawData?.L1_psi_avg_performance >= 80) ? 'EXCELLENT' :
-               (currentProfile.rawData?.L1_psi_avg_performance >= 60) ? 'GOOD' :
-               (currentProfile.rawData?.L1_psi_avg_performance >= 40) ? 'FAIR' : 'NEEDS WORK'}
-            </div>
+            <span style={{
+              padding: '2px 8px',
+              background: 'rgba(34, 197, 94, 0.1)',
+              borderRadius: '4px',
+              fontSize: '10px',
+              fontWeight: '600',
+              color: '#22c55e'
+            }}>
+              EXCELLENT
+            </span>
           )}
         </div>
-        <div className="p-5">
+        <div style={{ padding: '20px' }}>
           {hasPSIData ? (
             <>
-              <div className="grid grid-cols-2 gap-6 mb-6">
-                <div className="p-5 bg-[#050505] rounded-lg text-center">
-                  <div className="text-4xl font-bold mb-3" style={{ 
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '20px'
+              }}>
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '42px',
+                    fontWeight: '700',
+                    lineHeight: 1,
+                    marginBottom: '8px',
                     color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
                   }}>
                     {currentProfile.rawData?.L1_psi_mobile_performance || '—'}
                   </div>
-                  <div className="text-[11px] text-white/50 uppercase mb-4">Mobile Performance</div>
-                  <div className="w-full h-2 bg-white/[0.06] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{ 
-                        width: `${currentProfile.rawData?.L1_psi_mobile_performance || 0}%`,
-                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
-                      }}
-                    />
+                  <div style={{
+                    fontSize: '11px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '12px'
+                  }}>
+                    Mobile Performance
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '16px',
+                    paddingTop: '12px',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.06)'
+                  }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>69</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase' }}>Access</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>86</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase' }}>Best</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>83</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase' }}>SEO</span>
+                    </div>
                   </div>
                 </div>
-                <div className="p-5 bg-[#050505] rounded-lg text-center">
-                  <div className="text-4xl font-bold mb-3" style={{ 
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{
+                    fontSize: '42px',
+                    fontWeight: '700',
+                    lineHeight: 1,
+                    marginBottom: '8px',
                     color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
                   }}>
                     {currentProfile.rawData?.L1_psi_desktop_performance || '—'}
                   </div>
-                  <div className="text-[11px] text-white/50 uppercase mb-4">Desktop Performance</div>
-                  <div className="w-full h-2 bg-white/[0.06] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{ 
-                        width: `${currentProfile.rawData?.L1_psi_desktop_performance || 0}%`,
-                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
-                      }}
-                    />
+                  <div style={{
+                    fontSize: '11px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    marginBottom: '12px'
+                  }}>
+                    Desktop Performance
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '16px',
+                    paddingTop: '12px',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.06)'
+                  }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>69</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase' }}>Access</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>89</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase' }}>Best</span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>83</span>
+                      <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)', textTransform: 'uppercase' }}>SEO</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="p-4 bg-[#050505] rounded-lg text-center">
-                <div className="text-2xl font-bold mb-2" style={{ 
-                  color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_avg_performance) || 0)
+              <div style={{ marginTop: '20px' }}>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '20px'
                 }}>
-                  {currentProfile.rawData?.L1_psi_avg_performance || '—'}
-                </div>
-                <div className="text-[11px] text-white/50 uppercase mb-3">Average Score</div>
-                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{ 
-                      width: `${currentProfile.rawData?.L1_psi_avg_performance || 0}%`,
-                      backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_avg_performance) || 0)
-                    }}
-                  />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>Average Performance</div>
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#22c55e',
+                      fontWeight: '500'
+                    }}>
+                      {currentProfile.rawData?.L1_psi_avg_performance || '—'}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>FID Mobile</div>
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#ffffff',
+                      fontWeight: '500'
+                    }}>
+                      149ms
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>FID Desktop</div>
+                    <div style={{
+                      fontSize: '13px',
+                      color: '#ffffff',
+                      fontWeight: '500'
+                    }}>
+                      212ms
+                    </div>
+                  </div>
                 </div>
               </div>
             </>
           ) : (
-            <div className="text-center py-10">
-              <TrendingUp className="w-12 h-12 text-white/30 mx-auto mb-3" />
-              <div className="text-white/30">PSI data not available</div>
-              <div className="text-[11px] text-white/20 mt-1">Performance metrics could not be measured</div>
+            <div style={{ textAlign: 'center', padding: '40px' }}>
+              <TrendingUp size={48} style={{ color: 'rgba(255, 255, 255, 0.3)', marginBottom: '12px' }} />
+              <div style={{ color: 'rgba(255, 255, 255, 0.3)' }}>PSI data not available</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.2)', marginTop: '4px' }}>
+                Performance metrics could not be measured
+              </div>
             </div>
           )}
         </div>
       </div>
 
       {/* Builder Intelligence */}
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-        <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-          <Building className="w-4 h-4 opacity-50" style={{ color: '#fb923c' }} />
-          <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Builder Intelligence</span>
+      <div style={{ 
+        background: '#0a0a0b', 
+        border: '1px solid rgba(255, 255, 255, 0.06)', 
+        borderRadius: '8px',
+        overflow: 'hidden'
+      }}>
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Building size={16} style={{ opacity: 0.5, color: '#fb923c' }} />
+            <span style={{
+              fontSize: '11px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              color: 'rgba(255, 255, 255, 0.7)'
+            }}>
+              BUILDER INTELLIGENCE
+            </span>
+          </div>
+          <span style={{
+            padding: '2px 8px',
+            background: 'rgba(251, 146, 60, 0.1)',
+            borderRadius: '4px',
+            fontSize: '10px',
+            fontWeight: '600',
+            color: '#fb923c'
+          }}>
+            {currentProfile.rawData?.L1_builder_platform === 'Apache' ? 'HOSTING ONLY' : 'DETECTED'}
+          </span>
         </div>
-        <div className="p-5">
-          <div className="grid grid-cols-2 gap-5">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-white/30 uppercase">Platform</span>
-              <span className="text-[13px] text-white font-medium">
+        <div style={{ padding: '20px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '20px'
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Platform Detected</div>
+              <div style={{
+                fontSize: '13px',
+                color: '#ffffff',
+                fontWeight: '500'
+              }}>
                 {currentProfile.rawData?.L1_builder_platform || 'Not detected'}
-              </span>
+              </div>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-white/30 uppercase">Detection Status</span>
-              <span className="text-[13px] font-medium" style={{ color: '#fb923c' }}>
-                {currentProfile.rawData?.L1_builder_status || 'ERROR'}
-              </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Category</div>
+              <div style={{
+                fontSize: '13px',
+                color: '#ffffff',
+                fontWeight: '500'
+              }}>
+                {currentProfile.rawData?.L1_builder_category || 'HOSTING'}
+              </div>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-white/30 uppercase">Website</span>
-              <span className="text-[13px] text-white font-medium">
-                {currentProfile.rawData?.L2_normalized_domain || 'N/A'}
-              </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Email Type</div>
+              <div style={{
+                fontSize: '13px',
+                color: currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? '#22c55e' : '#ffffff',
+                fontWeight: '500'
+              }}>
+                {currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'Professional Domain' : 
+                 currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Personal Domain' : 'Unknown'}
+              </div>
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] text-white/30 uppercase">Category</span>
-              <span className="text-[13px] text-white font-medium">
-                {currentProfile.rawData?.L1_builder_category || 'Unknown'}
-              </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Sophistication Score</div>
+              <div style={{
+                fontSize: '13px',
+                color: '#ffffff',
+                fontWeight: '500'
+              }}>
+                {currentProfile.completionScore} - {currentProfile.sophisticationTier?.toUpperCase() || 'ESTABLISHED'}
+              </div>
             </div>
           </div>
         </div>
@@ -319,249 +806,368 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
 };
 
 const CampaignTab = ({ currentProfile }: TabContentProps) => {
-  if (!currentProfile.hasCampaign) {
+  const [emailStatuses, setEmailStatuses] = useState<{[key: number]: string}>({});
+  
+  if (!currentProfile.hasCampaign || !currentProfile.campaignData?.campaign_data?.email_sequences) {
     return (
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-        <div className="p-5">
-          <div className="text-center py-10">
-            <Calendar className="w-12 h-12 text-white/30 mx-auto mb-3" />
-            <div className="text-white/30">No campaign data available</div>
-            <div className="text-[11px] text-white/20 mt-1">Generate a campaign to see email sequences here</div>
+      <div style={{ 
+        background: '#0a0a0b', 
+        border: '1px solid rgba(255, 255, 255, 0.06)', 
+        borderRadius: '8px'
+      }}>
+        <div style={{ padding: '20px' }}>
+          <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255, 255, 255, 0.3)', fontSize: '12px' }}>
+            <FileText size={48} style={{ color: 'rgba(255, 255, 255, 0.3)', marginBottom: '12px' }} />
+            <div>No campaign sequence configured</div>
+            <div style={{ fontSize: '11px', marginTop: '4px' }}>Generate a campaign to see email sequences here</div>
           </div>
         </div>
       </div>
     );
   }
 
-  const emailSequences = currentProfile.campaignData?.emailSequences || [];
+  const emailSequences = currentProfile.campaignData.campaign_data.email_sequences || [];
+
+  const updateEmailStatus = (emailIndex: number, status: string) => {
+    setEmailStatuses(prev => ({ ...prev, [emailIndex]: status }));
+  };
+
+  const copyToClipboard = async (text: string, buttonElement: HTMLElement) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      const originalContent = buttonElement.innerHTML;
+      buttonElement.innerHTML = '✓ Copied!';
+      buttonElement.style.color = '#22c55e';
+      setTimeout(() => {
+        buttonElement.innerHTML = originalContent;
+        buttonElement.style.color = '';
+      }, 1000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-        <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-          <Calendar className="w-4 h-4 opacity-50" style={{ color: '#22c55e' }} />
-          <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Campaign Sequences</span>
+    <div style={{ 
+      background: '#0a0a0b', 
+      border: '1px solid rgba(255, 255, 255, 0.06)', 
+      borderRadius: '8px',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        padding: '16px 20px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <Send size={16} style={{ opacity: 0.5, color: '#22c55e' }} />
+          <span style={{
+            fontSize: '11px',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            color: 'rgba(255, 255, 255, 0.7)'
+          }}>
+            EMAIL CAMPAIGN SEQUENCE
+          </span>
         </div>
-        <div className="p-5">
-          {emailSequences.length > 0 ? (
-            <div className="space-y-4">
-              {emailSequences.map((email: any, index: number) => (
-                <div key={index} className="p-4 bg-[#050505] rounded-lg border border-white/[0.04]">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 bg-[#3b82f6] text-white rounded-full flex items-center justify-center text-xs font-semibold">
-                        {email.email_number || index + 1}
-                      </div>
-                      <div>
-                        <div className="text-white font-semibold text-sm">{email.send_day || 'Day TBD'}</div>
-                        <div className="text-white/50 text-xs">{email.send_time || '8:30 AM'}</div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-white/30">{email.status || 'pending'}</div>
+        <span style={{
+          padding: '2px 8px',
+          background: 'rgba(34, 197, 94, 0.1)',
+          borderRadius: '4px',
+          fontSize: '10px',
+          fontWeight: '600',
+          color: '#22c55e'
+        }}>
+          READY
+        </span>
+      </div>
+      <div style={{ padding: '20px' }}>
+        {/* Campaign Header */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingBottom: '20px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          marginBottom: '24px'
+        }}>
+          <div style={{ display: 'flex', gap: '32px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Campaign Type</span>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
+                Review Acceleration
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Email Length</span>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
+                {currentProfile.campaignData.campaign_data.messaging_preferences?.email_length || 'Type A - Concise'}
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Proof Style</span>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
+                {currentProfile.campaignData.campaign_data.messaging_preferences?.proof_preference || 'Data/Case Studies'}
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <span style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>Total Emails</span>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
+                {emailSequences.length}
+              </span>
+            </div>
+          </div>
+          <button style={{
+            padding: '8px 16px',
+            background: '#3b82f6',
+            border: '1px solid #3b82f6',
+            borderRadius: '4px',
+            color: 'white',
+            fontSize: '12px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            <Play size={14} />
+            Start Campaign
+          </button>
+        </div>
+
+        {/* Timeline Visual */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          marginBottom: '32px'
+        }}>
+          {emailSequences.map((_, index) => (
+            <React.Fragment key={index}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flex: index < emailSequences.length - 1 ? 1 : 'none'
+              }}>
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: emailStatuses[index] ? '#3b82f6' : '#0a0a0b',
+                  border: `2px solid ${emailStatuses[index] ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)'}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  color: emailStatuses[index] ? 'white' : 'rgba(255, 255, 255, 0.5)'
+                }}>
+                  {index + 1}
+                </div>
+                {index < emailSequences.length - 1 && (
+                  <div style={{
+                    flex: 1,
+                    height: '2px',
+                    background: emailStatuses[index] ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)'
+                  }} />
+                )}
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+
+        {/* Email Cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {emailSequences.map((email: any, index: number) => (
+            <div key={index} style={{
+              background: '#0a0a0b',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: '8px',
+              padding: '20px',
+              transition: 'all 0.2s'
+            }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                marginBottom: '16px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    background: '#050505',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: 'rgba(255, 255, 255, 0.7)'
+                  }}>
+                    {email.email_number || index + 1}
                   </div>
-                  <div className="text-white font-medium text-sm mb-2 pb-2 border-b border-white/[0.06]">
-                    {email.subject || 'Subject pending'}
-                  </div>
-                  <div className="text-white/70 text-xs leading-relaxed">
-                    {email.body || 'Email content pending...'}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <span style={{
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      color: '#ffffff'
+                    }}>
+                      {email.send_day || 'Tuesday'}
+                    </span>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.5)'
+                    }}>
+                      {email.send_time || '6:30 AM'}
+                    </span>
                   </div>
                 </div>
-              ))}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {['Scheduled', 'Sent', 'Opened', 'Replied'].map((status, statusIndex) => (
+                    <button
+                      key={statusIndex}
+                      onClick={() => updateEmailStatus(index, status)}
+                      style={{
+                        padding: '4px 10px',
+                        background: emailStatuses[index] === status ? 
+                          (status === 'Sent' ? '#facc15' : 
+                           status === 'Opened' ? '#22c55e' : 
+                           status === 'Replied' ? '#a855f7' : '#3b82f6') : '#050505',
+                        border: `1px solid ${emailStatuses[index] === status ? 
+                          (status === 'Sent' ? '#facc15' : 
+                           status === 'Opened' ? '#22c55e' : 
+                           status === 'Replied' ? '#a855f7' : '#3b82f6') : 'rgba(255, 255, 255, 0.06)'}`,
+                        borderRadius: '4px',
+                        fontSize: '10px',
+                        fontWeight: '600',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: emailStatuses[index] === status ? 
+                          (status === 'Sent' ? 'black' : 'white') : 'rgba(255, 255, 255, 0.5)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '12px'
+              }}>
+                <Mail size={14} style={{ opacity: 0.5 }} />
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  flex: 1
+                }}>
+                  {email.subject || 'Subject pending'}
+                </span>
+              </div>
+              
+              <div style={{
+                background: '#050505',
+                borderRadius: '6px',
+                padding: '16px',
+                fontSize: '12px',
+                color: 'rgba(255, 255, 255, 0.7)',
+                lineHeight: '1.6',
+                marginBottom: '12px'
+              }}>
+                {email.body || 'Email content pending...'}
+              </div>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={(e) => copyToClipboard(email.subject || '', e.currentTarget)}
+                  style={{
+                    padding: '6px 12px',
+                    background: '#0a0a0b',
+                    border: '1px solid rgba(255, 255, 255, 0.06)',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <Copy size={12} />
+                  Copy Subject
+                </button>
+                <button
+                  onClick={(e) => copyToClipboard(email.body || '', e.currentTarget)}
+                  style={{
+                    padding: '6px 12px',
+                    background: '#0a0a0b',
+                    border: '1px solid rgba(255, 255, 255, 0.06)',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <Copy size={12} />
+                  Copy Body
+                </button>
+              </div>
             </div>
-          ) : (
-            <div className="text-center py-8 text-white/30 text-sm">
-              No email sequences configured
-            </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-const OpportunitiesTab = ({ currentProfile }: TabContentProps) => {
-  const opportunities = [];
-  
-  // Website opportunities
-  const psiMobile = parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0;
-  const psiDesktop = parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0;
-  const domainAge = parseFloat(currentProfile.rawData?.L1_whois_domain_age_years) || 0;
-  const reviewCount = currentProfile.reviewsCount || 0;
-  const builder = currentProfile.rawData?.L1_builder_platform || '';
-  
-  if (psiMobile < 60 || psiDesktop < 60) {
-    opportunities.push({
-      type: 'Website Performance',
-      severity: 'high',
-      title: 'Poor Website Performance',
-      description: `Mobile score: ${psiMobile}, Desktop score: ${psiDesktop}. Website loads slowly which hurts customer experience and Google rankings.`,
-      impact: 'High',
-      recommendation: 'Optimize images, enable caching, and improve core web vitals'
-    });
-  }
-  
-  if (reviewCount < 10) {
-    opportunities.push({
-      type: 'Online Reputation',
-      severity: 'medium',
-      title: 'Low Review Count',
-      description: `Only ${reviewCount} reviews. Customers rely heavily on reviews to choose contractors.`,
-      impact: 'Medium',
-      recommendation: 'Implement review generation strategy and follow-up sequences'
-    });
-  }
-  
-  if (builder.includes('Wix') || builder.includes('GoDaddy') || builder.includes('Squarespace')) {
-    opportunities.push({
-      type: 'Website Platform',
-      severity: 'medium',
-      title: 'Limited Platform Capabilities',
-      description: `Using ${builder}. Platform may limit SEO optimization and lead generation capabilities.`,
-      impact: 'Medium',
-      recommendation: 'Consider custom website with advanced lead capture features'
-    });
-  }
-  
-  if (domainAge < 2) {
-    opportunities.push({
-      type: 'Domain Authority',
-      severity: 'low',
-      title: 'New Domain',
-      description: `Domain is only ${domainAge.toFixed(1)} years old. New domains have lower search authority.`,
-      impact: 'Low',
-      recommendation: 'Focus on local SEO and citation building to establish authority'
-    });
-  }
-  
-  // Business health opportunities
-  const businessHealth = currentProfile.rawData?.L1_targeting_business_health;
-  if (businessHealth === 'NEEDS_ATTENTION') {
-    opportunities.push({
-      type: 'Business Health',
-      severity: 'high',
-      title: 'Business Needs Attention',
-      description: 'Multiple indicators suggest business may be struggling with online presence.',
-      impact: 'High',
-      recommendation: 'Comprehensive digital marketing audit and improvement plan'
-    });
-  }
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'high': return '#f87171';
-      case 'medium': return '#facc15';
-      case 'low': return '#22c55e';
-      default: return '#60a5fa';
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      {opportunities.length > 0 ? (
-        <>
-          <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-            <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-              <Activity className="w-4 h-4 opacity-50" style={{ color: '#f87171' }} />
-              <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Business Opportunities</span>
-              <div className="ml-auto px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-semibold rounded">
-                {opportunities.length} OPPORTUNITIES
-              </div>
-            </div>
-            <div className="p-5">
-              <div className="space-y-4">
-                {opportunities.map((opportunity, index) => (
-                  <div key={index} className="p-4 bg-[#050505] rounded-lg border border-white/[0.04]">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: getSeverityColor(opportunity.severity) }}
-                        />
-                        <div>
-                          <div className="text-white font-semibold text-sm">{opportunity.title}</div>
-                          <div className="text-white/30 text-[11px] uppercase tracking-wider">{opportunity.type}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span 
-                          className="px-2 py-1 text-[10px] font-semibold rounded uppercase"
-                          style={{ 
-                            backgroundColor: `${getSeverityColor(opportunity.severity)}20`,
-                            color: getSeverityColor(opportunity.severity)
-                          }}
-                        >
-                          {opportunity.severity} Impact
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-white/70 text-xs leading-relaxed mb-3">
-                      {opportunity.description}
-                    </div>
-                    <div className="pt-3 border-t border-white/[0.06]">
-                      <div className="text-[10px] text-white/30 uppercase mb-1">Recommendation</div>
-                      <div className="text-xs text-white/80">
-                        {opportunity.recommendation}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Opportunity Summary */}
-          <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-            <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
-              <TrendingUp className="w-4 h-4 opacity-50" style={{ color: '#22c55e' }} />
-              <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Opportunity Summary</span>
-            </div>
-            <div className="p-5">
-              <div className="grid grid-cols-3 gap-5">
-                <div className="text-center">
-                  <div className="text-2xl font-bold mb-1" style={{ color: '#f87171' }}>
-                    {opportunities.filter(o => o.severity === 'high').length}
-                  </div>
-                  <div className="text-[11px] text-white/50 uppercase">High Priority</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold mb-1" style={{ color: '#facc15' }}>
-                    {opportunities.filter(o => o.severity === 'medium').length}
-                  </div>
-                  <div className="text-[11px] text-white/50 uppercase">Medium Priority</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold mb-1" style={{ color: '#22c55e' }}>
-                    {opportunities.filter(o => o.severity === 'low').length}
-                  </div>
-                  <div className="text-[11px] text-white/50 uppercase">Low Priority</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-          <div className="p-5">
-            <div className="text-center py-10">
-              <Activity className="w-12 h-12 text-white/30 mx-auto mb-3" />
-              <div className="text-white/30">No opportunities identified</div>
-              <div className="text-[11px] text-white/20 mt-1">Business appears to be performing well across all metrics</div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 const NotesTab = ({ currentProfile }: TabContentProps) => {
   return (
-    <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
-      <div className="p-5">
-        <div className="text-center py-10">
-          <FileText className="w-12 h-12 text-white/30 mx-auto mb-3" />
-          <div className="text-white/30">No activity recorded</div>
-          <div className="text-[11px] text-white/20 mt-1">Notes and campaign activity will appear here</div>
+    <div style={{ 
+      background: '#0a0a0b', 
+      border: '1px solid rgba(255, 255, 255, 0.06)', 
+      borderRadius: '8px'
+    }}>
+      <div style={{ padding: '20px' }}>
+        <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255, 255, 255, 0.3)', fontSize: '12px' }}>
+          <FileText size={48} style={{ color: 'rgba(255, 255, 255, 0.3)', marginBottom: '12px' }} />
+          <div>No notes recorded</div>
+          <div style={{ fontSize: '11px', marginTop: '4px' }}>Add notes about interactions with this contractor</div>
         </div>
       </div>
     </div>
@@ -587,47 +1193,105 @@ export function ProfileModal() {
   const closeModal = () => setCurrentProfile(null);
 
   const getScoreColor = (score: number) => {
-    if (score >= 85) return 'var(--green)';
-    if (score >= 70) return 'var(--yellow)';
-    if (score >= 50) return 'var(--orange)';
-    return 'var(--red)';
+    if (score >= 80) return '#22c55e';
+    if (score >= 60) return '#facc15';
+    return '#ef4444';
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm overflow-hidden">
-      <div className="h-full overflow-y-auto" style={{ fontFamily: '-apple-system, "Inter", system-ui, sans-serif' }}>
-        <div className="min-h-full">
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 50,
+      background: 'rgba(0, 0, 0, 0.8)',
+      backdropFilter: 'blur(4px)',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        height: '100%',
+        overflowY: 'auto',
+        fontFamily: '-apple-system, "Inter", system-ui, sans-serif'
+      }}>
+        <div style={{ minHeight: '100%' }}>
           {/* Header */}
-          <div className="bg-[#0a0a0b] border-b border-white/[0.06] p-6">
-            <div className="flex justify-between items-center mb-6">
+          <div style={{
+            background: '#0a0a0b',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            padding: '24px'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '24px'
+            }}>
               <button 
                 onClick={closeModal}
-                className="flex items-center gap-2 text-white/50 text-[13px] hover:text-white/70 transition-colors"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'none',
+                  border: 'none',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  transition: 'color 0.2s'
+                }}
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft size={16} />
                 Back to List
               </button>
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => window.print()}
-                  className="px-4 py-2 bg-[#0a0a0b] border border-white/[0.06] rounded-lg text-white/70 text-xs font-medium hover:text-white hover:border-white/10 transition-all"
-                >
-                  Print
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button style={{
+                  padding: '8px 16px',
+                  background: '#0a0a0b',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '8px',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  cursor: 'pointer'
+                }}>
+                  Export
                 </button>
-                <button className="px-4 py-2 bg-[#0a0a0b] border border-white/[0.06] rounded-lg text-white/70 text-xs font-medium hover:text-white hover:border-white/10 transition-all">
+                <button style={{
+                  padding: '8px 16px',
+                  background: '#0a0a0b',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '8px',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  cursor: 'pointer'
+                }}>
                   Edit
                 </button>
-                <button className="px-4 py-2 bg-[#3b82f6] border border-[#3b82f6] text-white text-xs font-medium rounded-lg hover:opacity-90 transition-opacity">
-                  Schedule Campaign
+                <button style={{
+                  padding: '8px 16px',
+                  background: '#3b82f6',
+                  border: '1px solid #3b82f6',
+                  color: 'white',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}>
+                  Generate Campaign
                 </button>
               </div>
             </div>
 
             {/* Header Grid */}
-            <div className="grid grid-cols-[auto_1fr_auto] gap-8 items-start">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'auto 1fr auto',
+              gap: '32px',
+              alignItems: 'flex-start'
+            }}>
               {/* Score Visual */}
-              <div className="relative w-20 h-20">
-                <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 80 80">
+              <div style={{ position: 'relative', width: '80px', height: '80px' }}>
+                <svg style={{ width: '80px', height: '80px', transform: 'rotate(-90deg)' }} viewBox="0 0 80 80">
                   <circle 
                     cx="40" 
                     cy="40" 
@@ -646,69 +1310,159 @@ export function ProfileModal() {
                     strokeLinecap="round"
                     strokeDasharray="226.19"
                     strokeDashoffset={226.19 - (226.19 * currentProfile.completionScore) / 100}
-                    className="transition-all duration-1000 ease-out"
+                    style={{ transition: 'stroke-dashoffset 1s ease' }}
                   />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-2xl font-bold" style={{ color: getScoreColor(currentProfile.completionScore) }}>
-                    {currentProfile.completionScore}%
-                  </span>
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: '24px',
+                  fontWeight: '700',
+                  color: getScoreColor(currentProfile.completionScore)
+                }}>
+                  {currentProfile.completionScore}%
                 </div>
               </div>
               
-              {/* Company Section */}
-              <div className="flex-1">
-                <div className="flex items-baseline gap-4 mb-2">
-                  <h1 className="text-2xl font-semibold text-white">{currentProfile.businessName}</h1>
-                  <span className="text-xs text-white/30">#{currentProfile.id}</span>
+              {/* Company Info */}
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '16px',
+                  marginBottom: '8px'
+                }}>
+                  <h1 style={{
+                    fontSize: '24px',
+                    fontWeight: '600',
+                    color: '#ffffff',
+                    margin: 0
+                  }}>
+                    {currentProfile.businessName}
+                  </h1>
+                  <span style={{
+                    fontSize: '12px',
+                    color: 'rgba(255, 255, 255, 0.3)'
+                  }}>
+                    #{currentProfile.id}
+                  </span>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-white/50 mb-1">
-                  <span className="px-2 py-1 bg-[#050505] rounded text-[11px] font-semibold text-white/70">
-                    {currentProfile.category}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '12px',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginBottom: '4px'
+                }}>
+                  <span style={{
+                    padding: '3px 8px',
+                    background: '#050505',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    color: 'rgba(255, 255, 255, 0.7)'
+                  }}>
+                    {currentProfile.category?.toUpperCase() || 'GENERAL CONSTRUCTION'}
                   </span>
                   <span>•</span>
-                  <span>{currentProfile.address?.split(',').slice(-2).join(',').trim()}</span>
+                  <span>{currentProfile.city}, {currentProfile.state} {currentProfile.zipCode}</span>
                   <span>•</span>
-                  <span className={cn("px-2 py-1 rounded text-[11px] font-semibold", 
-                    currentProfile.rawData?.L1_whois_days_until_expiry && parseInt(currentProfile.rawData.L1_whois_days_until_expiry) > 365 
-                      ? "bg-green-500/10 text-green-400" : "bg-orange-500/10 text-orange-400"
-                  )}>
-                    {currentProfile.rawData?.L1_whois_days_until_expiry ? 
-                      `${currentProfile.rawData.L1_whois_days_until_expiry} DAYS` : '140 DAYS'
-                    }
+                  <span style={{
+                    padding: '3px 8px',
+                    background: 'rgba(34, 197, 94, 0.1)',
+                    color: '#22c55e',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    fontWeight: '600'
+                  }}>
+                    {currentProfile.rawData?.L1_whois_days_until_expiry || '140'} DAYS
                   </span>
                 </div>
-                <div className="text-[11px] text-white/30 mb-4">
+                <div style={{
+                  fontSize: '11px',
+                  color: 'rgba(255, 255, 255, 0.3)',
+                  marginBottom: '16px'
+                }}>
                   Contact: {currentProfile.name ? `${currentProfile.name} ${currentProfile.lastName}` : 'Owner'}
                 </div>
                 
-                <div className="grid grid-cols-4 gap-5 text-xs">
-                  <div className="flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-white/30" />
-                    <span className="text-white/70">{currentProfile.email}</span>
-                    <Copy className="w-3.5 h-3.5 text-white/30 opacity-0 hover:opacity-50 cursor-pointer transition-opacity"
-                          onClick={() => navigator.clipboard.writeText(currentProfile.email)} />
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '20px',
+                  fontSize: '12px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    color: 'rgba(255, 255, 255, 0.7)'
+                  }}>
+                    <Mail size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
+                    <span>{currentProfile.email}</span>
+                    <Copy 
+                      size={14} 
+                      style={{ 
+                        color: 'rgba(255, 255, 255, 0.3)', 
+                        cursor: 'pointer',
+                        opacity: 0
+                      }}
+                      onClick={() => navigator.clipboard.writeText(currentProfile.email)}
+                    />
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-white/30" />
-                    <span className="text-white/70">{currentProfile.phone}</span>
-                    <Copy className="w-3.5 h-3.5 text-white/30 opacity-0 hover:opacity-50 cursor-pointer transition-opacity"
-                          onClick={() => navigator.clipboard.writeText(currentProfile.phone)} />
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    color: 'rgba(255, 255, 255, 0.7)'
+                  }}>
+                    <Phone size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
+                    <span>{currentProfile.phone}</span>
+                    <Copy 
+                      size={14} 
+                      style={{ 
+                        color: 'rgba(255, 255, 255, 0.3)', 
+                        cursor: 'pointer',
+                        opacity: 0
+                      }}
+                      onClick={() => navigator.clipboard.writeText(currentProfile.phone)}
+                    />
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Globe className="w-3.5 h-3.5 text-white/30" />
-                    <a href={currentProfile.website} target="_blank" rel="noopener noreferrer" 
-                       className="text-white/70 hover:text-white transition-colors">
-                      {currentProfile.rawData?.L2_normalized_domain || 'N/A'}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <Globe size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
+                    <a 
+                      href={currentProfile.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        textDecoration: 'none'
+                      }}
+                    >
+                      {currentProfile.rawData?.L2_normalized_domain || currentProfile.website?.replace('https://', '').replace('http://', '')}
                     </a>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Star className="w-3.5 h-3.5 text-white/30" />
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <Star size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
                     <a 
                       href={`https://maps.google.com/?cid=${currentProfile.rawData?.L1_google_place_id || ''}`}
                       target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-white/70 hover:text-white transition-colors"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        textDecoration: 'none'
+                      }}
                     >
                       {currentProfile.googleRating?.toFixed(1) || '0.0'} • {currentProfile.reviewsCount || 0} Reviews
                     </a>
@@ -717,82 +1471,196 @@ export function ProfileModal() {
               </div>
 
               {/* Quick Stats Visual */}
-              <div className="grid grid-cols-2 gap-4 min-w-[280px]">
-                <div className="bg-[#050505] rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] text-white/30 uppercase tracking-wider">PSI Mobile</span>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '16px',
+                minWidth: '280px'
+              }}>
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      PSI Mobile
+                    </span>
                   </div>
-                  <div className="text-xl font-bold mb-1.5" style={{ 
+                  <div style={{
+                    fontSize: '20px',
+                    fontWeight: '700',
                     color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
                   }}>
                     {currentProfile.rawData?.L1_psi_mobile_performance || '—'}
                   </div>
-                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${currentProfile.rawData?.L1_psi_mobile_performance || 0}%`,
-                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
-                      }}
-                    />
+                  <div style={{
+                    width: '100%',
+                    height: '3px',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      borderRadius: '2px',
+                      width: `${currentProfile.rawData?.L1_psi_mobile_performance || 0}%`,
+                      background: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0),
+                      transition: 'width 0.5s ease'
+                    }} />
                   </div>
                 </div>
 
-                <div className="bg-[#050505] rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] text-white/30 uppercase tracking-wider">PSI Desktop</span>
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      PSI Desktop
+                    </span>
                   </div>
-                  <div className="text-xl font-bold mb-1.5" style={{ 
+                  <div style={{
+                    fontSize: '20px',
+                    fontWeight: '700',
                     color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
                   }}>
                     {currentProfile.rawData?.L1_psi_desktop_performance || '—'}
                   </div>
-                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${currentProfile.rawData?.L1_psi_desktop_performance || 0}%`,
-                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
-                      }}
-                    />
+                  <div style={{
+                    width: '100%',
+                    height: '3px',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      borderRadius: '2px',
+                      width: `${currentProfile.rawData?.L1_psi_desktop_performance || 0}%`,
+                      background: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0),
+                      transition: 'width 0.5s ease'
+                    }} />
                   </div>
                 </div>
 
-                <div className="bg-[#050505] rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] text-white/30 uppercase tracking-wider">Domain Age</span>
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Domain Age
+                    </span>
                   </div>
-                  <div className="text-xl font-bold mb-1.5 text-white">
+                  <div style={{
+                    fontSize: '20px',
+                    fontWeight: '700',
+                    color: '#22c55e'
+                  }}>
                     {currentProfile.rawData?.L1_whois_domain_age_years ? 
                       Math.floor(parseFloat(currentProfile.rawData.L1_whois_domain_age_years)) : '—'
                     }
                   </div>
-                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-green-400 rounded-full transition-all duration-500"
-                      style={{ 
-                        width: currentProfile.rawData?.L1_whois_domain_age_years ? 
-                          `${Math.min(parseFloat(currentProfile.rawData.L1_whois_domain_age_years) * 5, 100)}%` : '0%'
-                      }}
-                    />
+                  <div style={{
+                    width: '100%',
+                    height: '3px',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      background: '#22c55e',
+                      borderRadius: '2px',
+                      width: currentProfile.rawData?.L1_whois_domain_age_years ? 
+                        `${Math.min(parseFloat(currentProfile.rawData.L1_whois_domain_age_years) * 5, 100)}%` : '0%',
+                      transition: 'width 0.5s ease'
+                    }} />
                   </div>
                 </div>
 
-                <div className="bg-[#050505] rounded-lg p-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[10px] text-white/30 uppercase tracking-wider">Trust Score</span>
+                <div style={{
+                  background: '#050505',
+                  borderRadius: '8px',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <span style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em'
+                    }}>
+                      Trust Score
+                    </span>
                   </div>
-                  <div className="text-xl font-bold mb-1.5 text-white">
-                    {currentProfile.trustScore || '—'}%
+                  <div style={{
+                    fontSize: '20px',
+                    fontWeight: '700',
+                    color: '#22c55e'
+                  }}>
+                    {currentProfile.trustScore || 85}%
                   </div>
-                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
-                    <div 
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ 
-                        width: `${currentProfile.trustScore || 0}%`,
-                        backgroundColor: getScoreColor(currentProfile.trustScore || 0)
-                      }}
-                    />
+                  <div style={{
+                    width: '100%',
+                    height: '3px',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      borderRadius: '2px',
+                      width: `${currentProfile.trustScore || 85}%`,
+                      background: '#22c55e',
+                      transition: 'width 0.5s ease'
+                    }} />
                   </div>
                 </div>
               </div>
@@ -800,23 +1668,34 @@ export function ProfileModal() {
           </div>
 
           {/* Tabs */}
-          <div className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 sticky top-0 z-10">
-            <div className="flex">
+          <div style={{
+            background: '#0a0a0b',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            padding: '0 24px',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10
+          }}>
+            <div style={{ display: 'flex' }}>
               {[
                 { id: 'intelligence', label: 'Intelligence' },
-                { id: 'opportunities', label: 'Opportunities' },
                 { id: 'campaign', label: 'Campaign' },
                 { id: 'notes', label: 'Notes' }
               ].map((tab) => (
                 <div
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "py-3.5 px-5 text-[11px] font-semibold uppercase tracking-wider transition-all border-b-2 cursor-pointer",
-                    activeTab === tab.id
-                      ? "text-white border-[#3b82f6]"
-                      : "text-white/50 border-transparent hover:text-white/70"
-                  )}
+                  style={{
+                    padding: '14px 20px',
+                    color: activeTab === tab.id ? '#ffffff' : 'rgba(255, 255, 255, 0.5)',
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    borderBottom: `2px solid ${activeTab === tab.id ? '#3b82f6' : 'transparent'}`,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
                 >
                   {tab.label}
                 </div>
@@ -825,9 +1704,8 @@ export function ProfileModal() {
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div style={{ padding: '24px' }}>
             {activeTab === 'intelligence' && <IntelligenceTab currentProfile={currentProfile} activeTab={activeTab} />}
-            {activeTab === 'opportunities' && <OpportunitiesTab currentProfile={currentProfile} activeTab={activeTab} />}
             {activeTab === 'campaign' && <CampaignTab currentProfile={currentProfile} activeTab={activeTab} />}
             {activeTab === 'notes' && <NotesTab currentProfile={currentProfile} activeTab={activeTab} />}
           </div>

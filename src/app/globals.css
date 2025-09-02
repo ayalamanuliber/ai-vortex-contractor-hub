@@ -2,9 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* AI Vortex Dark Theme - Preserving your original design */
+/* AI Vortex Dark Theme - New Sophisticated Layout */
 @layer base {
   :root {
+    /* Core Colors */
+    --bg: #050505;
+    --surface: #0a0a0b;
+    --surface-hover: #111113;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(255, 255, 255, 0.1);
+    
+    --text: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --text-dim: rgba(255, 255, 255, 0.3);
+    
     /* AI Vortex Unified Card Colors */
     --green: #22c55e;
     --yellow: #facc15;
@@ -16,11 +28,11 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    background-image: 
-      radial-gradient(at 20% 10%, hsla(220, 50%, 30%, 0.15) 0px, transparent 50%), 
-      radial-gradient(at 80% 90%, hsla(280, 50%, 30%, 0.1) 0px, transparent 50%);
-    background-attachment: fixed;
+    font-family: -apple-system, "Inter", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
   }
 }
 

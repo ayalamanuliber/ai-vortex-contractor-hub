@@ -1,191 +1,256 @@
 'use client';
 
-import { TopNav } from '@/components/Navigation/TopNav';
-import { GlobalSearch } from '@/components/GlobalSearch';
 import { ModernFilters } from '@/components/ModernFilters';
 import { ContractorGrid } from '@/components/ContractorGrid';
 import { CampaignCalendar } from '@/components/Calendar/CampaignCalendar';
 import { ProfileModal } from '@/components/ProfileModal/ProfileModal';
 import { useContractorStore } from '@/stores/contractorStore';
-import { TrendingUp, Users, Mail, Target } from 'lucide-react';
+import { 
+  Search, Download, Plus, Filter, LayoutGrid, List, 
+  ChevronDown, ArrowUp 
+} from 'lucide-react';
+import { useState } from 'react';
 
 export default function HomePage() {
   const { 
     showingCount, 
-    filteredContractors, 
-    currentMode 
+    filteredContractors,
+    filters,
+    clearFilters,
+    searchQuery,
+    setSearchQuery
   } = useContractorStore();
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState('score-high-low');
 
   // Calculate stats
   const stats = {
     total: showingCount,
     withCampaigns: filteredContractors.filter(c => c.hasCampaign).length,
-    highCompletion: filteredContractors.filter(c => c.completionScore >= 85).length,
-    avgCompletion: filteredContractors.length > 0 
-      ? Math.round(filteredContractors.reduce((sum, c) => sum + c.completionScore, 0) / filteredContractors.length)
-      : 0,
+    ready: filteredContractors.filter(c => c.hasCampaign && c.campaignData).length,
+    scheduled: 12, // Mock data
+    sent: 8 // Mock data
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Top Navigation */}
-      <TopNav />
-      
-      {/* Main Content */}
-      <div className="pt-16 flex">
-        {/* Left Sidebar - Modern Filters */}
-        <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-80 bg-background/95 backdrop-blur-md border-r border-border/50 p-6 overflow-y-auto">
-          <ModernFilters />
+    <div className="min-h-screen flex bg-[#050505]">
+      {/* Sidebar */}
+      <aside className="w-60 bg-[#0a0a0b] border-r border-white/[0.06] flex flex-col overflow-hidden">
+        <div className="p-5 border-b border-white/[0.06]">
+          <div className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-3">
+            Filters
+          </div>
+          <div className="flex items-center justify-between text-[12px]">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 bg-[#3b82f6] text-white rounded-full text-[11px] font-semibold">
+                {filters.length}
+              </span>
+              <span className="text-white/50">Active filters</span>
+            </div>
+            {filters.length > 0 && (
+              <button 
+                onClick={clearFilters}
+                className="text-white/30 hover:text-white/50 text-[11px] transition-colors"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
         
-        {/* Main Content Area */}
-        <div className="ml-80 flex-1 p-6">
-          {/* Header Section */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-3xl font-bold text-foreground mb-2">
-                  {currentMode === 'intelligence' 
-                    ? 'Final Dossier Intelligence Hub'
-                    : 'Campaign Execution Center'
-                  }
-                </h2>
-                <p className="text-muted-foreground text-sm">
-                  {currentMode === 'intelligence'
-                    ? 'Complete intelligence profiles • Performance analytics • Business insights'
-                    : 'Campaign management • Email execution • Activity tracking'
-                  }
-                </p>
-              </div>
-              
-              {/* Global Search */}
-              <div className="w-96">
-                <GlobalSearch />
-              </div>
-            </div>
+        <div className="flex-1 overflow-y-auto">
+          <ModernFilters />
+        </div>
+      </aside>
 
-            {/* Operations Dashboard */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-card/20 border border-border/40 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Total Contractors</span>
-                  <Users className="w-4 h-4 text-primary" />
-                </div>
-                <div className="text-2xl font-bold text-foreground">{stats.total}</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Active in database
-                </div>
-              </div>
-              
-              <div className="bg-card/20 border border-border/40 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">High Completion</span>
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div className="text-2xl font-bold text-emerald-400">{stats.highCompletion}</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  85% or higher score
-                </div>
-              </div>
-              
-              <div className="bg-card/20 border border-border/40 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Active Campaigns</span>
-                  <Mail className="w-4 h-4 text-green-400" />
-                </div>
-                <div className="text-2xl font-bold text-green-400">{stats.withCampaigns}</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Campaign ready
-                </div>
-              </div>
-              
-              <div className="bg-card/20 border border-border/40 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Avg. Completion</span>
-                  <Target className="w-4 h-4 text-yellow-400" />
-                </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.avgCompletion}%</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Overall score
-                </div>
-              </div>
-            </div>
-
-            {/* Status Bar */}
-            <div className="bg-card/20 border border-border/40 rounded-lg p-4 mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-8 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                    <span className="text-muted-foreground">System Status: </span>
-                    <span className="text-primary font-semibold">Operational</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-muted-foreground">Last Update:</span>
-                    <span className="text-foreground font-semibold">
-                      {new Date().toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-muted-foreground">Mode:</span>
-                    <span className={`font-semibold ${
-                      currentMode === 'intelligence' ? 'text-primary' : 'text-green-400'
-                    }`}>
-                      {currentMode === 'intelligence' ? 'Intelligence' : 'Execution'}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4 text-xs">
-                  <div className="flex items-center space-x-2 bg-muted/20 px-3 py-2 rounded">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span className="text-blue-400">Queue: 2</span>
-                  </div>
-                  <div className="flex items-center space-x-2 bg-muted/20 px-3 py-2 rounded">
-                    <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-                    <span className="text-amber-400">Ready: {stats.withCampaigns}</span>
-                  </div>
-                  <div className="flex items-center space-x-2 bg-muted/20 px-3 py-2 rounded">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-green-400">Sent: 0</span>
-                  </div>
-                </div>
-              </div>
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-6">
+            <div className="text-[16px] font-bold text-white tracking-tight">
+              AI VORTEX
             </div>
           </div>
 
-          {/* Campaign Calendar */}
-          <CampaignCalendar />
+          <div className="flex-1 max-w-md mx-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[14px] h-[14px] text-white/30" />
+              <input
+                type="text"
+                className="w-full bg-[#050505] border border-white/[0.06] rounded-lg pl-10 pr-4 py-2 text-[13px] text-white placeholder-white/30 focus:outline-none focus:border-white/10"
+                placeholder="Search contractors by name, ID, category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
 
-          {/* Contractor Grid */}
-          <ContractorGrid />
-          
-          {/* Stats Footer */}
-          <div className="text-center mt-8">
-            <p className="text-muted-foreground mb-4">
-              Showing {showingCount} contractors with complete dossier intelligence
-            </p>
-            <div className="flex items-center justify-center space-x-8 text-sm">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-muted-foreground">
-                  {stats.highCompletion} High Completion Scores
-                </span>
+          <div className="flex items-center gap-4">
+            <div className="flex gap-4 text-center border-l border-white/[0.06] pl-4">
+              <div>
+                <div className="text-[18px] font-bold text-white">{showingCount}</div>
+                <div className="text-[10px] text-white/50 uppercase tracking-wider">Showing</div>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span className="text-muted-foreground">
-                  {stats.withCampaigns} Campaign Data Integrated
-                </span>
+              <div>
+                <div className="text-[18px] font-bold text-white">4,107</div>
+                <div className="text-[10px] text-white/50 uppercase tracking-wider">Total</div>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="text-muted-foreground">Full Dossier Intelligence</span>
+            </div>
+            <div className="flex gap-2">
+              <button className="px-3 py-2 bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded-md hover:bg-[#111113] hover:border-white/10 transition-colors flex items-center gap-2">
+                <Download className="w-[14px] h-[14px]" />
+                Export
+              </button>
+              <button className="px-3 py-2 bg-[#3b82f6] border border-[#3b82f6] text-white text-[12px] font-medium rounded-md hover:opacity-90 transition-opacity flex items-center gap-2">
+                <Plus className="w-[14px] h-[14px]" />
+                Add Contractor
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Calendar */}
+          <div className="p-6 pb-0">
+            <CampaignCalendar />
+          </div>
+
+          {/* Action Bar */}
+          <div className="bg-[#0a0a0b] border-t border-b border-white/[0.06] px-6 py-2.5 flex justify-between items-center">
+            <div className="flex items-center gap-6">
+              {/* View Toggle */}
+              <div className="flex bg-[#050505] border border-white/[0.06] rounded-md p-0.5">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
+                    viewMode === 'grid' 
+                      ? 'bg-[#0a0a0b] text-white' 
+                      : 'text-white/50 hover:text-white/70'
+                  }`}
+                >
+                  <LayoutGrid className="w-[12px] h-[12px]" />
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
+                    viewMode === 'list' 
+                      ? 'bg-[#0a0a0b] text-white' 
+                      : 'text-white/50 hover:text-white/70'
+                  }`}
+                >
+                  <List className="w-[12px] h-[12px]" />
+                  List
+                </button>
               </div>
+
+              {/* Sort */}
+              <div className="flex items-center gap-2 text-[11px]">
+                <span className="text-white/50 uppercase tracking-wider">Sort</span>
+                <select 
+                  className="bg-[#050505] border border-white/[0.06] text-white/70 px-2 py-1 rounded text-[11px] font-medium cursor-pointer appearance-none pr-6"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 8px center'
+                  }}
+                >
+                  <option value="score-high-low">Score: High → Low</option>
+                  <option value="score-low-high">Score: Low → High</option>
+                  <option value="reviews-recent">Reviews: Recent First</option>
+                  <option value="domain-expiring">Domain: Expiring Soon</option>
+                  <option value="campaign-ready">Campaign: Ready First</option>
+                  <option value="recently-added">Recently Added</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="flex gap-4 text-[11px]">
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#facc15]"></div>
+                <span className="text-white/70 font-semibold">{stats.ready}</span>
+                <span className="text-white/30">ready</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                <span className="text-white/70 font-semibold">{stats.scheduled}</span>
+                <span className="text-white/30">today</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></div>
+                <span className="text-white/70 font-semibold">{stats.sent}</span>
+                <span className="text-white/30">sent</span>
+              </div>
+            </div>
+
+            {/* Bulk Actions */}
+            <div className="flex gap-2">
+              <button className="px-2.5 py-1 bg-[#050505] border border-white/[0.06] text-white/70 text-[11px] font-medium rounded hover:bg-[#111113] transition-colors">
+                Select Mode
+              </button>
+              <button className="px-2.5 py-1 bg-[#3b82f6] text-white text-[11px] font-medium rounded hover:opacity-90 transition-opacity">
+                Quick Schedule
+              </button>
+            </div>
+          </div>
+
+          {/* Cards Container */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <ContractorGrid />
+          </div>
+
+          {/* Pagination */}
+          <div className="bg-[#0a0a0b] border-t border-white/[0.06] px-6 py-4 flex justify-between items-center">
+            <div className="text-[12px] text-white/50">
+              Showing <strong className="text-white/70">1-{showingCount}</strong> of <strong className="text-white/70">4,107</strong> contractors
+            </div>
+            <div className="flex gap-1">
+              <button className="w-8 h-8 flex items-center justify-center bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded hover:bg-[#111113] transition-colors disabled:opacity-30" disabled>
+                ←
+              </button>
+              <button className="w-8 h-8 flex items-center justify-center bg-[#3b82f6] border border-[#3b82f6] text-white text-[12px] font-medium rounded">
+                1
+              </button>
+              <button className="w-8 h-8 flex items-center justify-center bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded hover:bg-[#111113] transition-colors">
+                2
+              </button>
+              <button className="w-8 h-8 flex items-center justify-center bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded hover:bg-[#111113] transition-colors">
+                3
+              </button>
+              <span className="w-8 h-8 flex items-center justify-center text-white/30 text-[12px]">...</span>
+              <button className="w-8 h-8 flex items-center justify-center bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded hover:bg-[#111113] transition-colors">
+                21
+              </button>
+              <button className="w-8 h-8 flex items-center justify-center bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded hover:bg-[#111113] transition-colors">
+                →
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      
+
+        {/* Status Bar Footer */}
+        <footer className="bg-[#0a0a0b] border-t border-white/[0.06] px-6 py-3 flex justify-between items-center text-[11px] text-white/50">
+          <div className="flex gap-4">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></div>
+              <span>System Operational</span>
+            </div>
+            <div>Last Update: {new Date().toLocaleDateString()}</div>
+            <div className="text-white/70">Queue: 2 campaigns processing</div>
+          </div>
+          <div className="flex gap-4">
+            <span>Ready: {stats.ready}</span>
+            <span>Scheduled: {stats.scheduled}</span>
+            <span>Sent Today: {stats.sent}</span>
+          </div>
+        </footer>
+      </main>
+
       {/* Profile Modal */}
       <ProfileModal />
     </div>

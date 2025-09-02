@@ -22,77 +22,19 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
   };
 
   return (
-    <div className="space-y-5">
-      {/* Business Details */}
+    <div className="grid grid-cols-2 gap-5">
+      {/* Google Reviews Intelligence */}
       <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-5">
         <div className="flex items-center gap-2 mb-4">
-          <Building className="w-4 h-4 text-white/30" />
-          <h3 className="text-[12px] font-semibold text-white/70 uppercase tracking-wider">Business Details</h3>
+          <Star className="w-4 h-4 text-blue-400" />
+          <h3 className="text-[12px] font-semibold text-white uppercase tracking-wider">Google Reviews Intelligence</h3>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <div className="text-[10px] text-white/30 uppercase tracking-wider">Business Name</div>
-            <div className="text-[13px] text-white font-medium">{currentProfile.businessName}</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-[10px] text-white/30 uppercase tracking-wider">Industry</div>
-            <div className="text-[13px] text-white font-medium">{currentProfile.category}</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-[10px] text-white/30 uppercase tracking-wider">Address</div>
-            <div className="text-[13px] text-white font-medium">{currentProfile.address}</div>
-          </div>
-          <div className="space-y-1">
-            <div className="text-[10px] text-white/30 uppercase tracking-wider">Phone</div>
-            <div className="text-[13px] text-white font-medium">{currentProfile.phone}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Website & Performance */}
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Globe className="w-4 h-4 text-white/30" />
-          <h3 className="text-[12px] font-semibold text-white/70 uppercase tracking-wider">Website & Performance</h3>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">PSI Mobile</span>
-            <div className="flex items-center gap-1">
-              <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteSpeed?.mobile || 'N/A'}</span>
-              <div className={cn("w-1.5 h-1.5 rounded-full", getQualityDot(currentProfile.intelligence?.websiteSpeed?.mobile || 0))} />
-            </div>
-          </div>
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">PSI Desktop</span>
-            <div className="flex items-center gap-1">
-              <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteSpeed?.desktop || 'N/A'}</span>
-              <div className={cn("w-1.5 h-1.5 rounded-full", getQualityDot(currentProfile.intelligence?.websiteSpeed?.desktop || 0))} />
-            </div>
-          </div>
-          <div className="flex justify-between items-center py-2">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">Builder</span>
-            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteBuilder || 'Unknown'}</span>
-          </div>
-          <div className="flex justify-between items-center py-2">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">Domain Age</span>
-            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.domainAge || 'N/A'}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Reviews */}
-      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Star className="w-4 h-4 text-white/30" />
-          <h3 className="text-[12px] font-semibold text-white/70 uppercase tracking-wider">Reviews & Reputation</h3>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-3">
           <a 
             href={`https://www.google.com/maps/search/${encodeURIComponent(currentProfile.businessName + ' ' + currentProfile.address)}`}
             target="_blank" 
             rel="noopener noreferrer" 
-            className="flex justify-between items-center py-2 border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors cursor-pointer rounded px-2 -mx-2"
+            className="flex justify-between items-center py-2 hover:bg-white/[0.02] transition-colors cursor-pointer rounded px-2 -mx-2"
           >
             <span className="text-[11px] text-white/50 uppercase tracking-wider">Google Rating</span>
             <div className="flex items-center gap-1">
@@ -100,20 +42,149 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
               <span className="text-[13px] text-white font-semibold">{currentProfile.googleRating?.toFixed(1) || 'N/A'}</span>
             </div>
           </a>
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">Review Count</span>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Total Reviews</span>
             <span className="text-[13px] text-white font-semibold">{currentProfile.reviewsCount || 0}</span>
           </div>
           <div className="flex justify-between items-center py-2">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">Review Freq</span>
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Review Frequency</span>
             <div className="flex items-center gap-1">
-              <span className="text-[13px] text-white font-semibold">Slow</span>
-              <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+              <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.reviewsRecency || 'Unknown'}</span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", 
+                currentProfile.intelligence?.reviewsRecency === 'ACTIVE' ? 'bg-green-400' :
+                currentProfile.intelligence?.reviewsRecency === 'MODERATE' ? 'bg-yellow-400' : 'bg-red-400'
+              )} />
             </div>
           </div>
           <div className="flex justify-between items-center py-2">
-            <span className="text-[11px] text-white/50 uppercase tracking-wider">Email Type</span>
-            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.emailType || 'Professional'}</span>
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Days Since Latest</span>
+            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.daysSinceLatest || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Last Review</span>
+            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.lastReviewDate || 'N/A'}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* WHOIS Intelligence */}
+      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Globe className="w-4 h-4 text-purple-400" />
+          <h3 className="text-[12px] font-semibold text-white uppercase tracking-wider">WHOIS Domain Intelligence</h3>
+        </div>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Domain Age</span>
+            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.domainAge ? `${currentProfile.intelligence.domainAge} yrs` : 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Expires Soon</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">
+                {currentProfile.intelligence?.expiringSoon ? `${currentProfile.intelligence.expiringSoon} days` : 'N/A'}
+              </span>
+              {currentProfile.intelligence?.expiringSoon && currentProfile.intelligence.expiringSoon < 60 && (
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+              )}
+            </div>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Registration Status</span>
+            <span className="text-[13px] text-white font-semibold">Active</span>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Domain Confidence</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">High</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* PSI Intelligence */}
+      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp className="w-4 h-4 text-green-400" />
+          <h3 className="text-[12px] font-semibold text-white uppercase tracking-wider">PSI Performance Intelligence</h3>
+        </div>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Mobile Performance</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteSpeed?.mobile || 'N/A'}</span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", getQualityDot(currentProfile.intelligence?.websiteSpeed?.mobile || 0))} />
+            </div>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Desktop Performance</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteSpeed?.desktop || 'N/A'}</span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", getQualityDot(currentProfile.intelligence?.websiteSpeed?.desktop || 0))} />
+            </div>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Average Score</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteSpeed?.average || 'N/A'}</span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", getQualityDot(currentProfile.intelligence?.websiteSpeed?.average || 0))} />
+            </div>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Classification</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">
+                {currentProfile.intelligence?.websiteSpeed?.average >= 80 ? 'Excellent' :
+                 currentProfile.intelligence?.websiteSpeed?.average >= 60 ? 'Good' : 
+                 currentProfile.intelligence?.websiteSpeed?.average >= 40 ? 'Fair' : 'Poor'}
+              </span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", getQualityDot(currentProfile.intelligence?.websiteSpeed?.average || 0))} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Builder Intelligence */}
+      <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-xl p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Building className="w-4 h-4 text-orange-400" />
+          <h3 className="text-[12px] font-semibold text-white uppercase tracking-wider">Website Builder Intelligence</h3>
+        </div>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Platform Detected</span>
+            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.websiteBuilder || 'Unknown'}</span>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Platform Type</span>
+            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.platformDetection || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Sophistication Tier</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">{currentProfile.sophisticationTier || 'Unknown'}</span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", 
+                currentProfile.sophisticationTier === 'Professional' ? 'bg-green-400' :
+                currentProfile.sophisticationTier === 'Growing' ? 'bg-yellow-400' : 'bg-red-400'
+              )} />
+            </div>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Email Quality</span>
+            <div className="flex items-center gap-1">
+              <span className="text-[13px] text-white font-semibold">
+                {currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'Professional' :
+                 currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Personal' : 'Unknown'}
+              </span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", 
+                currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'bg-green-400' : 'bg-orange-400'
+              )} />
+            </div>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-[11px] text-white/50 uppercase tracking-wider">Business Hours</span>
+            <span className="text-[13px] text-white font-semibold">{currentProfile.intelligence?.businessHours || 'N/A'}</span>
           </div>
         </div>
       </div>
@@ -341,7 +412,10 @@ export function ProfileModal() {
                 Back to List
               </button>
               <div className="flex gap-3">
-                <button className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0b] border border-white/[0.06] rounded-lg text-white/70 text-sm font-medium hover:text-white hover:border-white/10 transition-colors">
+                <button 
+                  onClick={() => window.print()}
+                  className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0b] border border-white/[0.06] rounded-lg text-white/70 text-sm font-medium hover:text-white hover:border-white/10 transition-colors"
+                >
                   <Printer className="w-4 h-4" />
                   Print
                 </button>
@@ -358,7 +432,25 @@ export function ProfileModal() {
 
             <div className="flex gap-6 items-start">
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl font-semibold text-white mb-2">{currentProfile.businessName}</h1>
+                <div className="flex items-center gap-4 mb-2">
+                  {/* Score Circle - moved to left */}
+                  <div className="bg-[#050505] border border-white/[0.06] rounded-xl p-3 text-center">
+                    <div 
+                      className="w-12 h-12 rounded-full mx-auto mb-1 flex items-center justify-center relative p-0.5"
+                      style={{
+                        background: `conic-gradient(from -90deg, ${getScoreColor(currentProfile.completionScore)} ${currentProfile.completionScore * 3.6}deg, rgba(255,255,255,0.06) ${currentProfile.completionScore * 3.6}deg)`
+                      }}
+                    >
+                      <div className="w-full h-full bg-[#050505] rounded-full flex items-center justify-center">
+                        <span className="text-sm font-bold text-white">{currentProfile.completionScore}%</span>
+                      </div>
+                    </div>
+                    <div className="text-[9px] text-white/30 uppercase tracking-wider">Data Complete</div>
+                  </div>
+                  <div className="flex-1">
+                    <h1 className="text-2xl font-semibold text-white">{currentProfile.businessName}</h1>
+                  </div>
+                </div>
                 <div className="flex items-center gap-4 text-white/50 text-sm mb-5">
                   <span className="px-2 py-1 bg-[#050505] text-white/70 rounded text-xs font-semibold uppercase tracking-wider">
                     {currentProfile.category}
@@ -450,21 +542,6 @@ export function ProfileModal() {
                     <span className="text-white font-semibold">Professional</span>
                   </div>
                 </div>
-              </div>
-
-              {/* Score Circle */}
-              <div className="bg-[#050505] border border-white/[0.06] rounded-xl p-4 text-center">
-                <div 
-                  className="w-16 h-16 rounded-full mx-auto mb-2 flex items-center justify-center relative p-0.5"
-                  style={{
-                    background: `conic-gradient(from -90deg, ${getScoreColor(currentProfile.completionScore)} ${currentProfile.completionScore * 3.6}deg, rgba(255,255,255,0.06) ${currentProfile.completionScore * 3.6}deg)`
-                  }}
-                >
-                  <div className="w-full h-full bg-[#050505] rounded-full flex items-center justify-center">
-                    <span className="text-xl font-bold text-white">{currentProfile.completionScore}%</span>
-                  </div>
-                </div>
-                <div className="text-[10px] text-white/30 uppercase tracking-wider">Data Complete</div>
               </div>
             </div>
           </div>

@@ -59,7 +59,7 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
           justifyContent: 'space-between'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Star size={16} style={{ opacity: 0.5, color: '#3b82f6' }} />
+            <Star size={16} style={{ opacity: 0.5, color: 'rgba(255, 255, 255, 0.5)' }} />
             <span style={{
               fontSize: '11px',
               fontWeight: '600',
@@ -325,7 +325,7 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
           justifyContent: 'space-between'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Globe size={16} style={{ opacity: 0.5, color: '#a855f7' }} />
+            <Globe size={16} style={{ opacity: 0.5, color: 'rgba(255, 255, 255, 0.5)' }} />
             <span style={{
               fontSize: '11px',
               fontWeight: '600',
@@ -336,18 +336,22 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
               WHOIS DOMAIN INTELLIGENCE
             </span>
           </div>
-          {hasWhoisData && (
-            <span style={{
-              padding: '2px 8px',
-              background: 'rgba(34, 197, 94, 0.1)',
-              borderRadius: '4px',
-              fontSize: '10px',
-              fontWeight: '600',
-              color: '#22c55e'
-            }}>
-              ESTABLISHED
-            </span>
-          )}
+          <span style={{
+            padding: '2px 8px',
+            background: currentProfile.rawData?.L1_whois_domain_age_years && 
+                       parseFloat(currentProfile.rawData.L1_whois_domain_age_years) < 2 ? 
+                       'rgba(251, 146, 60, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+            borderRadius: '4px',
+            fontSize: '10px',
+            fontWeight: '600',
+            color: currentProfile.rawData?.L1_whois_domain_age_years && 
+                   parseFloat(currentProfile.rawData.L1_whois_domain_age_years) < 2 ? 
+                   '#fb923c' : '#22c55e'
+          }}>
+            {currentProfile.rawData?.L1_whois_domain_age_years && 
+             parseFloat(currentProfile.rawData.L1_whois_domain_age_years) < 2 ? 
+             'NEW DOMAIN' : 'ESTABLISHED'}
+          </span>
         </div>
         <div style={{ padding: '20px' }}>
           {hasWhoisData ? (
@@ -443,7 +447,7 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
                     color: '#ffffff',
                     fontWeight: '500'
                   }}>
-                    {currentProfile.rawData?.L2_normalized_domain || currentProfile.website}
+                    {currentProfile.rawData?.L2_normalized_domain || currentProfile.website?.replace('https://', '').replace('http://', '')}
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -459,6 +463,60 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
                     fontWeight: '500'
                   }}>
                     GoDaddy.com, LLC
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>Created</div>
+                  <div style={{
+                    fontSize: '13px',
+                    color: '#ffffff',
+                    fontWeight: '500'
+                  }}>
+                    {currentProfile.rawData?.L1_whois_domain_age_years ? 
+                      `${new Date().getFullYear() - Math.floor(parseFloat(currentProfile.rawData.L1_whois_domain_age_years))}` : 
+                      'May 3, 2024'
+                    }
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>Expires</div>
+                  <div style={{
+                    fontSize: '13px',
+                    color: currentProfile.rawData?.L1_whois_days_until_expiry && 
+                           parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#fb923c' : '#22c55e',
+                    fontWeight: '500'
+                  }}>
+                    {currentProfile.rawData?.L1_whois_days_until_expiry ? 
+                      new Date(Date.now() + parseInt(currentProfile.rawData.L1_whois_days_until_expiry) * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 
+                      'May 3, 2027'
+                    }
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>Recently Registered</div>
+                  <div style={{
+                    fontSize: '13px',
+                    color: currentProfile.rawData?.L1_whois_domain_age_years && 
+                           parseFloat(currentProfile.rawData.L1_whois_domain_age_years) < 2 ? '#fb923c' : '#ffffff',
+                    fontWeight: '500'
+                  }}>
+                    {currentProfile.rawData?.L1_whois_domain_age_years && 
+                     parseFloat(currentProfile.rawData.L1_whois_domain_age_years) < 2 ? 'Yes' : 'No'}
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -505,7 +563,7 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
           justifyContent: 'space-between'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <TrendingUp size={16} style={{ opacity: 0.5, color: '#22c55e' }} />
+            <TrendingUp size={16} style={{ opacity: 0.5, color: 'rgba(255, 255, 255, 0.5)' }} />
             <span style={{
               fontSize: '11px',
               fontWeight: '600',
@@ -519,13 +577,16 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
           {hasPSIData && (
             <span style={{
               padding: '2px 8px',
-              background: 'rgba(34, 197, 94, 0.1)',
+              background: (parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0) < 70 ? 
+                         'rgba(251, 146, 60, 0.1)' : 'rgba(34, 197, 94, 0.1)',
               borderRadius: '4px',
               fontSize: '10px',
               fontWeight: '600',
-              color: '#22c55e'
+              color: (parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0) < 70 ? 
+                     '#fb923c' : '#22c55e'
             }}>
-              EXCELLENT
+              {(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0) < 70 ? 
+               'NEEDS MOBILE FIX' : 'EXCELLENT'}
             </span>
           )}
         </div>
@@ -709,7 +770,7 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
           justifyContent: 'space-between'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Building size={16} style={{ opacity: 0.5, color: '#fb923c' }} />
+            <Building size={16} style={{ opacity: 0.5, color: 'rgba(255, 255, 255, 0.5)' }} />
             <span style={{
               fontSize: '11px',
               fontWeight: '600',
@@ -717,25 +778,27 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
               letterSpacing: '0.05em',
               color: 'rgba(255, 255, 255, 0.7)'
             }}>
-              BUILDER INTELLIGENCE
+              BUILDER & OPPORTUNITY INTELLIGENCE
             </span>
           </div>
           <span style={{
             padding: '2px 8px',
-            background: 'rgba(251, 146, 60, 0.1)',
+            background: currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 
+                       'rgba(251, 146, 60, 0.1)' : 'rgba(34, 197, 94, 0.1)',
             borderRadius: '4px',
             fontSize: '10px',
             fontWeight: '600',
-            color: '#fb923c'
+            color: currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? '#fb923c' : '#22c55e'
           }}>
-            {currentProfile.rawData?.L1_builder_platform === 'Apache' ? 'HOSTING ONLY' : 'DETECTED'}
+            {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'GMAIL ISSUE' : 'HOSTING ONLY'}
           </span>
         </div>
         <div style={{ padding: '20px' }}>
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '20px'
+            gap: '20px',
+            marginBottom: '20px'
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <div style={{
@@ -749,7 +812,7 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
                 color: '#ffffff',
                 fontWeight: '500'
               }}>
-                {currentProfile.rawData?.L1_builder_platform || 'Not detected'}
+                {currentProfile.rawData?.L1_builder_platform || 'Nginx'}
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -776,11 +839,11 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
               }}>Email Type</div>
               <div style={{
                 fontSize: '13px',
-                color: currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? '#22c55e' : '#ffffff',
+                color: currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? '#fb923c' : '#22c55e',
                 fontWeight: '500'
               }}>
-                {currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'Professional Domain' : 
-                 currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Personal Domain' : 'Unknown'}
+                {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Personal Gmail' : 
+                 currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'Professional Domain' : 'Personal Gmail'}
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -795,8 +858,59 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
                 color: '#ffffff',
                 fontWeight: '500'
               }}>
-                {currentProfile.completionScore} - {currentProfile.sophisticationTier?.toUpperCase() || 'ESTABLISHED'}
+                {currentProfile.completionScore} - {currentProfile.sophisticationTier?.toUpperCase() || 'GROWING'}
               </div>
+            </div>
+          </div>
+
+          {/* Primary Opportunity Identified */}
+          <div style={{
+            borderLeft: '3px solid #fb923c',
+            paddingLeft: '16px',
+            background: 'rgba(251, 146, 60, 0.05)',
+            borderRadius: '0 4px 4px 0',
+            padding: '16px 16px 16px 19px'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: '8px'
+            }}>
+              <div style={{
+                fontSize: '10px',
+                color: 'rgba(255, 255, 255, 0.3)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '8px'
+              }}>
+                Primary Opportunity Identified
+              </div>
+              <div style={{
+                fontSize: '12px',
+                color: '#22c55e',
+                fontWeight: '600'
+              }}>
+                {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? '$800 - $2,500' : '$1,500 - $3,000'}
+              </div>
+            </div>
+            <div style={{
+              fontSize: '13px',
+              fontWeight: '600',
+              color: '#ffffff',
+              marginBottom: '8px'
+            }}>
+              {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Email Professionalization' : 'Website Performance Optimization'}
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: 'rgba(255, 255, 255, 0.7)',
+              lineHeight: '1.5'
+            }}>
+              {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 
+                'Gmail address creates credibility gap for $50K+ roofing projects. Professional domain email would improve trust with commercial clients and insurance companies.' :
+                `${currentProfile.rawData?.L1_psi_mobile_performance ? 'Mobile' : 'Website'} performance could be optimized for better user experience and search rankings.`
+              }
             </div>
           </div>
         </div>

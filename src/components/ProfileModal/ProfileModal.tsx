@@ -162,7 +162,7 @@ export function ProfileModal() {
                       <span className="text-sm text-muted-foreground">Tokens</span>
                     </div>
                     <span className="text-lg font-bold text-blue-400">
-                      {currentProfile.tokensUsed.toLocaleString()}
+                      {(currentProfile.tokensUsed || 0).toLocaleString()}
                     </span>
                   </div>
                   <div className="text-center">

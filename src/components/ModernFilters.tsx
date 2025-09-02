@@ -165,7 +165,7 @@ export default function ModernFilters() {
         <span className={`text-[11px] px-1.5 py-0.5 bg-[#050505] rounded-full ${
           color ? `text-${color}` : 'text-white/50'
         }`}>
-          {count.toLocaleString()}
+          {(count || 0).toLocaleString()}
         </span>
       </div>
     );

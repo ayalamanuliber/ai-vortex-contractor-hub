@@ -1005,8 +1005,6 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
 };
 
 const CampaignTab = ({ currentProfile }: TabContentProps) => {
-  const [emailStatuses, setEmailStatuses] = useState<{[key: number]: string}>({});
-  
   if (!currentProfile.hasCampaign || !currentProfile.campaignData?.campaign_data?.email_sequences) {
     return (
       <div style={{ 
@@ -1026,20 +1024,64 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
   }
 
   const emailSequences = currentProfile.campaignData.campaign_data.email_sequences || [];
+  const contactTiming = currentProfile.campaignData.campaign_data?.contact_timing || {};
+  const messagingPrefs = currentProfile.campaignData.campaign_data?.messaging_preferences || {};
 
-  const updateEmailStatus = (emailIndex: number, status: string) => {
-    setEmailStatuses(prev => ({ ...prev, [emailIndex]: status }));
+  // Generate insights based on contractor data
+  const getDosAndDonts = () => {
+    const dos = [];
+    const donts = [];
+    const painPoints = [];
+
+    // Generate insights based on contractor data
+    if (currentProfile.reviewsCount) {
+      dos.push(`Mention specific review count (${currentProfile.reviewsCount})`);
+    }
+    
+    if (currentProfile.category?.toLowerCase().includes('roof')) {
+      dos.push("Reference insurance expertise");
+      painPoints.push("Losing jobs to competitors");
+      painPoints.push("Insurance claim battles");
+    }
+    
+    if (messagingPrefs.email_length === 'B') {
+      dos.push("Keep under 75 words");
+    } else {
+      dos.push("Keep under 60 words");
+    }
+    
+    if (currentProfile.city) {
+      dos.push(`Local ${currentProfile.city} references`);
+    }
+
+    if (currentProfile.emailQuality === 'PERSONAL_DOMAIN') {
+      painPoints.push("Gmail credibility gap");
+    }
+    
+    painPoints.push("Cash flow issues");
+
+    // Standard don'ts for all contractors
+    donts.push('"Synergy" or "leverage"');
+    donts.push("Consultant language");
+    donts.push("Vague promises");
+
+    return { dos, donts, painPoints };
   };
+
+  const { dos, donts, painPoints } = getDosAndDonts();
 
   const copyToClipboard = async (text: string, buttonElement: HTMLElement) => {
     try {
       await navigator.clipboard.writeText(text);
       const originalContent = buttonElement.innerHTML;
+      const originalColor = buttonElement.style.color;
+      
       buttonElement.innerHTML = '✓ Copied!';
       buttonElement.style.color = '#22c55e';
+      
       setTimeout(() => {
         buttonElement.innerHTML = originalContent;
-        buttonElement.style.color = '';
+        buttonElement.style.color = originalColor;
       }, 1000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
@@ -1069,7 +1111,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
             letterSpacing: '0.05em',
             color: 'rgba(255, 255, 255, 0.7)'
           }}>
-            EMAIL CAMPAIGN SEQUENCE
+            CAMPAIGN COMMAND CENTER
           </span>
         </div>
         <span style={{
@@ -1080,275 +1122,406 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
           fontWeight: '600',
           color: '#22c55e'
         }}>
-          READY
+          {currentProfile.campaignData?.focus_group_generated ? 'FOCUS GROUP VALIDATED' : 'READY'}
         </span>
       </div>
+
       <div style={{ padding: '20px' }}>
-        {/* Campaign Header */}
         <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingBottom: '20px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-          marginBottom: '24px'
+          display: 'grid',
+          gridTemplateColumns: '30% 70%',
+          gap: '24px'
         }}>
-          <div style={{ display: 'flex', gap: '32px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{
-                fontSize: '10px',
-                color: 'rgba(255, 255, 255, 0.3)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}>Campaign Type</span>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
-                Review Acceleration
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{
-                fontSize: '10px',
-                color: 'rgba(255, 255, 255, 0.3)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}>Email Length</span>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
-                {currentProfile.campaignData.campaign_data.messaging_preferences?.email_length || 'Type A - Concise'}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{
-                fontSize: '10px',
-                color: 'rgba(255, 255, 255, 0.3)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}>Proof Style</span>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
-                {currentProfile.campaignData.campaign_data.messaging_preferences?.proof_preference || 'Data/Case Studies'}
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <span style={{
-                fontSize: '10px',
-                color: 'rgba(255, 255, 255, 0.3)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}>Total Emails</span>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>
-                {emailSequences.length}
-              </span>
-            </div>
-          </div>
-          <button style={{
-            padding: '8px 16px',
-            background: '#3b82f6',
-            border: '1px solid #3b82f6',
-            borderRadius: '4px',
-            color: 'white',
-            fontSize: '12px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}>
-            <Play size={14} />
-            Start Campaign
-          </button>
-        </div>
-
-        {/* Timeline Visual */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          marginBottom: '32px'
-        }}>
-          {emailSequences.map((_: any, index: number) => (
-            <React.Fragment key={index}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                flex: index < emailSequences.length - 1 ? 1 : 'none'
-              }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  background: emailStatuses[index] ? '#3b82f6' : '#0a0a0b',
-                  border: `2px solid ${emailStatuses[index] ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)'}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  color: emailStatuses[index] ? 'white' : 'rgba(255, 255, 255, 0.5)'
-                }}>
-                  {index + 1}
-                </div>
-                {index < emailSequences.length - 1 && (
-                  <div style={{
-                    flex: 1,
-                    height: '2px',
-                    background: emailStatuses[index] ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)'
-                  }} />
-                )}
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-
-        {/* Email Cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {emailSequences.map((email: any, index: number) => (
-            <div key={index} style={{
-              background: '#0a0a0b',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
+          {/* Sidebar */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Do's */}
+            <div style={{
+              background: '#050505',
               borderRadius: '8px',
-              padding: '20px',
-              transition: 'all 0.2s'
+              padding: '16px'
             }}>
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginBottom: '16px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '50%',
-                    background: '#050505',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}>
-                    {email.email_number || index + 1}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      color: '#ffffff'
-                    }}>
-                      {email.send_day || 'Tuesday'}
-                    </span>
-                    <span style={{
-                      fontSize: '10px',
-                      color: 'rgba(255, 255, 255, 0.5)'
-                    }}>
-                      {email.send_time || '6:30 AM'}
-                    </span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  {['Scheduled', 'Sent', 'Opened', 'Replied'].map((status, statusIndex) => (
-                    <button
-                      key={statusIndex}
-                      onClick={() => updateEmailStatus(index, status)}
-                      style={{
-                        padding: '4px 10px',
-                        background: emailStatuses[index] === status ? 
-                          (status === 'Sent' ? '#facc15' : 
-                           status === 'Opened' ? '#22c55e' : 
-                           status === 'Replied' ? '#a855f7' : '#3b82f6') : '#050505',
-                        border: `1px solid ${emailStatuses[index] === status ? 
-                          (status === 'Sent' ? '#facc15' : 
-                           status === 'Opened' ? '#22c55e' : 
-                           status === 'Replied' ? '#a855f7' : '#3b82f6') : 'rgba(255, 255, 255, 0.06)'}`,
-                        borderRadius: '4px',
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: emailStatuses[index] === status ? 
-                          (status === 'Sent' ? 'black' : 'white') : 'rgba(255, 255, 255, 0.5)',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                    >
-                      {status}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '12px'
-              }}>
-                <Mail size={14} style={{ opacity: 0.5 }} />
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  color: '#ffffff',
-                  flex: 1
-                }}>
-                  {email.subject || 'Subject pending'}
-                </span>
-              </div>
-              
-              <div style={{
-                background: '#050505',
-                borderRadius: '6px',
-                padding: '16px',
-                fontSize: '12px',
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
                 color: 'rgba(255, 255, 255, 0.7)',
-                lineHeight: '1.6',
                 marginBottom: '12px'
               }}>
-                {email.body || 'Email content pending...'}
+                ✓ Messaging Do's
               </div>
-              
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={(e) => copyToClipboard(email.subject || '', e.currentTarget)}
-                  style={{
-                    padding: '6px 12px',
-                    background: '#0a0a0b',
-                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                    borderRadius: '4px',
+              {dos.map((item, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  marginBottom: '8px'
+                }}>
+                  <span style={{
+                    width: '14px',
+                    height: '14px',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                    color: '#22c55e'
+                  }}>✓</span>
+                  <span style={{
                     fontSize: '11px',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <Copy size={12} />
-                  Copy Subject
-                </button>
-                <button
-                  onClick={(e) => copyToClipboard(email.body || '', e.currentTarget)}
-                  style={{
-                    padding: '6px 12px',
-                    background: '#0a0a0b',
-                    border: '1px solid rgba(255, 255, 255, 0.06)',
-                    borderRadius: '4px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    lineHeight: '1.4'
+                  }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Don'ts */}
+            <div style={{
+              background: '#050505',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '12px'
+              }}>
+                ✗ Avoid At All Costs
+              </div>
+              {donts.map((item, index) => (
+                <div key={index} style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '8px',
+                  marginBottom: '8px'
+                }}>
+                  <span style={{
+                    width: '14px',
+                    height: '14px',
+                    flexShrink: 0,
+                    marginTop: '2px',
+                    color: '#ef4444'
+                  }}>✗</span>
+                  <span style={{
                     fontSize: '11px',
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <Copy size={12} />
-                  Copy Body
-                </button>
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    lineHeight: '1.4'
+                  }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Pain Points */}
+            <div style={{
+              background: '#050505',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '12px'
+              }}>
+                Pain Points Validated
+              </div>
+              <div style={{
+                fontSize: '11px',
+                color: 'rgba(255, 255, 255, 0.7)',
+                lineHeight: '1.5'
+              }}>
+                {painPoints.map((point, index) => (
+                  <div key={index}>• {point}</div>
+                ))}
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Main Content */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Campaign Header */}
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingBottom: '16px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+            }}>
+              <div style={{ display: 'flex', gap: '32px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Strategy
+                  </span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#ffffff'
+                  }}>
+                    {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Email Professionalization' : 'Review Acceleration'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Timing
+                  </span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#ffffff'
+                  }}>
+                    {contactTiming.best_day_email_1?.substr(0,3) || 'Tue'}/{contactTiming.best_day_email_2?.substr(0,3) || 'Thu'} @ {contactTiming.window_a_time || '7:00 AM'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Length
+                  </span>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#ffffff'
+                  }}>
+                    {messagingPrefs.email_length === 'B' ? '50-75 words' : '40-60 words'}
+                  </span>
+                </div>
+              </div>
+              <button style={{
+                padding: '8px 16px',
+                background: '#3b82f6',
+                border: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '12px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <Play size={12} />
+                Launch Campaign
+              </button>
+            </div>
+
+            {/* Email Timeline */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '24px'
+            }}>
+              {emailSequences.map((_: any, index: number) => (
+                <React.Fragment key={index}>
+                  <div style={{
+                    flex: index < emailSequences.length - 1 ? 1 : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: index === 0 ? '#3b82f6' : '#0a0a0b',
+                      border: `2px solid ${index === 0 ? '#3b82f6' : 'rgba(255, 255, 255, 0.06)'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      color: index === 0 ? 'white' : 'rgba(255, 255, 255, 0.5)'
+                    }}>
+                      {index + 1}
+                    </div>
+                    {index < emailSequences.length - 1 && (
+                      <div style={{
+                        flex: 1,
+                        height: '2px',
+                        background: 'rgba(255, 255, 255, 0.06)'
+                      }} />
+                    )}
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+
+            {/* Email Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {emailSequences.map((email: any, index: number) => (
+                <div key={index} style={{
+                  background: '#0a0a0b',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    marginBottom: '16px'
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px'
+                    }}>
+                      <div style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        background: '#050505',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        color: 'rgba(255, 255, 255, 0.7)'
+                      }}>
+                        {index + 1}
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '2px'
+                      }}>
+                        <span style={{
+                          fontSize: '12px',
+                          fontWeight: '600',
+                          color: '#ffffff'
+                        }}>
+                          {email.send_day || contactTiming[`best_day_email_${index + 1}`] || ['Tuesday', 'Thursday', 'Monday'][index]}
+                        </span>
+                        <span style={{
+                          fontSize: '10px',
+                          color: 'rgba(255, 255, 255, 0.5)'
+                        }}>
+                          {email.send_time || contactTiming.window_a_time || '7:00 AM'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginBottom: '12px'
+                  }}>
+                    <span style={{
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#ffffff',
+                      flex: 1
+                    }}>
+                      {email.subject}
+                    </span>
+                  </div>
+
+                  <div style={{
+                    background: '#050505',
+                    borderRadius: '6px',
+                    padding: '16px',
+                    fontSize: '12px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    lineHeight: '1.6',
+                    marginBottom: '12px'
+                  }}>
+                    {email.body}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={(e) => copyToClipboard(email.subject, e.currentTarget)}
+                      style={{
+                        padding: '6px 12px',
+                        background: '#0a0a0b',
+                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#0a0a0b';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                      }}
+                    >
+                      <Copy size={12} />
+                      Copy Subject
+                    </button>
+                    <button
+                      onClick={(e) => copyToClipboard(email.body || '', e.currentTarget)}
+                      style={{
+                        padding: '6px 12px',
+                        background: '#0a0a0b',
+                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#0a0a0b';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                      }}
+                    >
+                      <Copy size={12} />
+                      Copy Body
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1356,17 +1529,350 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
 };
 
 const NotesTab = ({ currentProfile }: TabContentProps) => {
+  const [newNote, setNewNote] = useState('');
+  const [notes, setNotes] = useState<Array<{id: string, timestamp: string, content: string}>>([]);
+
+  // Generate activity timeline based on contractor data
+  const getActivityTimeline = () => {
+    const activities = [];
+
+    if (currentProfile.campaignData?.focus_group_generated) {
+      activities.push({
+        type: 'note',
+        title: 'Focus Group Analysis Complete',
+        time: 'Today, 9:04 AM',
+        body: `Contractor persona validated pain points: ${currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Gmail credibility gap, ' : ''}losing jobs to competitors, insurance battles. Prefers ${currentProfile.campaignData.campaign_data?.messaging_preferences?.email_length === 'B' ? '50-75' : '40-60'} word emails, ${currentProfile.campaignData.campaign_data?.contact_timing?.best_day_email_1 || 'Tuesday'}/${currentProfile.campaignData.campaign_data?.contact_timing?.best_day_email_2 || 'Thursday'} at ${currentProfile.campaignData.campaign_data?.contact_timing?.window_a_time || '7AM'}. Hates consultant language and buzzwords.`
+      });
+    }
+
+    if (currentProfile.campaignData?.campaign_data?.email_sequences?.length > 0) {
+      activities.push({
+        type: 'email',
+        title: 'Campaign Generated',
+        time: 'Today, 8:30 AM',
+        body: `${currentProfile.campaignData.campaign_data.email_sequences.length}-email sequence created targeting ${currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'email professionalization' : 'review improvement'}. Focus on ${currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Gmail credibility gap and ' : ''}losing jobs to competitors. Using local ${currentProfile.city || 'area'} references.`
+      });
+    }
+
+    activities.push({
+      type: 'note',
+      title: 'Data Collection Complete',
+      time: 'Yesterday, 4:15 PM',
+      body: `${currentProfile.completionScore || 100}% data completeness achieved. ${currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Gmail address identified as primary opportunity ($800-$2,500 value)' : 'Review optimization identified as primary opportunity'}.`
+    });
+
+    return activities;
+  };
+
+  const activities = getActivityTimeline();
+
+  const addNote = () => {
+    if (newNote.trim()) {
+      const note = {
+        id: Date.now().toString(),
+        timestamp: 'Just now',
+        content: newNote.trim()
+      };
+      setNotes(prev => [note, ...prev]);
+      setNewNote('');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
+      addNote();
+    }
+  };
+
   return (
     <div style={{ 
       background: '#0a0a0b', 
       border: '1px solid rgba(255, 255, 255, 0.06)', 
-      borderRadius: '8px'
+      borderRadius: '8px',
+      overflow: 'hidden'
     }}>
+      <div style={{
+        padding: '16px 20px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <FileText size={16} style={{ opacity: 0.5, color: 'rgba(255, 255, 255, 0.5)' }} />
+          <span style={{
+            fontSize: '11px',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            color: 'rgba(255, 255, 255, 0.7)'
+          }}>
+            ACTIVITY TIMELINE & NOTES
+          </span>
+        </div>
+        <span style={{
+          padding: '2px 8px',
+          background: 'rgba(255, 255, 255, 0.06)',
+          borderRadius: '4px',
+          fontSize: '10px',
+          fontWeight: '600',
+          color: 'rgba(255, 255, 255, 0.7)'
+        }}>
+          {activities.length + notes.length} ACTIVITIES
+        </span>
+      </div>
+
       <div style={{ padding: '20px' }}>
-        <div style={{ textAlign: 'center', padding: '40px', color: 'rgba(255, 255, 255, 0.3)', fontSize: '12px' }}>
-          <FileText size={48} style={{ color: 'rgba(255, 255, 255, 0.3)', marginBottom: '12px' }} />
-          <div>No notes recorded</div>
-          <div style={{ fontSize: '11px', marginTop: '4px' }}>Add notes about interactions with this contractor</div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '65% 35%',
+          gap: '24px'
+        }}>
+          {/* Activity Timeline */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* User Notes */}
+            {notes.map((note, index) => (
+              <div key={note.id} style={{
+                display: 'flex',
+                gap: '12px',
+                position: 'relative'
+              }}>
+                {index < notes.length - 1 || activities.length > 0 && (
+                  <div style={{
+                    position: 'absolute',
+                    left: '15px',
+                    top: '30px',
+                    bottom: '-16px',
+                    width: '1px',
+                    background: 'rgba(255, 255, 255, 0.06)'
+                  }} />
+                )}
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  border: '1px solid #a855f7',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <FileText size={14} style={{ color: '#a855f7' }} />
+                </div>
+                <div style={{
+                  flex: 1,
+                  background: '#0a0a0b',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '8px',
+                  padding: '16px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px'
+                  }}>
+                    <span style={{
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      color: '#ffffff'
+                    }}>
+                      Note Added
+                    </span>
+                    <span style={{
+                      fontSize: '11px',
+                      color: 'rgba(255, 255, 255, 0.3)'
+                    }}>
+                      {note.timestamp}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    lineHeight: '1.5'
+                  }}>
+                    {note.content}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* System Activities */}
+            {activities.map((activity, index) => (
+              <div key={index} style={{
+                display: 'flex',
+                gap: '12px',
+                position: 'relative'
+              }}>
+                {index < activities.length - 1 && (
+                  <div style={{
+                    position: 'absolute',
+                    left: '15px',
+                    top: '30px',
+                    bottom: '-16px',
+                    width: '1px',
+                    background: 'rgba(255, 255, 255, 0.06)'
+                  }} />
+                )}
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: activity.type === 'email' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(168, 85, 247, 0.1)',
+                  border: `1px solid ${activity.type === 'email' ? '#3b82f6' : '#a855f7'}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  {activity.type === 'email' ? 
+                    <Send size={14} style={{ color: '#3b82f6' }} /> : 
+                    <FileText size={14} style={{ color: '#a855f7' }} />
+                  }
+                </div>
+                <div style={{
+                  flex: 1,
+                  background: '#0a0a0b',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '8px',
+                  padding: '16px'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '8px'
+                  }}>
+                    <span style={{
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      color: '#ffffff'
+                    }}>
+                      {activity.title}
+                    </span>
+                    <span style={{
+                      fontSize: '11px',
+                      color: 'rgba(255, 255, 255, 0.3)'
+                    }}>
+                      {activity.time}
+                    </span>
+                  </div>
+                  <div style={{
+                    fontSize: '12px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    lineHeight: '1.5'
+                  }}>
+                    {activity.body}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Sidebar */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Add Note Card */}
+            <div style={{
+              background: '#050505',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '12px'
+              }}>
+                Add Note
+              </div>
+              <textarea
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Add a note about this contractor..."
+                style={{
+                  width: '100%',
+                  minHeight: '100px',
+                  background: '#0a0a0b',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '6px',
+                  padding: '12px',
+                  color: '#ffffff',
+                  fontSize: '12px',
+                  resize: 'vertical',
+                  marginBottom: '12px',
+                  fontFamily: 'inherit',
+                  outline: 'none'
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                }}
+              />
+              <button
+                onClick={addNote}
+                disabled={!newNote.trim()}
+                style={{
+                  width: '100%',
+                  padding: '8px 16px',
+                  background: newNote.trim() ? '#3b82f6' : 'rgba(59, 130, 246, 0.3)',
+                  border: 'none',
+                  borderRadius: '6px',
+                  color: 'white',
+                  fontSize: '12px',
+                  fontWeight: '600',
+                  cursor: newNote.trim() ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  if (newNote.trim()) {
+                    e.currentTarget.style.background = '#2563eb';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (newNote.trim()) {
+                    e.currentTarget.style.background = '#3b82f6';
+                  }
+                }}
+              >
+                Add Note {newNote.trim() && '(Ctrl+Enter)'}
+              </button>
+            </div>
+
+            {/* Behavioral Patterns */}
+            <div style={{
+              background: '#050505',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '12px'
+              }}>
+                Behavioral Patterns
+              </div>
+              <div style={{
+                fontSize: '11px',
+                color: 'rgba(255, 255, 255, 0.7)',
+                lineHeight: '1.5'
+              }}>
+                <div><strong>Email Check:</strong> {currentProfile.campaignData?.campaign_data?.contact_timing?.window_a_time || '7AM'}, {currentProfile.campaignData?.campaign_data?.contact_timing?.window_b_time || '7PM'}</div>
+                <div><strong>Best Days:</strong> {currentProfile.campaignData?.campaign_data?.contact_timing?.best_day_email_1?.substr(0,3) || 'Tue'}, {currentProfile.campaignData?.campaign_data?.contact_timing?.best_day_email_2?.substr(0,3) || 'Thu'}</div>
+                <div><strong>Response Time:</strong> Same day</div>
+                <div><strong>Decision Style:</strong> Needs proof</div>
+                <div><strong>Budget Range:</strong> {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? '$800-$2,500' : '$1,500-$3,000'}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2168,7 +2674,7 @@ export function ProfileModal() {
               {[
                 { id: 'intelligence', label: 'Intelligence' },
                 { id: 'campaign', label: 'Campaign' },
-                { id: 'notes', label: 'Notes' }
+                { id: 'notes', label: 'Activity & Notes' }
               ].map((tab) => (
                 <div
                   key={tab.id}

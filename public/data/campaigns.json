@@ -1,9 +1,9 @@
 {
   "database_info": {
-    "generated_date": "2025-09-02T16:25:56.678550",
+    "generated_date": "2025-09-02T17:03:30.145327",
     "total_contractors": 1,
     "system_version": "FOCUS-INTEL V2.0 - 3LAYER SYNC",
-    "last_updated": "2025-09-02T16:25:56.678566",
+    "last_updated": "2025-09-02T17:03:30.145341",
     "merge_source": "intelligent_3layer_merge"
   },
   "contractors": {
@@ -12,7 +12,7 @@
       "trade": "Concrete product supplier",
       "location": "Horse Cave, Kentucky",
       "processing_status": "completed",
-      "timestamp": "2025-09-02T15:45:07.605197",
+      "timestamp": "2025-09-02T16:57:44.904300",
       "cost": 0.00419,
       "tokens": 21895,
       "duration_minutes": 2.0245450178782147,
@@ -23,39 +23,32 @@
         "location": "Horse Cave, Kentucky",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Tuesday",
-          "best_day_email_3": "Tuesday",
-          "window_a_time": "7:00 AM",
-          "window_b_time": "7:30 PM"
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "06:30 AM",
+          "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "imi Concrete - optimization opportunity in Horse Cave concrete product supplier market",
+            "subject": "Your 2 Google Reviews: Losing You Jobs?",
             "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Hi there,\n\nNoticed imi Concrete while researching established concrete product supplier operations in Horse Cave.\n\nYour service approach and Horse Cave presence show solid business fundamentals.\n\nFrom analyzing 4,517+ concrete product supplier contractors, I identified an optimization pattern that companies at your stage typically benefit from.\n\nMost established concrete product supplier businesses miss 30-40% of their lead conversion potential due to positioning gaps.\n\nI help concrete product supplier contractors unlock hidden revenue through Business Optimization Systems.\n\nWorth exploring the opportunity together?\n\nBest,\nManu\n\nP.S. Kentucky concrete product supplier contractors implementing these optimizations see 40%+ revenue increase within 90 days."
+            "send_time": "06:30 AM",
+            "body": "Manu here. Saw imi Concrete only has 2 Google reviews. That's a trust barrier costing you new work. I fix contractor problems like this fast. Can you tell me what 2-3 new jobs would mean for you? Reply here."
           },
           {
             "email_number": 2,
-            "subject": "Re: imi Concrete - Horse Cave market analysis completed",
-            "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Hi there,\n\nCompleted the Horse Cave concrete product supplier market analysis I mentioned.\n\nHere's what the data shows for imi Concrete:\n\n**CURRENT POSITION:**\n• Horse Cave market has 47 active concrete product supplier competitors\n• Your setup ranks in top 60% for service capability\n• Missing 3 key positioning elements that premium contractors use\n\n**REVENUE GAP ANALYSIS:**\n• Average concrete product supplier project value in Horse Cave: $2,847\n• Premium-positioned competitors average: $4,230 (+48%)\n• Your estimated monthly opportunity cost: $8,400-$12,600\n\n**THE PATTERN:**\nSuccessful Horse Cave concrete product supplier contractors implement these 3 elements:\n1. Professional platform presence (not Custom)\n2. Credible email positioning (not Professional)  \n3. Authority-building review systems\n\nI can show you exactly how to implement all 3 for imi Concrete.\n\nWant me to send the Horse Cave-specific implementation roadmap?\n\nBest,\nManu\n\nP.S. The contractors who implement this system typically see results within 30-45 days."
+            "subject": "Re: Your 2 Google Reviews: Losing You Jobs?",
+            "send_day": "Thursday",
+            "send_time": "06:30 AM",
+            "body": "Following up on your Google reviews. Most contractors I analyze with low review counts are losing out on significant projects. I have data from 5,500+ contractors showing how to fix this without hassle. What's the biggest challenge you face getting new leads? Let me know."
           },
           {
             "email_number": 3,
-            "subject": "imi Concrete - 15-minute solution preview ready",
-            "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Hi there,\n\nBuilt out the imi Concrete optimization preview I mentioned.\n\nSince I don't have a long list of testimonials yet (just launched this system), I created something better - a live demonstration.\n\n**WHAT I'LL SHOW YOU:**\n• Exact professional setup that premium concrete product supplier contractors use\n• Your specific implementation roadmap (company-customized)\n• concrete product supplier-specific authority positioning strategy\n• Expected ROI timeline and revenue projections\n\n**THE PREVIEW PROCESS:**\n15-minute screen share where you'll see:\n1. Your current positioning analysis (already completed)\n2. Professional setup transformation (built for imi Concrete)  \n3. Implementation timeline and investment breakdown\n\nNo sales pitch - just showing you exactly what the solution looks like for your specific situation.\n\nI spent three days analyzing 5,609+ concrete product supplier contractors to build this system.\n\nWorth 15 minutes to see how it applies to imi Concrete?\n\nBest,\nManu\n\nP.S. If it's not a perfect fit for your situation, I'll tell you honestly - no time wasted."
-          },
-          {
-            "email_number": 4,
-            "subject": "Final note - imi Concrete optimization window",
-            "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Hi there,\n\nFinal follow-up about the imi Concrete optimization opportunity.\n\n**THE TIMING REALITY:**\nMost concrete product supplier contractors optimize their positioning during August-September before the busy season planning period.\n\nOctober-December is when commercial clients and homeowners start researching contractors for next year's projects.\n\n**YOUR SPECIFIC SITUATION:**\nimi Concrete has solid fundamentals - the optimization work would take 2-3 weeks to implement.\n\nThat puts you ready for the October opportunity window when Horse Cave clients start their contractor research.\n\n**THE DECISION POINT:**\nI can take on 3 more concrete product supplier contractors this month.\n\nAfter that, the next availability is November (which positions for February opportunity instead of October).\n\nIf you want to see the imi Concrete optimization preview, let's schedule it this week.\n\nIf not, no worries - I'll focus on the other Horse Cave concrete product supplier contractors who are ready to move.\n\nBest,\nManu\n\nP.S. The contractors who implement professional positioning before their busy season consistently report 40-60% revenue increases. But timing is everything in this business."
+            "subject": "Re: Your 2 Google Reviews: Losing You Jobs?",
+            "send_day": "Monday",
+            "send_time": "06:30 AM",
+            "body": "Still thinking about your Google reviews and what it means for imi Concrete's growth. My process is quick, no-overhead, and gets results. I don't have testimonials yet, but I have the data. Want to see how we can get you more reviews and more jobs? Email me back."
           }
         ],
         "messaging_preferences": {

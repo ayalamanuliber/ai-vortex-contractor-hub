@@ -965,7 +965,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
           gap: '8px',
           marginBottom: '32px'
         }}>
-          {emailSequences.map((_, index) => (
+          {emailSequences.map((_: any, index: number) => (
             <React.Fragment key={index}>
               <div style={{
                 display: 'flex',

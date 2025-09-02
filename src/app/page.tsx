@@ -1,7 +1,7 @@
 'use client';
 
-import { ModernFilters } from '@/components/ModernFilters';
-import { ContractorGrid } from '@/components/ContractorGrid';
+import ModernFilters from '@/components/ModernFilters';
+import ContractorGrid from '@/components/ContractorGrid';
 import { CampaignCalendar } from '@/components/Calendar/CampaignCalendar';
 import { ProfileModal } from '@/components/ProfileModal/ProfileModal';
 import { useContractorStore } from '@/stores/contractorStore';

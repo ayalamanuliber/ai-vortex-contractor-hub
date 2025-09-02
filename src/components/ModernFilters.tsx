@@ -60,7 +60,7 @@ interface FilterStats {
   };
 }
 
-export function ModernFilters() {
+export default function ModernFilters() {
   const { filters, toggleFilter } = useContractorStore();
   const [stats, setStats] = useState<FilterStats | null>(null);
   const [expandedSections, setExpandedSections] = useState({

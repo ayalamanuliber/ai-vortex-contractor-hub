@@ -7,7 +7,7 @@ import { contractorService } from '@/lib/services/ContractorService';
 import { useContractorStore } from '@/stores/contractorStore';
 import { Loader2 } from 'lucide-react';
 
-export function ContractorGrid() {
+export default function ContractorGrid() {
   const [page, setPage] = useState(0);
   
   const { ref, inView } = useInView({

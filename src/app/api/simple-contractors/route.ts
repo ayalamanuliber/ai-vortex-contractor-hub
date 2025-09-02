@@ -120,6 +120,7 @@ export async function GET(request: NextRequest) {
         emailQuality: row['L2_email_quality'] || 'UNKNOWN',
         name: '',
         lastName: '',
+        nombre: row['nombre'] || '',
         hasCampaign,
         hasFocusGroup: !!campaignData?.focus_group_generated,
         campaignData: campaignData || null,

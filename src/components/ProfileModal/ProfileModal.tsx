@@ -2261,6 +2261,8 @@ export function ProfileModal() {
   const [activeTab, setActiveTab] = useState('intelligence');
   const [isExporting, setIsExporting] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [editingNombre, setEditingNombre] = useState(false);
+  const [nombreValue, setNombreValue] = useState('');
 
   const closeModal = React.useCallback(() => {
     setIsVisible(false);
@@ -2269,6 +2271,13 @@ export function ProfileModal() {
       setCurrentProfile(null);
     }, 200);
   }, [setCurrentProfile]);
+
+  // Initialize nombre value when modal opens
+  React.useEffect(() => {
+    if (currentProfile) {
+      setNombreValue(currentProfile.nombre || '');
+    }
+  }, [currentProfile]);
 
   // Block body scroll when modal is open and handle entrance animation
   React.useEffect(() => {
@@ -2324,6 +2333,32 @@ export function ProfileModal() {
       console.error('Export failed:', error);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const saveNombre = async () => {
+    try {
+      const response = await fetch('/api/contractors/update-nombre', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: currentProfile.id,
+          nombre: nombreValue.trim()
+        })
+      });
+      
+      if (response.ok) {
+        // Update local state
+        setCurrentProfile({
+          ...currentProfile,
+          nombre: nombreValue.trim()
+        });
+        setEditingNombre(false);
+      } else {
+        console.error('Failed to save nombre');
+      }
+    } catch (error) {
+      console.error('Error saving nombre:', error);
     }
   };
 
@@ -2547,6 +2582,116 @@ export function ProfileModal() {
                   }}>
                     #{currentProfile.id}
                   </span>
+                </div>
+                
+                {/* Editable nombre field */}
+                <div style={{ 
+                  marginTop: '8px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px' 
+                }}>
+                  <span style={{
+                    fontSize: '12px',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    fontWeight: '600'
+                  }}>
+                    Owner Name:
+                  </span>
+                  {editingNombre ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <input
+                        type="text"
+                        value={nombreValue}
+                        onChange={(e) => setNombreValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') saveNombre();
+                          if (e.key === 'Escape') {
+                            setEditingNombre(false);
+                            setNombreValue(currentProfile.nombre || '');
+                          }
+                        }}
+                        style={{
+                          background: '#0a0a0b',
+                          border: '1px solid rgba(255, 255, 255, 0.15)',
+                          borderRadius: '4px',
+                          color: '#ffffff',
+                          fontSize: '13px',
+                          padding: '4px 8px',
+                          outline: 'none',
+                          minWidth: '150px'
+                        }}
+                        placeholder="Enter owner name"
+                        autoFocus
+                      />
+                      <button
+                        onClick={saveNombre}
+                        style={{
+                          background: '#22c55e',
+                          border: 'none',
+                          borderRadius: '4px',
+                          color: 'white',
+                          fontSize: '11px',
+                          padding: '4px 8px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditingNombre(false);
+                          setNombreValue(currentProfile.nombre || '');
+                        }}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: 'none',
+                          borderRadius: '4px',
+                          color: 'rgba(255, 255, 255, 0.7)',
+                          fontSize: '11px',
+                          padding: '4px 8px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{
+                        fontSize: '13px',
+                        color: currentProfile.nombre ? '#ffffff' : 'rgba(255, 255, 255, 0.4)',
+                        fontStyle: currentProfile.nombre ? 'normal' : 'italic'
+                      }}>
+                        {currentProfile.nombre || 'Click to add owner name'}
+                      </span>
+                      <button
+                        onClick={() => setEditingNombre(true)}
+                        style={{
+                          background: 'none',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: '4px',
+                          color: 'rgba(255, 255, 255, 0.5)',
+                          fontSize: '11px',
+                          padding: '2px 6px',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                          e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                          e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div style={{
                   display: 'flex',

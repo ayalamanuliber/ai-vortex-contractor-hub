@@ -42,6 +42,7 @@ export interface Contractor {
   // Editable fields
   name: string;
   lastName: string;
+  nombre?: string;
 }
 
 export interface Campaign {

@@ -14,7 +14,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Call the sync system to update the nombre field
-    const syncScriptPath = path.join(process.cwd(), '..', '..', '02_CAMPAIGN_GENERATOR', 'scripts', 'sync_system.py');
+    const syncScriptPath = path.join(process.cwd(), 'scripts', 'sync_system.py');
     const command = `python3 "${syncScriptPath}" --update-nombre "${id}" "${nombre || ''}"`;
     
     console.log('Executing sync command:', command);

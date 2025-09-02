@@ -88,13 +88,18 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
           <h3 className="text-[12px] font-semibold text-white/70 uppercase tracking-wider">Reviews & Reputation</h3>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
+          <a 
+            href={`https://www.google.com/maps/search/${encodeURIComponent(currentProfile.businessName + ' ' + currentProfile.address)}`}
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="flex justify-between items-center py-2 border-b border-white/[0.06] hover:bg-white/[0.02] transition-colors cursor-pointer rounded px-2 -mx-2"
+          >
             <span className="text-[11px] text-white/50 uppercase tracking-wider">Google Rating</span>
             <div className="flex items-center gap-1">
               <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
               <span className="text-[13px] text-white font-semibold">{currentProfile.googleRating?.toFixed(1) || 'N/A'}</span>
             </div>
-          </div>
+          </a>
           <div className="flex justify-between items-center py-2 border-b border-white/[0.06]">
             <span className="text-[11px] text-white/50 uppercase tracking-wider">Review Count</span>
             <span className="text-[13px] text-white font-semibold">{currentProfile.reviewsCount || 0}</span>
@@ -300,6 +305,16 @@ export function ProfileModal() {
   const { currentProfile, setCurrentProfile } = useContractorStore();
   const [activeTab, setActiveTab] = useState('intelligence');
 
+  // Block body scroll when modal is open
+  React.useEffect(() => {
+    if (currentProfile) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [currentProfile]);
+
   if (!currentProfile) return null;
 
   const closeModal = () => setCurrentProfile(null);
@@ -312,11 +327,11 @@ export function ProfileModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-      <div className="absolute inset-0 overflow-y-auto">
-        <div className="min-h-screen">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm overflow-hidden">
+      <div className="h-full overflow-y-auto">
+        <div className="min-h-full">
           {/* Header */}
-          <div className="bg-[#0a0a0b] border-b border-white/[0.06] p-6 sticky top-0 z-10">
+          <div className="bg-[#0a0a0b] border-b border-white/[0.06] p-6">
             <div className="flex justify-between items-center mb-5">
               <button 
                 onClick={closeModal}
@@ -386,9 +401,14 @@ export function ProfileModal() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Star className="w-4 h-4 text-white/30" />
-                    <span className="text-white">
-                      {currentProfile.googleRating?.toFixed(1) || 'N/A'} · {currentProfile.reviewsCount || 0} Reviews
-                    </span>
+                    <a 
+                      href={`https://www.google.com/maps/search/${encodeURIComponent(currentProfile.businessName + ' ' + currentProfile.address)}`}
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-white hover:text-blue-400 transition-colors cursor-pointer"
+                    >
+                      {currentProfile.googleRating?.toFixed(1) || 'N/A'} · {currentProfile.reviewsCount || 0} Reviews on Google
+                    </a>
                   </div>
                 </div>
               </div>
@@ -450,7 +470,7 @@ export function ProfileModal() {
           </div>
 
           {/* Tabs */}
-          <div className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 sticky top-[200px] z-10">
+          <div className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 sticky top-0 z-10">
             <div className="flex gap-8">
               {[
                 { id: 'intelligence', label: 'Intelligence' },

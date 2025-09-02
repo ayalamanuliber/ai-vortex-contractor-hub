@@ -139,28 +139,54 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
         <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
           <Globe className="w-4 h-4 opacity-50" style={{ color: '#a855f7' }} />
           <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">WHOIS Domain Intelligence</span>
+          {hasWhoisData && (
+            <div className="ml-auto px-2 py-1 bg-purple-500/10 text-purple-400 text-[10px] font-semibold rounded">
+              ESTABLISHED
+            </div>
+          )}
         </div>
         <div className="p-5">
           {hasWhoisData ? (
-            <div className="grid grid-cols-3 gap-5">
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] text-white/30 uppercase">Domain Age</span>
-                <span className="text-[13px] text-white font-medium">
+            <div className="grid grid-cols-2 gap-5">
+              <div className="p-4 bg-[#050505] rounded-lg text-center">
+                <div className="text-3xl font-bold mb-2 text-purple-400">
                   {currentProfile.rawData?.L1_whois_domain_age_years ? 
-                    `${parseFloat(currentProfile.rawData.L1_whois_domain_age_years).toFixed(1)} yrs` : 
-                    'N/A'
+                    Math.floor(parseFloat(currentProfile.rawData.L1_whois_domain_age_years)) : '—'
                   }
-                </span>
+                </div>
+                <div className="text-[11px] text-white/50 uppercase mb-3">Years Old</div>
+                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-purple-400 rounded-full transition-all duration-500"
+                    style={{ 
+                      width: currentProfile.rawData?.L1_whois_domain_age_years ? 
+                        `${Math.min(parseFloat(currentProfile.rawData.L1_whois_domain_age_years) * 8, 100)}%` : '0%'
+                    }}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] text-white/30 uppercase">Days Until Expiry</span>
-                <span className="text-[13px] text-white font-medium">
-                  {currentProfile.rawData?.L1_whois_days_until_expiry || 'N/A'}
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-[10px] text-white/30 uppercase">Registration Status</span>
-                <span className="text-[13px] text-white font-medium">Active</span>
+              
+              <div className="p-4 bg-[#050505] rounded-lg text-center">
+                <div className="text-3xl font-bold mb-2" style={{
+                  color: currentProfile.rawData?.L1_whois_days_until_expiry && 
+                         parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#f87171' : '#22c55e'
+                }}>
+                  {currentProfile.rawData?.L1_whois_days_until_expiry ? 
+                    Math.floor(parseInt(currentProfile.rawData.L1_whois_days_until_expiry) / 30) : '—'
+                  }
+                </div>
+                <div className="text-[11px] text-white/50 uppercase mb-3">Months Until Expiry</div>
+                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{ 
+                      width: currentProfile.rawData?.L1_whois_days_until_expiry ? 
+                        `${Math.min(parseInt(currentProfile.rawData.L1_whois_days_until_expiry) / 365 * 100, 100)}%` : '0%',
+                      backgroundColor: currentProfile.rawData?.L1_whois_days_until_expiry && 
+                                       parseInt(currentProfile.rawData.L1_whois_days_until_expiry) < 90 ? '#f87171' : '#22c55e'
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ) : (
@@ -178,42 +204,68 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
         <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
           <TrendingUp className="w-4 h-4 opacity-50" style={{ color: '#22c55e' }} />
           <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">PSI Performance Intelligence</span>
+          {hasPSIData && (
+            <div className="ml-auto px-2 py-1 bg-green-500/10 text-green-400 text-[10px] font-semibold rounded">
+              {(currentProfile.rawData?.L1_psi_avg_performance >= 80) ? 'EXCELLENT' :
+               (currentProfile.rawData?.L1_psi_avg_performance >= 60) ? 'GOOD' :
+               (currentProfile.rawData?.L1_psi_avg_performance >= 40) ? 'FAIR' : 'NEEDS WORK'}
+            </div>
+          )}
         </div>
         <div className="p-5">
           {hasPSIData ? (
             <>
-              <div className="grid grid-cols-2 gap-5 mb-5">
-                <div className="p-4 bg-[#050505] rounded-md text-center">
-                  <div className="text-[32px] font-bold mb-1" style={{ 
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="p-5 bg-[#050505] rounded-lg text-center">
+                  <div className="text-4xl font-bold mb-3" style={{ 
                     color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
                   }}>
                     {currentProfile.rawData?.L1_psi_mobile_performance || '—'}
                   </div>
-                  <div className="text-[11px] text-white/50 uppercase">Mobile</div>
+                  <div className="text-[11px] text-white/50 uppercase mb-4">Mobile Performance</div>
+                  <div className="w-full h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ 
+                        width: `${currentProfile.rawData?.L1_psi_mobile_performance || 0}%`,
+                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="p-4 bg-[#050505] rounded-md text-center">
-                  <div className="text-[32px] font-bold mb-1" style={{ 
+                <div className="p-5 bg-[#050505] rounded-lg text-center">
+                  <div className="text-4xl font-bold mb-3" style={{ 
                     color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
                   }}>
                     {currentProfile.rawData?.L1_psi_desktop_performance || '—'}
                   </div>
-                  <div className="text-[11px] text-white/50 uppercase">Desktop</div>
+                  <div className="text-[11px] text-white/50 uppercase mb-4">Desktop Performance</div>
+                  <div className="w-full h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ 
+                        width: `${currentProfile.rawData?.L1_psi_desktop_performance || 0}%`,
+                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-5">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">Average Score</span>
-                  <span className="text-[13px] text-white font-medium">
-                    {currentProfile.rawData?.L1_psi_avg_performance || 'N/A'}
-                  </span>
+              <div className="p-4 bg-[#050505] rounded-lg text-center">
+                <div className="text-2xl font-bold mb-2" style={{ 
+                  color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_avg_performance) || 0)
+                }}>
+                  {currentProfile.rawData?.L1_psi_avg_performance || '—'}
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">Classification</span>
-                  <span className="text-[13px] text-white font-medium">
-                    {(currentProfile.rawData?.L1_psi_avg_performance >= 80) ? 'Excellent' :
-                     (currentProfile.rawData?.L1_psi_avg_performance >= 60) ? 'Good' :
-                     (currentProfile.rawData?.L1_psi_avg_performance >= 40) ? 'Fair' : 'Poor'}
-                  </span>
+                <div className="text-[11px] text-white/50 uppercase mb-3">Average Score</div>
+                <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{ 
+                      width: `${currentProfile.rawData?.L1_psi_avg_performance || 0}%`,
+                      backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_avg_performance) || 0)
+                    }}
+                  />
                 </div>
               </div>
             </>
@@ -327,6 +379,181 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
   );
 };
 
+const OpportunitiesTab = ({ currentProfile }: TabContentProps) => {
+  const opportunities = [];
+  
+  // Website opportunities
+  const psiMobile = parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0;
+  const psiDesktop = parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0;
+  const domainAge = parseFloat(currentProfile.rawData?.L1_whois_domain_age_years) || 0;
+  const reviewCount = currentProfile.reviewsCount || 0;
+  const builder = currentProfile.rawData?.L1_builder_platform || '';
+  
+  if (psiMobile < 60 || psiDesktop < 60) {
+    opportunities.push({
+      type: 'Website Performance',
+      severity: 'high',
+      title: 'Poor Website Performance',
+      description: `Mobile score: ${psiMobile}, Desktop score: ${psiDesktop}. Website loads slowly which hurts customer experience and Google rankings.`,
+      impact: 'High',
+      recommendation: 'Optimize images, enable caching, and improve core web vitals'
+    });
+  }
+  
+  if (reviewCount < 10) {
+    opportunities.push({
+      type: 'Online Reputation',
+      severity: 'medium',
+      title: 'Low Review Count',
+      description: `Only ${reviewCount} reviews. Customers rely heavily on reviews to choose contractors.`,
+      impact: 'Medium',
+      recommendation: 'Implement review generation strategy and follow-up sequences'
+    });
+  }
+  
+  if (builder.includes('Wix') || builder.includes('GoDaddy') || builder.includes('Squarespace')) {
+    opportunities.push({
+      type: 'Website Platform',
+      severity: 'medium',
+      title: 'Limited Platform Capabilities',
+      description: `Using ${builder}. Platform may limit SEO optimization and lead generation capabilities.`,
+      impact: 'Medium',
+      recommendation: 'Consider custom website with advanced lead capture features'
+    });
+  }
+  
+  if (domainAge < 2) {
+    opportunities.push({
+      type: 'Domain Authority',
+      severity: 'low',
+      title: 'New Domain',
+      description: `Domain is only ${domainAge.toFixed(1)} years old. New domains have lower search authority.`,
+      impact: 'Low',
+      recommendation: 'Focus on local SEO and citation building to establish authority'
+    });
+  }
+  
+  // Business health opportunities
+  const businessHealth = currentProfile.rawData?.L1_targeting_business_health;
+  if (businessHealth === 'NEEDS_ATTENTION') {
+    opportunities.push({
+      type: 'Business Health',
+      severity: 'high',
+      title: 'Business Needs Attention',
+      description: 'Multiple indicators suggest business may be struggling with online presence.',
+      impact: 'High',
+      recommendation: 'Comprehensive digital marketing audit and improvement plan'
+    });
+  }
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'high': return '#f87171';
+      case 'medium': return '#facc15';
+      case 'low': return '#22c55e';
+      default: return '#60a5fa';
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {opportunities.length > 0 ? (
+        <>
+          <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
+            <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
+              <Activity className="w-4 h-4 opacity-50" style={{ color: '#f87171' }} />
+              <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Business Opportunities</span>
+              <div className="ml-auto px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-semibold rounded">
+                {opportunities.length} OPPORTUNITIES
+              </div>
+            </div>
+            <div className="p-5">
+              <div className="space-y-4">
+                {opportunities.map((opportunity, index) => (
+                  <div key={index} className="p-4 bg-[#050505] rounded-lg border border-white/[0.04]">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <div 
+                          className="w-2 h-2 rounded-full"
+                          style={{ backgroundColor: getSeverityColor(opportunity.severity) }}
+                        />
+                        <div>
+                          <div className="text-white font-semibold text-sm">{opportunity.title}</div>
+                          <div className="text-white/30 text-[11px] uppercase tracking-wider">{opportunity.type}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span 
+                          className="px-2 py-1 text-[10px] font-semibold rounded uppercase"
+                          style={{ 
+                            backgroundColor: `${getSeverityColor(opportunity.severity)}20`,
+                            color: getSeverityColor(opportunity.severity)
+                          }}
+                        >
+                          {opportunity.severity} Impact
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-white/70 text-xs leading-relaxed mb-3">
+                      {opportunity.description}
+                    </div>
+                    <div className="pt-3 border-t border-white/[0.06]">
+                      <div className="text-[10px] text-white/30 uppercase mb-1">Recommendation</div>
+                      <div className="text-xs text-white/80">
+                        {opportunity.recommendation}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Opportunity Summary */}
+          <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
+            <div className="p-4 bg-gradient-to-b from-white/[0.02] to-transparent border-b border-white/[0.06] flex items-center gap-3">
+              <TrendingUp className="w-4 h-4 opacity-50" style={{ color: '#22c55e' }} />
+              <span className="text-[11px] font-semibold text-white/70 uppercase tracking-wider">Opportunity Summary</span>
+            </div>
+            <div className="p-5">
+              <div className="grid grid-cols-3 gap-5">
+                <div className="text-center">
+                  <div className="text-2xl font-bold mb-1" style={{ color: '#f87171' }}>
+                    {opportunities.filter(o => o.severity === 'high').length}
+                  </div>
+                  <div className="text-[11px] text-white/50 uppercase">High Priority</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold mb-1" style={{ color: '#facc15' }}>
+                    {opportunities.filter(o => o.severity === 'medium').length}
+                  </div>
+                  <div className="text-[11px] text-white/50 uppercase">Medium Priority</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold mb-1" style={{ color: '#22c55e' }}>
+                    {opportunities.filter(o => o.severity === 'low').length}
+                  </div>
+                  <div className="text-[11px] text-white/50 uppercase">Low Priority</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
+          <div className="p-5">
+            <div className="text-center py-10">
+              <Activity className="w-12 h-12 text-white/30 mx-auto mb-3" />
+              <div className="text-white/30">No opportunities identified</div>
+              <div className="text-[11px] text-white/20 mt-1">Business appears to be performing well across all metrics</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const NotesTab = ({ currentProfile }: TabContentProps) => {
   return (
     <div className="bg-[#0a0a0b] border border-white/[0.06] rounded-lg overflow-hidden">
@@ -398,43 +625,75 @@ export function ProfileModal() {
 
             {/* Header Grid */}
             <div className="grid grid-cols-[auto_1fr_auto] gap-8 items-start">
-              {/* Score Circle */}
-              <div className="text-center">
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center relative mb-2"
-                  style={{
-                    background: `conic-gradient(from -90deg, ${getScoreColor(currentProfile.completionScore)} ${currentProfile.completionScore * 3.6}deg, rgba(255,255,255,0.06) ${currentProfile.completionScore * 3.6}deg)`,
-                    padding: '3px'
-                  }}
-                >
-                  <div className="w-full h-full bg-[#0a0a0b] rounded-full flex items-center justify-center relative z-10">
-                    <span className="text-xl font-bold text-white">{currentProfile.completionScore}%</span>
-                  </div>
+              {/* Score Visual */}
+              <div className="relative w-20 h-20">
+                <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 80 80">
+                  <circle 
+                    cx="40" 
+                    cy="40" 
+                    r="36" 
+                    stroke="rgba(255,255,255,0.06)" 
+                    strokeWidth="4" 
+                    fill="none"
+                  />
+                  <circle 
+                    cx="40" 
+                    cy="40" 
+                    r="36" 
+                    stroke={getScoreColor(currentProfile.completionScore)}
+                    strokeWidth="4" 
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeDasharray="226.19"
+                    strokeDashoffset={226.19 - (226.19 * currentProfile.completionScore) / 100}
+                    className="transition-all duration-1000 ease-out"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl font-bold" style={{ color: getScoreColor(currentProfile.completionScore) }}>
+                    {currentProfile.completionScore}%
+                  </span>
                 </div>
-                <div className="text-[9px] text-white/30 uppercase tracking-wider">DATA COMPLETE</div>
               </div>
               
               {/* Company Section */}
               <div className="flex-1">
-                <h1 className="text-[22px] font-semibold text-white mb-2">{currentProfile.businessName}</h1>
-                <div className="flex items-center gap-3 text-xs text-white/50 mb-5">
-                  <span className="px-2 py-1 bg-[#050505] rounded text-[11px] font-semibold text-white/70 uppercase">
+                <div className="flex items-baseline gap-4 mb-2">
+                  <h1 className="text-2xl font-semibold text-white">{currentProfile.businessName}</h1>
+                  <span className="text-xs text-white/30">#{currentProfile.id}</span>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-white/50 mb-1">
+                  <span className="px-2 py-1 bg-[#050505] rounded text-[11px] font-semibold text-white/70">
                     {currentProfile.category}
                   </span>
                   <span>•</span>
-                  <span>#{currentProfile.id}</span>
-                  <span>•</span>
                   <span>{currentProfile.address?.split(',').slice(-2).join(',').trim()}</span>
+                  <span>•</span>
+                  <span className={cn("px-2 py-1 rounded text-[11px] font-semibold", 
+                    currentProfile.rawData?.L1_whois_days_until_expiry && parseInt(currentProfile.rawData.L1_whois_days_until_expiry) > 365 
+                      ? "bg-green-500/10 text-green-400" : "bg-orange-500/10 text-orange-400"
+                  )}>
+                    {currentProfile.rawData?.L1_whois_days_until_expiry ? 
+                      `${currentProfile.rawData.L1_whois_days_until_expiry} DAYS` : '140 DAYS'
+                    }
+                  </span>
+                </div>
+                <div className="text-[11px] text-white/30 mb-4">
+                  Contact: {currentProfile.name ? `${currentProfile.name} ${currentProfile.lastName}` : 'Owner'}
                 </div>
                 
-                <div className="flex gap-6 text-xs">
+                <div className="grid grid-cols-4 gap-5 text-xs">
                   <div className="flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-white/30" />
                     <span className="text-white/70">{currentProfile.email}</span>
+                    <Copy className="w-3.5 h-3.5 text-white/30 opacity-0 hover:opacity-50 cursor-pointer transition-opacity"
+                          onClick={() => navigator.clipboard.writeText(currentProfile.email)} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-white/30" />
                     <span className="text-white/70">{currentProfile.phone}</span>
+                    <Copy className="w-3.5 h-3.5 text-white/30 opacity-0 hover:opacity-50 cursor-pointer transition-opacity"
+                          onClick={() => navigator.clipboard.writeText(currentProfile.phone)} />
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Globe className="w-3.5 h-3.5 text-white/30" />
@@ -457,56 +716,84 @@ export function ProfileModal() {
                 </div>
               </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-5 p-5 bg-[#050505] rounded-lg min-w-[260px]">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">PSI Mobile</span>
-                  <span className={cn("text-sm font-semibold", 
-                    currentProfile.rawData?.L1_psi_mobile_performance ? 'text-white' : 'text-red-400'
-                  )}>
+              {/* Quick Stats Visual */}
+              <div className="grid grid-cols-2 gap-4 min-w-[280px]">
+                <div className="bg-[#050505] rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[10px] text-white/30 uppercase tracking-wider">PSI Mobile</span>
+                  </div>
+                  <div className="text-xl font-bold mb-1.5" style={{ 
+                    color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
+                  }}>
                     {currentProfile.rawData?.L1_psi_mobile_performance || '—'}
-                  </span>
+                  </div>
+                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ 
+                        width: `${currentProfile.rawData?.L1_psi_mobile_performance || 0}%`,
+                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">PSI Desktop</span>
-                  <span className={cn("text-sm font-semibold", 
-                    currentProfile.rawData?.L1_psi_desktop_performance ? 'text-white' : 'text-red-400'
-                  )}>
+
+                <div className="bg-[#050505] rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[10px] text-white/30 uppercase tracking-wider">PSI Desktop</span>
+                  </div>
+                  <div className="text-xl font-bold mb-1.5" style={{ 
+                    color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
+                  }}>
                     {currentProfile.rawData?.L1_psi_desktop_performance || '—'}
-                  </span>
+                  </div>
+                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ 
+                        width: `${currentProfile.rawData?.L1_psi_desktop_performance || 0}%`,
+                        backgroundColor: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">Domain Age</span>
-                  <span className={cn("text-sm font-semibold", 
-                    currentProfile.rawData?.L1_whois_domain_age_years ? 'text-white' : 'text-red-400'
-                  )}>
+
+                <div className="bg-[#050505] rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[10px] text-white/30 uppercase tracking-wider">Domain Age</span>
+                  </div>
+                  <div className="text-xl font-bold mb-1.5 text-white">
                     {currentProfile.rawData?.L1_whois_domain_age_years ? 
-                      `${parseFloat(currentProfile.rawData.L1_whois_domain_age_years).toFixed(1)} yrs` : '—'
+                      Math.floor(parseFloat(currentProfile.rawData.L1_whois_domain_age_years)) : '—'
                     }
-                  </span>
+                  </div>
+                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-green-400 rounded-full transition-all duration-500"
+                      style={{ 
+                        width: currentProfile.rawData?.L1_whois_domain_age_years ? 
+                          `${Math.min(parseFloat(currentProfile.rawData.L1_whois_domain_age_years) * 5, 100)}%` : '0%'
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">Days to Expiry</span>
-                  <span className={cn("text-sm font-semibold", 
-                    currentProfile.rawData?.L1_whois_days_until_expiry ? 'text-white' : 'text-red-400'
-                  )}>
-                    {currentProfile.rawData?.L1_whois_days_until_expiry || '—'}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">Builder</span>
-                  <span className="text-sm font-semibold text-white">
-                    {currentProfile.rawData?.L1_builder_platform || 'Unknown'}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/30 uppercase">Email Type</span>
-                  <span className={cn("text-sm font-semibold", 
-                    currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'text-green-400' : 'text-white'
-                  )}>
-                    {currentProfile.emailQuality === 'PROFESSIONAL_DOMAIN' ? 'Professional' :
-                     currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Personal' : 'Unknown'}
-                  </span>
+
+                <div className="bg-[#050505] rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[10px] text-white/30 uppercase tracking-wider">Trust Score</span>
+                  </div>
+                  <div className="text-xl font-bold mb-1.5 text-white">
+                    {currentProfile.trustScore || '—'}%
+                  </div>
+                  <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ 
+                        width: `${currentProfile.trustScore || 0}%`,
+                        backgroundColor: getScoreColor(currentProfile.trustScore || 0)
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -517,14 +804,15 @@ export function ProfileModal() {
             <div className="flex">
               {[
                 { id: 'intelligence', label: 'Intelligence' },
+                { id: 'opportunities', label: 'Opportunities' },
                 { id: 'campaign', label: 'Campaign' },
-                { id: 'notes', label: 'Notes & Activity' }
+                { id: 'notes', label: 'Notes' }
               ].map((tab) => (
                 <div
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "py-3.5 px-6 text-xs font-medium uppercase tracking-wider transition-all border-b-2 cursor-pointer",
+                    "py-3.5 px-5 text-[11px] font-semibold uppercase tracking-wider transition-all border-b-2 cursor-pointer",
                     activeTab === tab.id
                       ? "text-white border-[#3b82f6]"
                       : "text-white/50 border-transparent hover:text-white/70"
@@ -539,6 +827,7 @@ export function ProfileModal() {
           {/* Content */}
           <div className="p-6">
             {activeTab === 'intelligence' && <IntelligenceTab currentProfile={currentProfile} activeTab={activeTab} />}
+            {activeTab === 'opportunities' && <OpportunitiesTab currentProfile={currentProfile} activeTab={activeTab} />}
             {activeTab === 'campaign' && <CampaignTab currentProfile={currentProfile} activeTab={activeTab} />}
             {activeTab === 'notes' && <NotesTab currentProfile={currentProfile} activeTab={activeTab} />}
           </div>

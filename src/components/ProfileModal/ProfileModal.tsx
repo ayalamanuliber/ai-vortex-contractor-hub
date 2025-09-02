@@ -1182,7 +1182,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
         justifyContent: 'space-between'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Send size={16} style={{ opacity: 0.5, color: '#22c55e' }} />
+          <Send size={16} style={{ opacity: 0.5, color: 'rgba(255, 255, 255, 0.5)' }} />
           <span style={{
             fontSize: '11px',
             fontWeight: '600',
@@ -1333,7 +1333,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
               paddingBottom: '16px',
               borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
             }}>
-              <div style={{ display: 'flex', gap: '32px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '24px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <span style={{
                     fontSize: '10px',
@@ -1344,13 +1344,14 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
                     Strategy
                   </span>
                   <span style={{
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontWeight: '600',
                     color: '#ffffff'
                   }}>
-                    {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Email Professionalization' : 'Review Acceleration'}
+                    {currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? 'Email Pro' : 'Review Boost'}
                   </span>
                 </div>
+                
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <span style={{
                     fontSize: '10px',
@@ -1358,16 +1359,17 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em'
                   }}>
-                    Timing
+                    Email Check
                   </span>
                   <span style={{
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontWeight: '600',
                     color: '#ffffff'
                   }}>
-                    {contactTiming.best_day_email_1?.substr(0,3) || 'Tue'}/{contactTiming.best_day_email_2?.substr(0,3) || 'Thu'} @ {contactTiming.window_a_time || '7:00 AM'}
+                    {contactTiming.window_a_time || '6:30 AM'}, 8:30 PM
                   </span>
                 </div>
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <span style={{
                     fontSize: '10px',
@@ -1375,14 +1377,68 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em'
                   }}>
-                    Length
+                    Best Days
                   </span>
                   <span style={{
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontWeight: '600',
                     color: '#ffffff'
                   }}>
-                    {messagingPrefs.email_length === 'B' ? '50-75 words' : '40-60 words'}
+                    {contactTiming.best_day_email_1?.substr(0,3) || 'Tue'}, {contactTiming.best_day_email_2?.substr(0,3) || 'Thu'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Response Time
+                  </span>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#ffffff'
+                  }}>
+                    Same day
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Decision Style
+                  </span>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#ffffff'
+                  }}>
+                    {messagingPrefs.proof_preference === 'A' ? 'Needs proof' : 'Quick decide'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
+                  }}>
+                    Budget Range
+                  </span>
+                  <span style={{
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#ffffff'
+                  }}>
+                    ${currentProfile.emailQuality === 'PERSONAL_DOMAIN' ? '800-2,500' : '1,500-3,000'}
                   </span>
                 </div>
               </div>

@@ -8,10 +8,87 @@ import {
 import { useContractorStore } from '@/stores/contractorStore';
 import { cn } from '@/lib/utils/cn';
 
+// Add CSS keyframes for animations
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 interface TabContentProps {
   currentProfile: any;
   activeTab: string;
 }
+
+// Simple Tooltip Component
+const Tooltip = ({ children, text, delay = 0 }: { 
+  children: React.ReactNode; 
+  text: string; 
+  delay?: number;
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  return (
+    <div 
+      style={{ position: 'relative', display: 'inline-block' }}
+      onMouseEnter={() => setTimeout(() => setIsVisible(true), delay)}
+      onMouseLeave={() => setIsVisible(false)}
+    >
+      {children}
+      {isVisible && (
+        <div style={{
+          position: 'absolute',
+          bottom: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          marginBottom: '8px',
+          padding: '8px 12px',
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#ffffff',
+          fontSize: '12px',
+          borderRadius: '6px',
+          whiteSpace: 'nowrap',
+          zIndex: 1000,
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          animation: 'fadeInUp 0.2s ease-out'
+        }}>
+          {text}
+          <div style={{
+            position: 'absolute',
+            top: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 0,
+            height: 0,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderTop: '6px solid rgba(0, 0, 0, 0.9)'
+          }} />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
   // Extract reviews from rawData
@@ -43,13 +120,18 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '16px'
+    }}>
       {/* Google Reviews Intelligence */}
       <div style={{ 
         background: '#0a0a0b', 
         border: '1px solid rgba(255, 255, 255, 0.06)', 
         borderRadius: '8px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        animation: 'fadeInUp 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) 0.1s both'
       }}>
         <div style={{
           padding: '16px 20px',
@@ -315,7 +397,8 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
         background: '#0a0a0b', 
         border: '1px solid rgba(255, 255, 255, 0.06)', 
         borderRadius: '8px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        animation: 'fadeInUp 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) 0.2s both'
       }}>
         <div style={{
           padding: '16px 20px',
@@ -553,7 +636,8 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
         background: '#0a0a0b', 
         border: '1px solid rgba(255, 255, 255, 0.06)', 
         borderRadius: '8px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        animation: 'fadeInUp 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) 0.3s both'
       }}>
         <div style={{
           padding: '16px 20px',
@@ -760,7 +844,8 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
         background: '#0a0a0b', 
         border: '1px solid rgba(255, 255, 255, 0.06)', 
         borderRadius: '8px',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        animation: 'fadeInUp 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) 0.4s both'
       }}>
         <div style={{
           padding: '16px 20px',
@@ -1291,20 +1376,73 @@ const NotesTab = ({ currentProfile }: TabContentProps) => {
 export function ProfileModal() {
   const { currentProfile, setCurrentProfile } = useContractorStore();
   const [activeTab, setActiveTab] = useState('intelligence');
+  const [isExporting, setIsExporting] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  // Block body scroll when modal is open
+  const closeModal = React.useCallback(() => {
+    setIsVisible(false);
+    // Delay the actual close to allow exit animation
+    setTimeout(() => {
+      setCurrentProfile(null);
+    }, 200);
+  }, [setCurrentProfile]);
+
+  // Block body scroll when modal is open and handle entrance animation
   React.useEffect(() => {
     if (currentProfile) {
       document.body.style.overflow = 'hidden';
+      // Trigger entrance animation after a tiny delay
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 10);
+      
+      // Add keyboard event listener for ESC key
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      };
+      document.addEventListener('keydown', handleKeyDown);
+      
       return () => {
         document.body.style.overflow = 'unset';
+        clearTimeout(timer);
+        document.removeEventListener('keydown', handleKeyDown);
       };
     }
-  }, [currentProfile]);
+  }, [currentProfile, closeModal]);
 
   if (!currentProfile) return null;
 
-  const closeModal = () => setCurrentProfile(null);
+  const exportScreenshot = async () => {
+    setIsExporting(true);
+    try {
+      // Use html2canvas to capture the entire modal
+      const { default: html2canvas } = await import('html2canvas');
+      const modalElement = document.querySelector('[data-modal-content]') as HTMLElement;
+      
+      if (modalElement) {
+        const canvas = await html2canvas(modalElement, {
+          backgroundColor: '#050505',
+          scale: 2, // Higher quality
+          useCORS: true,
+          allowTaint: true,
+          scrollX: 0,
+          scrollY: 0
+        });
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.download = `${currentProfile.businessName.replace(/[^a-zA-Z0-9]/g, '_')}_intelligence_report.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return '#22c55e';
@@ -1317,16 +1455,20 @@ export function ProfileModal() {
       position: 'fixed',
       inset: 0,
       zIndex: 50,
-      background: 'rgba(0, 0, 0, 0.8)',
-      backdropFilter: 'blur(4px)',
-      overflow: 'hidden'
+      background: isVisible ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0)',
+      backdropFilter: isVisible ? 'blur(4px)' : 'blur(0px)',
+      overflow: 'hidden',
+      transition: 'background-color 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), backdrop-filter 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)'
     }}>
       <div style={{
         height: '100%',
         overflowY: 'auto',
-        fontFamily: '-apple-system, "Inter", system-ui, sans-serif'
+        fontFamily: '-apple-system, "Inter", system-ui, sans-serif',
+        transform: isVisible ? 'translateY(0%) scale(1)' : 'translateY(4%) scale(0.95)',
+        opacity: isVisible ? 1 : 0,
+        transition: 'all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)'
       }}>
-        <div style={{ minHeight: '100%' }}>
+        <div data-modal-content style={{ minHeight: '100%' }}>
           {/* Header */}
           <div style={{
             background: '#0a0a0b',
@@ -1339,36 +1481,96 @@ export function ProfileModal() {
               alignItems: 'center',
               marginBottom: '24px'
             }}>
-              <button 
-                onClick={closeModal}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  background: 'none',
-                  border: 'none',
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  fontSize: '13px',
-                  cursor: 'pointer',
-                  transition: 'color 0.2s'
-                }}
-              >
-                <ArrowLeft size={16} />
-                Back to List
-              </button>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button style={{
-                  padding: '8px 16px',
-                  background: '#0a0a0b',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                  borderRadius: '8px',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  cursor: 'pointer'
-                }}>
-                  Export
+              <Tooltip text="Press ESC or click to close" delay={500}>
+                <button 
+                  onClick={closeModal}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    background: 'none',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)',
+                    padding: '6px 8px',
+                    borderRadius: '6px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.transform = 'translateX(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                    e.currentTarget.style.background = 'none';
+                    e.currentTarget.style.transform = 'translateX(0px)';
+                  }}
+                >
+                  <ArrowLeft size={16} />
+                  Back to List
                 </button>
+              </Tooltip>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <Tooltip text={isExporting ? "Processing screenshot..." : "Export full intelligence report as image"}>
+                  <button 
+                    onClick={exportScreenshot}
+                    disabled={isExporting}
+                    style={{
+                      padding: '8px 16px',
+                      background: '#0a0a0b',
+                      border: '1px solid rgba(255, 255, 255, 0.06)',
+                      borderRadius: '8px',
+                      color: isExporting ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      cursor: isExporting ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isExporting) {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.4)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isExporting) {
+                        e.currentTarget.style.background = '#0a0a0b';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                        e.currentTarget.style.transform = 'translateY(0px)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }
+                    }}
+                  >
+                    <span style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '6px',
+                      transform: isExporting ? 'scale(0.98)' : 'scale(1)',
+                      transition: 'transform 0.2s ease'
+                    }}>
+                      {isExporting ? (
+                        <>
+                          <span style={{ 
+                            animation: 'spin 1s linear infinite',
+                            display: 'inline-block'
+                          }}>⚡</span>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          📸 Export
+                        </>
+                      )}
+                    </span>
+                  </button>
+                </Tooltip>
                 <button style={{
                   padding: '8px 16px',
                   background: '#0a0a0b',
@@ -1513,36 +1715,110 @@ export function ProfileModal() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}>
-                    <Mail size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    padding: '4px',
+                    borderRadius: '4px',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    const copyIcon = e.currentTarget.querySelector('[data-copy-email]') as HTMLElement;
+                    if (copyIcon) copyIcon.style.opacity = '1';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                    const copyIcon = e.currentTarget.querySelector('[data-copy-email]') as HTMLElement;
+                    if (copyIcon) copyIcon.style.opacity = '0';
+                  }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(currentProfile.email);
+                    // Add visual feedback
+                    const element = document.activeElement as HTMLElement;
+                    if (element) {
+                      const originalText = element.textContent;
+                      element.textContent = '✓ Email Copied!';
+                      setTimeout(() => {
+                        element.textContent = originalText;
+                      }, 1500);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Copy email ${currentProfile.email}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      e.currentTarget.click();
+                    }
+                  }}
+                  >
+                    <Mail size={14} style={{ color: 'rgba(255, 255, 255, 0.5)' }} />
                     <span>{currentProfile.email}</span>
                     <Copy 
+                      data-copy-email
                       size={14} 
                       style={{ 
-                        color: 'rgba(255, 255, 255, 0.3)', 
+                        color: 'rgba(255, 255, 255, 0.5)', 
                         cursor: 'pointer',
-                        opacity: 0
+                        opacity: 0,
+                        transition: 'opacity 0.2s ease'
                       }}
-                      onClick={() => navigator.clipboard.writeText(currentProfile.email)}
                     />
                   </div>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}>
-                    <Phone size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    padding: '4px',
+                    borderRadius: '4px',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    const copyIcon = e.currentTarget.querySelector('[data-copy-phone]') as HTMLElement;
+                    if (copyIcon) copyIcon.style.opacity = '1';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                    const copyIcon = e.currentTarget.querySelector('[data-copy-phone]') as HTMLElement;
+                    if (copyIcon) copyIcon.style.opacity = '0';
+                  }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(currentProfile.phone);
+                    // Add visual feedback
+                    const element = document.activeElement as HTMLElement;
+                    if (element) {
+                      const originalText = element.textContent;
+                      element.textContent = '✓ Phone Copied!';
+                      setTimeout(() => {
+                        element.textContent = originalText;
+                      }, 1500);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Copy phone ${currentProfile.phone}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      e.currentTarget.click();
+                    }
+                  }}
+                  >
+                    <Phone size={14} style={{ color: 'rgba(255, 255, 255, 0.5)' }} />
                     <span>{currentProfile.phone}</span>
                     <Copy 
+                      data-copy-phone
                       size={14} 
                       style={{ 
-                        color: 'rgba(255, 255, 255, 0.3)', 
+                        color: 'rgba(255, 255, 255, 0.5)', 
                         cursor: 'pointer',
-                        opacity: 0
+                        opacity: 0,
+                        transition: 'opacity 0.2s ease'
                       }}
-                      onClick={() => navigator.clipboard.writeText(currentProfile.phone)}
                     />
                   </div>
                   <div style={{
@@ -1591,14 +1867,29 @@ export function ProfileModal() {
                 gap: '16px',
                 minWidth: '280px'
               }}>
-                <div style={{
-                  background: '#050505',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
-                }}>
+                <Tooltip text="PageSpeed Insights mobile performance score - higher is better for SEO and user experience">
+                  <div style={{
+                    background: '#050505',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    position: 'relative',
+                    border: `1px solid ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)}20`,
+                    transition: 'all 0.3s ease',
+                    cursor: 'help'
+                  }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0),
+                    margin: '8px'
+                  }} />
                   <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1611,6 +1902,14 @@ export function ProfileModal() {
                       letterSpacing: '0.05em'
                     }}>
                       PSI Mobile
+                    </span>
+                    <span style={{
+                      fontSize: '9px',
+                      color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0),
+                      fontWeight: '600'
+                    }}>
+                      {(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0) >= 80 ? '↗' : 
+                       (parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0) >= 60 ? '→' : '↘'}
                     </span>
                   </div>
                   <div style={{
@@ -1631,20 +1930,37 @@ export function ProfileModal() {
                       height: '100%',
                       borderRadius: '2px',
                       width: `${currentProfile.rawData?.L1_psi_mobile_performance || 0}%`,
-                      background: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0),
-                      transition: 'width 0.5s ease'
+                      background: `linear-gradient(90deg, ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)}, ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)}80)`,
+                      transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: `0 0 8px ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_mobile_performance) || 0)}30`
                     }} />
                   </div>
                 </div>
+                </Tooltip>
 
-                <div style={{
-                  background: '#050505',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
+                <Tooltip text="PageSpeed Insights desktop performance score - shows how fast the site loads on computers">
+                  <div style={{
+                    background: '#050505',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    position: 'relative',
+                    border: `1px solid ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)}20`,
+                    transition: 'all 0.3s ease',
+                    cursor: 'help'
                 }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0),
+                    margin: '8px'
+                  }} />
                   <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1657,6 +1973,14 @@ export function ProfileModal() {
                       letterSpacing: '0.05em'
                     }}>
                       PSI Desktop
+                    </span>
+                    <span style={{
+                      fontSize: '9px',
+                      color: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0),
+                      fontWeight: '600'
+                    }}>
+                      {(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0) >= 80 ? '↗' : 
+                       (parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0) >= 60 ? '→' : '↘'}
                     </span>
                   </div>
                   <div style={{
@@ -1677,20 +2001,37 @@ export function ProfileModal() {
                       height: '100%',
                       borderRadius: '2px',
                       width: `${currentProfile.rawData?.L1_psi_desktop_performance || 0}%`,
-                      background: getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0),
-                      transition: 'width 0.5s ease'
+                      background: `linear-gradient(90deg, ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)}, ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)}80)`,
+                      transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: `0 0 8px ${getScoreColor(parseInt(currentProfile.rawData?.L1_psi_desktop_performance) || 0)}30`
                     }} />
                   </div>
                 </div>
+                </Tooltip>
 
-                <div style={{
-                  background: '#050505',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
+                <Tooltip text="Domain age in years - older domains typically rank better and appear more trustworthy">
+                  <div style={{
+                    background: '#050505',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    position: 'relative',
+                    border: '1px solid #22c55e20',
+                    transition: 'all 0.3s ease',
+                    cursor: 'help'
                 }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: '#22c55e',
+                    margin: '8px'
+                  }} />
                   <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1703,6 +2044,13 @@ export function ProfileModal() {
                       letterSpacing: '0.05em'
                     }}>
                       Domain Age
+                    </span>
+                    <span style={{
+                      fontSize: '9px',
+                      color: '#22c55e',
+                      fontWeight: '600'
+                    }}>
+                      ↗
                     </span>
                   </div>
                   <div style={{
@@ -1723,23 +2071,40 @@ export function ProfileModal() {
                   }}>
                     <div style={{
                       height: '100%',
-                      background: '#22c55e',
+                      background: 'linear-gradient(90deg, #22c55e, #22c55e80)',
                       borderRadius: '2px',
                       width: currentProfile.rawData?.L1_whois_domain_age_years ? 
                         `${Math.min(parseFloat(currentProfile.rawData.L1_whois_domain_age_years) * 5, 100)}%` : '0%',
-                      transition: 'width 0.5s ease'
+                      transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: '0 0 8px #22c55e30'
                     }} />
                   </div>
                 </div>
+                </Tooltip>
 
-                <div style={{
-                  background: '#050505',
-                  borderRadius: '8px',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '6px'
+                <Tooltip text="Trust score based on business profile completeness, reviews quality, and online presence">
+                  <div style={{
+                    background: '#050505',
+                    borderRadius: '8px',
+                    padding: '12px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    position: 'relative',
+                    border: '1px solid #22c55e20',
+                    transition: 'all 0.3s ease',
+                    cursor: 'help'
                 }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: '#22c55e',
+                    margin: '8px'
+                  }} />
                   <div style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1752,6 +2117,13 @@ export function ProfileModal() {
                       letterSpacing: '0.05em'
                     }}>
                       Trust Score
+                    </span>
+                    <span style={{
+                      fontSize: '9px',
+                      color: '#22c55e',
+                      fontWeight: '600'
+                    }}>
+                      ↗
                     </span>
                   </div>
                   <div style={{
@@ -1772,11 +2144,13 @@ export function ProfileModal() {
                       height: '100%',
                       borderRadius: '2px',
                       width: `${currentProfile.trustScore || 85}%`,
-                      background: '#22c55e',
-                      transition: 'width 0.5s ease'
+                      background: 'linear-gradient(90deg, #22c55e, #22c55e80)',
+                      transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: '0 0 8px #22c55e30'
                     }} />
                   </div>
                 </div>
+                </Tooltip>
               </div>
             </div>
           </div>
@@ -1808,7 +2182,20 @@ export function ProfileModal() {
                     textTransform: 'uppercase',
                     borderBottom: `2px solid ${activeTab === tab.id ? '#3b82f6' : 'transparent'}`,
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)',
+                    position: 'relative'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activeTab !== tab.id) {
+                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                      e.currentTarget.style.borderBottomColor = 'rgba(59, 130, 246, 0.3)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeTab !== tab.id) {
+                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                      e.currentTarget.style.borderBottomColor = 'transparent';
+                    }
                   }}
                 >
                   {tab.label}

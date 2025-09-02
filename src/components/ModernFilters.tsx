@@ -79,10 +79,39 @@ export default function ModernFilters() {
     const loadStats = async () => {
       try {
         const response = await fetch('/api/contractor-stats');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const result = await response.json();
-        setStats(result.stats);
+        
+        // Ensure stats has expected structure with defaults
+        const safeStats = {
+          total: result.stats?.total || 0,
+          completion: result.stats?.completion || { excellent: 0, good: 0, fair: 0, poor: 0 },
+          categories: result.stats?.categories || { other: 0, roofing: 0, plumbing: 0, hvac: 0, electrical: 0, landscaping: 0, flooring: 0, painting: 0, carpentry: 0, masonry: 0, fencing: 0, siding: 0 },
+          locations: result.stats?.locations || { texas: 0, florida: 0, california: 0, georgia: 0, pennsylvania: 0, tennessee: 0, north_carolina: 0, ohio: 0, michigan: 0, illinois: 0, virginia: 0, new_york: 0, alabama: 0, south_carolina: 0, colorado: 0, arizona: 0, missouri: 0, maryland: 0, indiana: 0, washington: 0, wisconsin: 0, kentucky: 0, louisiana: 0, minnesota: 0, new_jersey: 0, oregon: 0, oklahoma: 0, arkansas: 0, kansas: 0, utah: 0, nevada: 0, iowa: 0, connecticut: 0, mississippi: 0, west_virginia: 0, nebraska: 0, new_mexico: 0, idaho: 0, maine: 0, new_hampshire: 0, hawaii: 0, rhode_island: 0, montana: 0, delaware: 0, south_dakota: 0, north_dakota: 0, alaska: 0, district_of_columbia: 0, vermont: 0, wyoming: 0 },
+          performance: result.stats?.performance || { high: 0, medium: 0, low: 0 },
+          reviews: result.stats?.reviews || { excellent: 0, good: 0, average: 0, poor: 0, none: 0 },
+          builder: result.stats?.builder || { yes: 0, no: 0 },
+          domain: result.stats?.domain || { yes: 0, no: 0 },
+          campaignStatus: result.stats?.campaignStatus || { ready: 0, scheduled: 0, running: 0, paused: 0, completed: 0, failed: 0 }
+        };
+        
+        setStats(safeStats);
       } catch (error) {
         console.error('Error loading stats:', error);
+        // Set fallback empty stats
+        setStats({
+          total: 0,
+          completion: { excellent: 0, good: 0, fair: 0, poor: 0 },
+          categories: { other: 0, roofing: 0, plumbing: 0, hvac: 0, electrical: 0, landscaping: 0, flooring: 0, painting: 0, carpentry: 0, masonry: 0, fencing: 0, siding: 0 },
+          locations: { texas: 0, florida: 0, california: 0, georgia: 0, pennsylvania: 0, tennessee: 0, north_carolina: 0, ohio: 0, michigan: 0, illinois: 0, virginia: 0, new_york: 0, alabama: 0, south_carolina: 0, colorado: 0, arizona: 0, missouri: 0, maryland: 0, indiana: 0, washington: 0, wisconsin: 0, kentucky: 0, louisiana: 0, minnesota: 0, new_jersey: 0, oregon: 0, oklahoma: 0, arkansas: 0, kansas: 0, utah: 0, nevada: 0, iowa: 0, connecticut: 0, mississippi: 0, west_virginia: 0, nebraska: 0, new_mexico: 0, idaho: 0, maine: 0, new_hampshire: 0, hawaii: 0, rhode_island: 0, montana: 0, delaware: 0, south_dakota: 0, north_dakota: 0, alaska: 0, district_of_columbia: 0, vermont: 0, wyoming: 0 },
+          performance: { high: 0, medium: 0, low: 0 },
+          reviews: { excellent: 0, good: 0, average: 0, poor: 0, none: 0 },
+          builder: { yes: 0, no: 0 },
+          domain: { yes: 0, no: 0 },
+          campaignStatus: { ready: 0, scheduled: 0, running: 0, paused: 0, completed: 0, failed: 0 }
+        });
       }
     };
     

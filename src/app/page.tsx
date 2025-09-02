@@ -4,12 +4,13 @@ import ModernFilters from '@/components/ModernFilters';
 import ContractorGrid from '@/components/ContractorGrid';
 import { CampaignCalendar } from '@/components/Calendar/CampaignCalendar';
 import { ProfileModal } from '@/components/ProfileModal/ProfileModal';
+import { SyncPanel } from '@/components/SyncPanel';
 import { useContractorStore } from '@/stores/contractorStore';
 import { 
   Search, Download, Plus, Filter, LayoutGrid, List, 
-  ChevronDown, ArrowUp 
+  ChevronDown, ArrowUp, RefreshCw
 } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export default function HomePage() {
   const { 
@@ -24,6 +25,8 @@ export default function HomePage() {
   const [sortBy, setSortBy] = useState('score-high-low');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [showSyncPanel, setShowSyncPanel] = useState(false);
+  const syncPanelRef = useRef<HTMLDivElement>(null);
 
   // Global search function that searches ALL contractors
   const performGlobalSearch = useCallback(async (query: string) => {
@@ -58,6 +61,20 @@ export default function HomePage() {
     
     return () => clearTimeout(timer);
   }, [searchQuery, performGlobalSearch]);
+
+  // Close sync panel on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (syncPanelRef.current && !syncPanelRef.current.contains(event.target as Node)) {
+        setShowSyncPanel(false);
+      }
+    };
+
+    if (showSyncPanel) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showSyncPanel]);
 
   // Calculate stats
   const stats = {
@@ -139,6 +156,22 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex gap-2">
+              <div className="relative" ref={syncPanelRef}>
+                <button 
+                  onClick={() => setShowSyncPanel(!showSyncPanel)}
+                  className="px-3 py-2 bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded-md hover:bg-[#111113] hover:border-white/10 transition-colors flex items-center gap-2"
+                >
+                  <RefreshCw className="w-[14px] h-[14px]" />
+                  Sync
+                </button>
+                
+                {showSyncPanel && (
+                  <div className="absolute right-0 top-full mt-2 w-80 z-50">
+                    <SyncPanel />
+                  </div>
+                )}
+              </div>
+              
               <button className="px-3 py-2 bg-[#050505] border border-white/[0.06] text-white/70 text-[12px] font-medium rounded-md hover:bg-[#111113] hover:border-white/10 transition-colors flex items-center gap-2">
                 <Download className="w-[14px] h-[14px]" />
                 Export

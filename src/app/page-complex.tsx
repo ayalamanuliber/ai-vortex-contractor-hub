@@ -2,7 +2,7 @@
 
 import { TopNav } from '@/components/Navigation/TopNav';
 import { FilterSidebar } from '@/components/Sidebar/FilterSidebar';
-import { ContractorGrid } from '@/components/ContractorGrid';
+import ContractorGrid from '@/components/ContractorGrid';
 import { CampaignCalendar } from '@/components/Calendar/CampaignCalendar';
 import { ProfileModal } from '@/components/ProfileModal/ProfileModal';
 import { useContractorStore } from '@/stores/contractorStore';

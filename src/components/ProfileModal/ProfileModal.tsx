@@ -1005,6 +1005,61 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
 };
 
 const CampaignTab = ({ currentProfile }: TabContentProps) => {
+  // Estado para tracking de emails y quick actions
+  const [emailStatuses, setEmailStatuses] = useState<{[key: number]: string}>(() => {
+    const saved = localStorage.getItem(`campaign_${currentProfile.id}`);
+    if (saved) {
+      const data = JSON.parse(saved);
+      return data.emailStatuses || {};
+    }
+    return {};
+  });
+
+  const [activities, setActivities] = useState<Array<{time: string, action: string}>>(() => {
+    const saved = localStorage.getItem(`campaign_${currentProfile.id}`);
+    if (saved) {
+      const data = JSON.parse(saved);
+      return data.activities || [];
+    }
+    return [];
+  });
+
+  // Guardar estado en localStorage
+  const saveState = () => {
+    const state = { emailStatuses, activities };
+    localStorage.setItem(`campaign_${currentProfile.id}`, JSON.stringify(state));
+  };
+
+  // Actualizar status de email
+  const setEmailStatus = (emailIndex: number, status: string) => {
+    setEmailStatuses(prev => {
+      const updated = { ...prev, [emailIndex]: status };
+      // Usar setTimeout para que el estado se actualice antes de guardar
+      setTimeout(() => {
+        const state = { emailStatuses: updated, activities };
+        localStorage.setItem(`campaign_${currentProfile.id}`, JSON.stringify(state));
+      }, 0);
+      return updated;
+    });
+    
+    logQuickAction(`Email ${emailIndex + 1} marked as ${status}`);
+  };
+
+  // Log quick action
+  const logQuickAction = (action: string) => {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    
+    setActivities(prev => {
+      const updated = [{ time, action }, ...prev.slice(0, 9)]; // Keep only last 10
+      setTimeout(() => {
+        const state = { emailStatuses, activities: updated };
+        localStorage.setItem(`campaign_${currentProfile.id}`, JSON.stringify(state));
+      }, 0);
+      return updated;
+    });
+  };
+
   if (!currentProfile.hasCampaign || !currentProfile.campaignData?.campaign_data?.email_sequences) {
     return (
       <div style={{ 
@@ -1088,6 +1143,30 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     }
   };
 
+  // Copy both subject and body
+  const copyBoth = async (subject: string, body: string, buttonElement: HTMLElement) => {
+    const combined = `Subject: ${subject}\n\n${body}`;
+    await copyToClipboard(combined, buttonElement);
+  };
+
+  // Open Gmail with pre-filled email
+  const openGmail = (subject: string, body: string) => {
+    const contractorEmail = currentProfile.email;
+    if (!contractorEmail) {
+      logQuickAction('Gmail open failed - no email found');
+      return;
+    }
+    
+    // Create mailto link with pre-filled content
+    const mailtoLink = `mailto:${contractorEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Try to open Gmail compose in a new tab/window
+    const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contractorEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    window.open(gmailCompose, '_blank');
+    logQuickAction(`Gmail opened for ${contractorEmail}`);
+  };
+
   return (
     <div style={{ 
       background: '#0a0a0b', 
@@ -1129,8 +1208,8 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       <div style={{ padding: '20px' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '30% 70%',
-          gap: '24px'
+          gridTemplateColumns: '25% 50% 25%',
+          gap: '20px'
         }}>
           {/* Sidebar */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -1428,6 +1507,52 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
                         </span>
                       </div>
                     </div>
+                    
+                    {/* Status Selector */}
+                    <div style={{
+                      display: 'flex',
+                      background: '#050505',
+                      borderRadius: '6px',
+                      padding: '2px',
+                      gap: '2px'
+                    }}>
+                      {['Ready', 'Scheduled', 'Sent', 'Opened', 'Replied'].map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => setEmailStatus(index, status.toLowerCase())}
+                          style={{
+                            padding: '6px 12px',
+                            fontSize: '11px',
+                            fontWeight: '600',
+                            color: emailStatuses[index] === status.toLowerCase() ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                            background: emailStatuses[index] === status.toLowerCase() 
+                              ? status === 'Ready' ? '#3b82f6'
+                                : status === 'Scheduled' ? '#facc15' 
+                                : status === 'Sent' ? '#22c55e'
+                                : status === 'Opened' ? '#a855f7'
+                                : '#fb923c' // Replied
+                              : 'transparent',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            whiteSpace: 'nowrap'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (emailStatuses[index] !== status.toLowerCase()) {
+                              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (emailStatuses[index] !== status.toLowerCase()) {
+                              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                            }
+                          }}
+                        >
+                          {status}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div style={{
@@ -1517,9 +1642,205 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
                       <Copy size={12} />
                       Copy Body
                     </button>
+                    <button
+                      onClick={(e) => copyBoth(email.subject, email.body || '', e.currentTarget)}
+                      style={{
+                        padding: '6px 12px',
+                        background: '#0a0a0b',
+                        border: '1px solid rgba(255, 255, 255, 0.06)',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#0a0a0b';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                      }}
+                    >
+                      <Copy size={12} />
+                      Copy Both
+                    </button>
+                    <button
+                      onClick={() => openGmail(email.subject, email.body || '')}
+                      style={{
+                        padding: '6px 12px',
+                        background: '#3b82f6',
+                        border: '1px solid #3b82f6',
+                        borderRadius: '4px',
+                        fontSize: '11px',
+                        color: 'white',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#2563eb';
+                        e.currentTarget.style.borderColor = '#2563eb';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = '#3b82f6';
+                        e.currentTarget.style.borderColor = '#3b82f6';
+                      }}
+                    >
+                      <svg 
+                        width={12} 
+                        height={12} 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth={2} 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                      >
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="m22 7-10 5L2 7"/>
+                      </svg>
+                      Open Gmail
+                    </button>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Right Sidebar - Quick Actions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Quick Actions */}
+            <div style={{
+              background: '#050505',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '12px'
+              }}>
+                QUICK ACTIONS
+              </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '8px'
+              }}>
+                {[
+                  'No Answer',
+                  'Left VM',
+                  'Email Opened', 
+                  'Got Reply',
+                  'Meeting Set',
+                  'Not Interested'
+                ].map((action, index) => (
+                  <button
+                    key={index}
+                    onClick={() => logQuickAction(action)}
+                    style={{
+                      padding: '8px 12px',
+                      background: '#0a0a0b',
+                      border: '1px solid rgba(255, 255, 255, 0.06)',
+                      borderRadius: '6px',
+                      fontSize: '11px',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      textAlign: 'center'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.color = '#ffffff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#0a0a0b';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                    }}
+                  >
+                    {action}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Activity Log */}
+            <div style={{
+              background: '#050505',
+              borderRadius: '8px',
+              padding: '16px'
+            }}>
+              <div style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'rgba(255, 255, 255, 0.7)',
+                marginBottom: '12px'
+              }}>
+                ACTIVITY LOG
+              </div>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                maxHeight: '300px',
+                overflowY: 'auto'
+              }}>
+                {activities.length === 0 && (
+                  <div style={{
+                    padding: '8px',
+                    background: '#0a0a0b',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                    textAlign: 'center'
+                  }}>
+                    No activity yet
+                  </div>
+                )}
+                {activities.map((activity, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      display: 'flex',
+                      gap: '8px',
+                      padding: '8px',
+                      background: '#0a0a0b',
+                      borderRadius: '4px',
+                      fontSize: '11px'
+                    }}
+                  >
+                    <span style={{
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      minWidth: '50px',
+                      flexShrink: 0
+                    }}>
+                      {activity.time}
+                    </span>
+                    <span style={{
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      flex: 1
+                    }}>
+                      {activity.action}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

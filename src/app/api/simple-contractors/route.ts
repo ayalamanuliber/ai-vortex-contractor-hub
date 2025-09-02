@@ -128,6 +128,8 @@ export async function GET(request: NextRequest) {
         tokensUsed: campaignData?.tokens || 0,
         emailSequences: campaignData?.campaign_data?.email_sequences?.length || 0,
         notes: [],
+        // Include raw CSV data for detailed intelligence
+        rawData: row,
       };
     });
     

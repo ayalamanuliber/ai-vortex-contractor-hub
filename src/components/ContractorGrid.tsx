@@ -34,7 +34,9 @@ export default function ContractorGrid() {
 
   // Load more when scrolling (disabled in search mode)
   useEffect(() => {
+    console.log('👀 Scroll effect:', { inView, hasMore, isLoading, page, isSearchMode });
     if (inView && hasMore && !isLoading && page > 0 && !isSearchMode) {
+      console.log('✅ Triggering loadMore');
       loadMore();
     }
   }, [inView, hasMore, isLoading, page, isSearchMode]);
@@ -70,8 +72,12 @@ export default function ContractorGrid() {
   };
 
   const loadMore = async () => {
-    if (isLoading || !hasMore) return;
+    if (isLoading || !hasMore) {
+      console.log('🚫 LoadMore blocked:', { isLoading, hasMore });
+      return;
+    }
     
+    console.log('🔄 Loading more...', { page, start: page * 200 });
     setLoading(true);
     try {
       const start = page * 200; // page starts at 1, so page 1 = start 200
@@ -79,13 +85,22 @@ export default function ContractorGrid() {
       const result = await response.json();
       const newData = result.contractors || [];
       
+      console.log('📊 Load result:', { 
+        newDataLength: newData.length, 
+        apiHasMore: result.hasMore,
+        currentPage: page 
+      });
+      
       if (newData.length === 0) {
+        console.log('🛑 No more data - stopping');
         setHasMore(false);
       } else {
         addContractors(newData);
         setPage(prev => prev + 1);
         // Use API's hasMore flag as the source of truth
-        setHasMore(result.hasMore && newData.length === 200);
+        const shouldContinue = result.hasMore && newData.length === 200;
+        console.log('🎯 Setting hasMore:', shouldContinue, { apiHasMore: result.hasMore, lengthCheck: newData.length === 200 });
+        setHasMore(shouldContinue);
       }
     } catch (error) {
       console.error('Failed to load more data:', error);

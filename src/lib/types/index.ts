@@ -96,6 +96,7 @@ export interface MergedContractor extends Contractor {
   tokensUsed: number;
   emailSequences: number;
   notes: Note[];
+  rawData?: any; // Raw CSV data for detailed intelligence
 }
 
 export interface Note {

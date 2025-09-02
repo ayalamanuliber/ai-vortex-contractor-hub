@@ -58,13 +58,10 @@ export default function ContractorGrid() {
       }
       
       setContractors(data);
-      setHasMore(result.hasMore);
       setPage(1);
       
-      // Check if there's more data
-      if (data.length < 200) {
-        setHasMore(false);
-      }
+      // Use API's hasMore flag as the source of truth
+      setHasMore(result.hasMore && data.length === 200);
     } catch (error) {
       console.error('Failed to load initial data:', error);
     } finally {
@@ -86,11 +83,9 @@ export default function ContractorGrid() {
         setHasMore(false);
       } else {
         addContractors(newData);
-        setHasMore(result.hasMore);
         setPage(prev => prev + 1);
-        if (newData.length < 200) {
-          setHasMore(false);
-        }
+        // Use API's hasMore flag as the source of truth
+        setHasMore(result.hasMore && newData.length === 200);
       }
     } catch (error) {
       console.error('Failed to load more data:', error);

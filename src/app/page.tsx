@@ -9,7 +9,7 @@ import {
   Search, Download, Plus, Filter, LayoutGrid, List, 
   ChevronDown, ArrowUp 
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function HomePage() {
   const { 
@@ -17,11 +17,44 @@ export default function HomePage() {
     filteredContractors,
     filters,
     clearFilters,
-    searchQuery,
-    setSearchQuery
+    setContractors
   } = useContractorStore();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('score-high-low');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Global search function that searches ALL contractors
+  const performGlobalSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      // Clear search - reload initial data
+      const response = await fetch('/api/simple-contractors?start=0&limit=200');
+      const result = await response.json();
+      setContractors(result.contractors || []);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      // Search across ALL contractors with no limit
+      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(query)}&start=0&limit=10000`);
+      const result = await response.json();
+      setContractors(result.contractors || []);
+    } catch (error) {
+      console.error('Global search error:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  }, [setContractors]);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      performGlobalSearch(searchQuery);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery, performGlobalSearch]);
 
   // Calculate stats
   const stats = {
@@ -35,7 +68,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex bg-[#050505]">
       {/* Sidebar */}
-      <aside className="w-60 bg-[#0a0a0b] border-r border-white/[0.06] flex flex-col overflow-hidden">
+      <aside className="w-60 bg-[#0a0a0b] border-r border-white/[0.06] flex flex-col overflow-hidden fixed h-full z-30">
         <div className="p-5 border-b border-white/[0.06]">
           <div className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-3">
             Filters
@@ -64,9 +97,9 @@ export default function HomePage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden ml-60">
         {/* Header */}
-        <header className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 py-4 flex justify-between items-center">
+        <header className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 py-4 flex justify-between items-center sticky top-0 z-20">
           <div className="flex items-center gap-6">
             <div className="text-[16px] font-bold text-white tracking-tight">
               AI VORTEX
@@ -78,11 +111,16 @@ export default function HomePage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[14px] h-[14px] text-white/30" />
               <input
                 type="text"
-                className="w-full bg-[#050505] border border-white/[0.06] rounded-lg pl-10 pr-4 py-2 text-[13px] text-white placeholder-white/30 focus:outline-none focus:border-white/10"
+                className="w-full bg-[#050505] border border-white/[0.06] rounded-lg pl-10 pr-10 py-2 text-[13px] text-white placeholder-white/30 focus:outline-none focus:border-white/10"
                 placeholder="Search contractors by name, ID, category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {isSearching && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="w-3 h-3 border border-white/20 border-t-white/60 rounded-full animate-spin"></div>
+                </div>
+              )}
             </div>
           </div>
 

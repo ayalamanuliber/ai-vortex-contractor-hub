@@ -2,109 +2,78 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  Filter, X, ChevronDown, ChevronRight, Loader2,
-  Target, MapPin, Building2, Zap, Star, Globe, TrendingUp, Calendar
+  ChevronDown, Target, MapPin, Building2, Zap, Star, 
+  Globe, Clock, Send, TrendingUp
 } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 
 interface FilterStats {
   total: number;
   completion: {
-    high: number;
-    medium: number;
-    low: number;
-    veryLow: number;
-  };
-  states: {
-    alabama: number;
-    arkansas: number;
-    idaho: number;
-    kansas: number;
-    kentucky: number;
-    mississippi: number;
-    montana: number;
-    newMexico: number;
-    oklahoma: number;
-    southDakota: number;
-    utah: number;
-    westVirginia: number;
+    excellent: number;
+    good: number;
+    fair: number;
+    poor: number;
   };
   categories: {
+    other: number;
     roofing: number;
     hvac: number;
-    plumbing: number;
-    electrical: number;
     remodeling: number;
-    exterior: number;
-    heavyCivil: number;
-    homeBuilding: number;
     specialty: number;
+    plumbing: number;
+    exterior: number;
+    electrical: number;
     suppliers: number;
-    ancillary: number;
-    construction: number;
     windowDoor: number;
-    other: number;
   };
   speed: {
     high: number;
     medium: number;
     low: number;
   };
-  rating: {
-    high: number;
-    good: number;
-    average: number;
-    low: number;
-    noRating: number;
-  };
-  email: {
-    professional: number;
-    personal: number;
-    unknown: number;
-  };
   reviews: {
     highRating: number;
     lowRating: number;
-    manyReviews: number;
     fewReviews: number;
-    activeReviews: number;
-    inactiveReviews: number;
+    inactive: number;
     noReviews: number;
+    active: number;
+    manyReviews: number;
   };
   builders: {
+    custom: number;
+    squarespace: number;
     wix: number;
     godaddy: number;
-    squarespace: number;
-    custom: number;
   };
   domain: {
-    expiringSoon: number;
-    new: number;
     established: number;
+    new: number;
+    expiring: number;
   };
   campaigns: {
+    notSetup: number;
     ready: number;
     processing: number;
-    notSetup: number;
     failed: number;
   };
 }
 
 export function ModernFilters() {
-  const { filters, toggleFilter, clearFilters, showingCount } = useContractorStore();
+  const { filters, toggleFilter } = useContractorStore();
   const [stats, setStats] = useState<FilterStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [expandedSections, setExpandedSections] = useState({
     completion: true,
     location: false,
-    category: false,
-    performance: false,
-    reviews: false,
-    builders: false,
-    domain: false,
-    campaigns: false,
+    industry: true,
+    performance: true,
+    reviews: true,
+    builder: true,
+    domain: true,
+    campaign: true,
   });
-  
+
   // Load filter stats
   useEffect(() => {
     const loadStats = async () => {
@@ -114,250 +83,323 @@ export function ModernFilters() {
         setStats(result.stats);
       } catch (error) {
         console.error('Error loading stats:', error);
-      } finally {
-        setIsLoading(false);
       }
     };
     
     loadStats();
   }, []);
-  
+
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
       [section]: !prev[section]
     }));
   };
-  
-  const FilterButton = ({ 
-    filter, 
-    label, 
-    count, 
-    color = "default" 
+
+  const FilterSection = ({ 
+    id, 
+    title, 
+    icon: Icon, 
+    children 
   }: { 
-    filter: string; 
-    label: string; 
-    count?: number;
-    color?: "default" | "green" | "yellow" | "orange" | "red" | "blue" | "purple";
+    id: keyof typeof expandedSections;
+    title: string;
+    icon: any;
+    children: React.ReactNode;
+  }) => (
+    <div className="filter-section border-b border-white/[0.06] last:border-b-0">
+      <div 
+        className="p-3 px-5 flex justify-between items-center cursor-pointer hover:bg-[#111113] transition-colors"
+        onClick={() => toggleSection(id)}
+      >
+        <div className="flex items-center gap-2 text-[12px] font-semibold text-white">
+          <Icon className="w-[14px] h-[14px] text-white/30" />
+          {title}
+        </div>
+        <ChevronDown 
+          className={`w-[12px] h-[12px] text-white/30 transition-transform ${
+            expandedSections[id] ? '' : '-rotate-90'
+          }`} 
+        />
+      </div>
+      {expandedSections[id] && (
+        <div className="px-5 pb-3 max-h-48 overflow-y-auto">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+
+  const FilterOption = ({ 
+    filterId, 
+    label, 
+    count,
+    color
+  }: { 
+    filterId: string;
+    label: string;
+    count: number;
+    color?: string;
   }) => {
-    const isActive = filters.includes(filter);
-    
-    const colorClasses = {
-      default: isActive ? 'bg-primary text-primary-foreground' : 'bg-background hover:bg-muted',
-      green: isActive ? 'bg-green-500 text-white' : 'bg-green-500/10 hover:bg-green-500/20 text-green-400',
-      yellow: isActive ? 'bg-yellow-500 text-white' : 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400',
-      orange: isActive ? 'bg-orange-500 text-white' : 'bg-orange-500/10 hover:bg-orange-500/20 text-orange-400',
-      red: isActive ? 'bg-red-500 text-white' : 'bg-red-500/10 hover:bg-red-500/20 text-red-400',
-      blue: isActive ? 'bg-blue-500 text-white' : 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400',
-      purple: isActive ? 'bg-purple-500 text-white' : 'bg-purple-500/10 hover:bg-purple-500/20 text-purple-400',
-    };
+    const isActive = filters.includes(filterId);
     
     return (
-      <button
-        onClick={() => toggleFilter(filter)}
-        className={`flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm transition-colors ${colorClasses[color]} border border-border/50`}
+      <div 
+        className="py-1.5 flex justify-between items-center cursor-pointer hover:opacity-80 transition-opacity"
+        onClick={() => toggleFilter(filterId)}
       >
-        <span>{label}</span>
-        {count !== undefined && (
-          <span className="ml-2 px-1.5 py-0.5 bg-background/20 rounded text-xs font-medium">
-            {count.toLocaleString()}
+        <div className="flex items-center gap-2 flex-1">
+          <div className={`w-[14px] h-[14px] border border-white/[0.06] rounded-sm relative transition-all ${
+            isActive ? 'bg-[#3b82f6] border-[#3b82f6]' : ''
+          }`}>
+            {isActive && (
+              <div className="absolute inset-0 flex items-center justify-center text-white text-[10px]">
+                ✓
+              </div>
+            )}
+          </div>
+          <span className={`text-[12px] ${isActive ? 'text-white font-medium' : 'text-white/70'}`}>
+            {label}
           </span>
-        )}
-      </button>
+        </div>
+        <span className={`text-[11px] px-1.5 py-0.5 bg-[#050505] rounded-full ${
+          color ? `text-${color}` : 'text-white/50'
+        }`}>
+          {count.toLocaleString()}
+        </span>
+      </div>
     );
   };
-  
-  const SectionHeader = ({ 
-    section, 
-    title, 
-    icon 
-  }: { 
-    section: keyof typeof expandedSections; 
-    title: string; 
-    icon?: React.ReactNode;
-  }) => (
-    <button
-      onClick={() => toggleSection(section)}
-      className="flex items-center justify-between w-full px-3 py-2 hover:bg-muted/50 rounded-lg transition-colors"
-    >
-      <div className="flex items-center gap-2 font-medium text-sm">
-        {icon}
-        {title}
-      </div>
-      {expandedSections[section] ? (
-        <ChevronDown className="h-4 w-4" />
-      ) : (
-        <ChevronRight className="h-4 w-4" />
-      )}
-    </button>
-  );
-  
-  if (isLoading) {
+
+  if (!stats) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-2 p-4">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          <span className="text-sm text-muted-foreground">Loading filters...</span>
-        </div>
+      <div className="p-5 flex items-center justify-center">
+        <div className="text-white/30 text-[12px]">Loading filters...</div>
       </div>
     );
   }
-  
-  if (!stats) return null;
-  
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4" />
-          <h2 className="font-semibold">Filters</h2>
-        </div>
-        {filters.length > 0 && (
-          <button
-            onClick={clearFilters}
-            className="flex items-center gap-1 px-2 py-1 text-xs text-destructive hover:bg-destructive/10 rounded transition-colors"
-          >
-            <X className="h-3 w-3" />
-            Clear
-          </button>
-        )}
-      </div>
-      
-      {/* Active filters count */}
-      {showingCount < stats.total && (
-        <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
-          <div className="text-sm text-center">
-            <span className="font-medium text-primary">{showingCount.toLocaleString()}</span>
-            <span className="text-muted-foreground"> of </span>
-            <span className="font-medium">{stats.total.toLocaleString()}</span>
-            <span className="text-muted-foreground"> contractors</span>
-          </div>
-        </div>
-      )}
-      
+    <div className="filter-sections">
       {/* Completion Score */}
-      <div className="space-y-2">
-        <SectionHeader section="completion" title="Completion Score" icon={<Target className="h-4 w-4" />} />
-        {expandedSections.completion && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="completion-80-100" label="80-100% (Excellent)" count={stats.completion.high} color="green" />
-            <FilterButton filter="completion-60-79" label="60-79% (Good)" count={stats.completion.medium} color="yellow" />
-            <FilterButton filter="completion-35-59" label="35-59% (Fair)" count={stats.completion.low} color="orange" />
-            <FilterButton filter="completion-0-34" label="0-34% (Poor)" count={stats.completion.veryLow} color="red" />
-          </div>
-        )}
-      </div>
-      
+      <FilterSection id="completion" title="Completion Score" icon={Target}>
+        <FilterOption 
+          filterId="completion-80-100" 
+          label="80-100% (Excellent)" 
+          count={stats.completion.excellent}
+        />
+        <FilterOption 
+          filterId="completion-60-79" 
+          label="60-79% (Good)" 
+          count={stats.completion.good}
+        />
+        <FilterOption 
+          filterId="completion-35-59" 
+          label="35-59% (Fair)" 
+          count={stats.completion.fair}
+        />
+        <FilterOption 
+          filterId="completion-0-34" 
+          label="0-34% (Poor)" 
+          count={stats.completion.poor}
+        />
+      </FilterSection>
+
       {/* Location */}
-      <div className="space-y-2">
-        <SectionHeader section="location" title="Location" icon={<MapPin className="h-4 w-4" />} />
-        {expandedSections.location && (
-          <div className="space-y-1 pl-2 max-h-48 overflow-y-auto">
-            <FilterButton filter="alabama" label="Alabama (AL)" count={stats.states.alabama} color="blue" />
-            <FilterButton filter="arkansas" label="Arkansas (AR)" count={stats.states.arkansas} color="blue" />
-            <FilterButton filter="idaho" label="Idaho (ID)" count={stats.states.idaho} color="blue" />
-            <FilterButton filter="kansas" label="Kansas (KS)" count={stats.states.kansas} color="blue" />
-            <FilterButton filter="kentucky" label="Kentucky (KY)" count={stats.states.kentucky} color="blue" />
-            <FilterButton filter="mississippi" label="Mississippi (MS)" count={stats.states.mississippi} color="blue" />
-            <FilterButton filter="montana" label="Montana (MT)" count={stats.states.montana} color="blue" />
-            <FilterButton filter="newMexico" label="New Mexico (NM)" count={stats.states.newMexico} color="blue" />
-            <FilterButton filter="oklahoma" label="Oklahoma (OK)" count={stats.states.oklahoma} color="blue" />
-            <FilterButton filter="southDakota" label="South Dakota (SD)" count={stats.states.southDakota} color="blue" />
-            <FilterButton filter="utah" label="Utah (UT)" count={stats.states.utah} color="blue" />
-            <FilterButton filter="westVirginia" label="West Virginia (WV)" count={stats.states.westVirginia} color="blue" />
-          </div>
-        )}
-      </div>
-      
-      {/* Category - 14 Real Mega Categories */}
-      <div className="space-y-2">
-        <SectionHeader section="category" title="Industry (14 Categories)" icon={<Building2 className="h-4 w-4" />} />
-        {expandedSections.category && (
-          <div className="space-y-1 pl-2 max-h-64 overflow-y-auto">
-            <FilterButton filter="roofing" label="Roofing" count={stats.categories.roofing} color="purple" />
-            <FilterButton filter="hvac" label="HVAC" count={stats.categories.hvac} color="purple" />
-            <FilterButton filter="plumbing" label="Plumbing" count={stats.categories.plumbing} color="purple" />
-            <FilterButton filter="electrical" label="Electrical" count={stats.categories.electrical} color="purple" />
-            <FilterButton filter="remodeling" label="Remodeling & Finishing" count={stats.categories.remodeling} color="purple" />
-            <FilterButton filter="exterior" label="Exterior & Landscaping" count={stats.categories.exterior} color="purple" />
-            <FilterButton filter="heavyCivil" label="Heavy & Civil Work" count={stats.categories.heavyCivil} color="purple" />
-            <FilterButton filter="homeBuilding" label="Home Building" count={stats.categories.homeBuilding} color="purple" />
-            <FilterButton filter="specialty" label="Specialty Trades & Handyman" count={stats.categories.specialty} color="purple" />
-            <FilterButton filter="suppliers" label="Suppliers & Materials" count={stats.categories.suppliers} color="purple" />
-            <FilterButton filter="ancillary" label="Ancillary Services" count={stats.categories.ancillary} color="purple" />
-            <FilterButton filter="construction" label="General Construction" count={stats.categories.construction} color="purple" />
-            <FilterButton filter="windowDoor" label="Window & Door" count={stats.categories.windowDoor} color="purple" />
-            <FilterButton filter="other" label="Other" count={stats.categories.other} color="purple" />
-          </div>
-        )}
-      </div>
-      
-      {/* Performance */}
-      <div className="space-y-2">
-        <SectionHeader section="performance" title="Website Performance" icon={<Zap className="h-4 w-4" />} />
-        {expandedSections.performance && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="high-psi" label="High Speed (85+)" count={stats.speed.high} color="green" />
-            <FilterButton filter="medium-psi" label="Medium Speed (60-84)" count={stats.speed.medium} color="yellow" />
-            <FilterButton filter="low-psi" label="Low Speed (<60)" count={stats.speed.low} color="red" />
-          </div>
-        )}
-      </div>
-      
-      {/* Reviews */}
-      <div className="space-y-2">
-        <SectionHeader section="reviews" title="Review Quality" icon={<Star className="h-4 w-4" />} />
-        {expandedSections.reviews && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="high-rating" label="High Rating (4.5+)" count={stats.reviews.highRating} color="green" />
-            <FilterButton filter="low-rating" label="Low Rating (<4.0)" count={stats.reviews.lowRating} color="red" />
-            <FilterButton filter="many-reviews" label="Many Reviews (50+)" count={stats.reviews.manyReviews} color="blue" />
-            <FilterButton filter="few-reviews" label="Few Reviews (<20)" count={stats.reviews.fewReviews} color="orange" />
-            <FilterButton filter="active-reviews" label="Active (Recent)" count={stats.reviews.activeReviews} color="green" />
-            <FilterButton filter="inactive-reviews" label="Inactive (6mo+)" count={stats.reviews.inactiveReviews} color="yellow" />
-            <FilterButton filter="no-reviews" label="No Reviews" count={stats.reviews.noReviews} color="red" />
-          </div>
-        )}
-      </div>
-      
-      {/* Website Builders */}
-      <div className="space-y-2">
-        <SectionHeader section="builders" title="Website Builder" icon={<Globe className="h-4 w-4" />} />
-        {expandedSections.builders && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="custom-site" label="Custom/WordPress" count={stats.builders.custom} color="green" />
-            <FilterButton filter="wix-site" label="Wix" count={stats.builders.wix} color="blue" />
-            <FilterButton filter="godaddy-site" label="GoDaddy" count={stats.builders.godaddy} color="orange" />
-            <FilterButton filter="squarespace-site" label="Squarespace" count={stats.builders.squarespace} color="purple" />
-          </div>
-        )}
-      </div>
-      
+      <FilterSection id="location" title="Location" icon={MapPin}>
+        <FilterOption filterId="alabama" label="Alabama" count={0} />
+        <FilterOption filterId="arkansas" label="Arkansas" count={0} />
+        <FilterOption filterId="idaho" label="Idaho" count={0} />
+        <FilterOption filterId="kansas" label="Kansas" count={0} />
+        <FilterOption filterId="kentucky" label="Kentucky" count={0} />
+        <FilterOption filterId="mississippi" label="Mississippi" count={0} />
+        <FilterOption filterId="montana" label="Montana" count={0} />
+        <FilterOption filterId="newMexico" label="New Mexico" count={0} />
+        <FilterOption filterId="oklahoma" label="Oklahoma" count={0} />
+        <FilterOption filterId="southDakota" label="South Dakota" count={0} />
+        <FilterOption filterId="utah" label="Utah" count={0} />
+        <FilterOption filterId="westVirginia" label="West Virginia" count={0} />
+      </FilterSection>
+
+      {/* Industry */}
+      <FilterSection id="industry" title="Industry (14)" icon={Building2}>
+        <FilterOption 
+          filterId="other" 
+          label="Other" 
+          count={stats.categories.other}
+        />
+        <FilterOption 
+          filterId="roofing" 
+          label="Roofing" 
+          count={stats.categories.roofing}
+        />
+        <FilterOption 
+          filterId="hvac" 
+          label="HVAC" 
+          count={stats.categories.hvac}
+        />
+        <FilterOption 
+          filterId="remodeling" 
+          label="Remodeling & Finishing" 
+          count={stats.categories.remodeling}
+        />
+        <FilterOption 
+          filterId="specialty" 
+          label="Specialty Trades" 
+          count={stats.categories.specialty}
+        />
+        <FilterOption 
+          filterId="plumbing" 
+          label="Plumbing" 
+          count={stats.categories.plumbing}
+        />
+        <FilterOption 
+          filterId="exterior" 
+          label="Exterior & Landscaping" 
+          count={stats.categories.exterior}
+        />
+        <FilterOption 
+          filterId="electrical" 
+          label="Electrical" 
+          count={stats.categories.electrical}
+        />
+        <FilterOption 
+          filterId="suppliers" 
+          label="Suppliers & Materials" 
+          count={stats.categories.suppliers}
+        />
+        <FilterOption 
+          filterId="windowDoor" 
+          label="Window & Door" 
+          count={stats.categories.windowDoor}
+        />
+      </FilterSection>
+
+      {/* Website Performance */}
+      <FilterSection id="performance" title="Website Performance" icon={Zap}>
+        <FilterOption 
+          filterId="high-psi" 
+          label="High Speed (85+)" 
+          count={stats.speed.high}
+        />
+        <FilterOption 
+          filterId="medium-psi" 
+          label="Medium (60-84)" 
+          count={stats.speed.medium}
+        />
+        <FilterOption 
+          filterId="low-psi" 
+          label="Low Speed (<60)" 
+          count={stats.speed.low}
+        />
+      </FilterSection>
+
+      {/* Review Quality */}
+      <FilterSection id="reviews" title="Review Quality" icon={Star}>
+        <FilterOption 
+          filterId="high-rating" 
+          label="High Rating (4.5+)" 
+          count={stats.reviews.highRating}
+        />
+        <FilterOption 
+          filterId="few-reviews" 
+          label="Few Reviews (<20)" 
+          count={stats.reviews.fewReviews}
+        />
+        <FilterOption 
+          filterId="inactive-reviews" 
+          label="Inactive (6mo+)" 
+          count={stats.reviews.inactive}
+        />
+        <FilterOption 
+          filterId="no-reviews" 
+          label="No Reviews" 
+          count={stats.reviews.noReviews}
+        />
+        <FilterOption 
+          filterId="active-reviews" 
+          label="Active (Recent)" 
+          count={stats.reviews.active}
+        />
+        <FilterOption 
+          filterId="many-reviews" 
+          label="Many Reviews (50+)" 
+          count={stats.reviews.manyReviews}
+        />
+        <FilterOption 
+          filterId="low-rating" 
+          label="Low Rating (<4.0)" 
+          count={stats.reviews.lowRating}
+        />
+      </FilterSection>
+
+      {/* Website Builder */}
+      <FilterSection id="builder" title="Website Builder" icon={Globe}>
+        <FilterOption 
+          filterId="custom-site" 
+          label="Custom/WordPress" 
+          count={stats.builders.custom}
+        />
+        <FilterOption 
+          filterId="squarespace-site" 
+          label="Squarespace" 
+          count={stats.builders.squarespace}
+        />
+        <FilterOption 
+          filterId="wix-site" 
+          label="Wix" 
+          count={stats.builders.wix}
+        />
+        <FilterOption 
+          filterId="godaddy-site" 
+          label="GoDaddy" 
+          count={stats.builders.godaddy}
+        />
+      </FilterSection>
+
       {/* Domain Age */}
-      <div className="space-y-2">
-        <SectionHeader section="domain" title="Domain Age" icon={<Calendar className="h-4 w-4" />} />
-        {expandedSections.domain && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="established-domain" label="Established (5+ years)" count={stats.domain.established} color="green" />
-            <FilterButton filter="new-domain" label="New Domain (<2 years)" count={stats.domain.new} color="blue" />
-            <FilterButton filter="expiring-domain" label="Expiring Soon (3mo)" count={stats.domain.expiringSoon} color="red" />
-          </div>
-        )}
-      </div>
+      <FilterSection id="domain" title="Domain Age" icon={Clock}>
+        <FilterOption 
+          filterId="established-domain" 
+          label="Established (5+ yrs)" 
+          count={stats.domain.established}
+        />
+        <FilterOption 
+          filterId="new-domain" 
+          label="New Domain (<2 yrs)" 
+          count={stats.domain.new}
+        />
+        <FilterOption 
+          filterId="expiring-domain" 
+          label="⚠️ Expiring Soon" 
+          count={stats.domain.expiring}
+          color="orange-400"
+        />
+      </FilterSection>
 
       {/* Campaign Status */}
-      <div className="space-y-2">
-        <SectionHeader section="campaigns" title="Campaign Status" icon={<Target className="h-4 w-4" />} />
-        {expandedSections.campaigns && (
-          <div className="space-y-1 pl-2">
-            <FilterButton filter="campaign-ready" label="Ready" count={stats.campaigns.ready} color="green" />
-            <FilterButton filter="campaign-processing" label="Processing" count={stats.campaigns.processing} color="yellow" />
-            <FilterButton filter="campaign-not-setup" label="Not Setup" count={stats.campaigns.notSetup} color="default" />
-            <FilterButton filter="campaign-failed" label="Failed" count={stats.campaigns.failed} color="red" />
-          </div>
-        )}
-      </div>
+      <FilterSection id="campaign" title="Campaign Status" icon={Send}>
+        <FilterOption 
+          filterId="campaign-not-setup" 
+          label="Not Setup" 
+          count={stats.campaigns.notSetup}
+        />
+        <FilterOption 
+          filterId="campaign-ready" 
+          label="Ready" 
+          count={stats.campaigns.ready}
+        />
+        <FilterOption 
+          filterId="campaign-processing" 
+          label="Processing" 
+          count={stats.campaigns.processing}
+        />
+        <FilterOption 
+          filterId="campaign-failed" 
+          label="Failed" 
+          count={stats.campaigns.failed}
+        />
+      </FilterSection>
     </div>
   );
 }

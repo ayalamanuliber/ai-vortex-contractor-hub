@@ -87,10 +87,23 @@ export default function ModernFilters() {
         // Ensure stats has expected structure with defaults
         const safeStats = {
           total: result.stats?.total || 0,
-          completion: result.stats?.completion || { excellent: 0, good: 0, fair: 0, poor: 0 },
+          completion: {
+            excellent: result.stats?.completion?.high || 0,
+            good: result.stats?.completion?.medium || 0, 
+            fair: result.stats?.completion?.low || 0,
+            poor: result.stats?.completion?.veryLow || 0
+          },
           categories: result.stats?.categories || { other: 0, roofing: 0, hvac: 0, remodeling: 0, specialty: 0, plumbing: 0, exterior: 0, electrical: 0, suppliers: 0, windowDoor: 0 },
           speed: result.stats?.speed || { high: 0, medium: 0, low: 0 },
-          reviews: result.stats?.reviews || { highRating: 0, lowRating: 0, fewReviews: 0, inactive: 0, noReviews: 0, active: 0, manyReviews: 0 },
+          reviews: {
+            highRating: result.stats?.reviews?.highRating || 0,
+            lowRating: result.stats?.reviews?.lowRating || 0,
+            fewReviews: result.stats?.reviews?.fewReviews || 0,
+            inactive: result.stats?.reviews?.inactiveReviews || 0,
+            noReviews: result.stats?.reviews?.noReviews || 0,
+            active: result.stats?.reviews?.activeReviews || 0,
+            manyReviews: result.stats?.reviews?.manyReviews || 0
+          },
           builders: result.stats?.builders || { custom: 0, squarespace: 0, wix: 0, godaddy: 0 },
           domain: result.stats?.domain || { established: 0, new: 0, expiring: 0 },
           campaigns: result.stats?.campaigns || { notSetup: 0, ready: 0, processing: 0, failed: 0 }

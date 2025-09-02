@@ -17,7 +17,8 @@ export default function HomePage() {
     filteredContractors,
     filters,
     clearFilters,
-    setContractors
+    setContractors,
+    setSearchMode
   } = useContractorStore();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('score-high-low');
@@ -28,6 +29,7 @@ export default function HomePage() {
   const performGlobalSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
       // Clear search - reload initial data
+      setSearchMode(false);
       const response = await fetch('/api/simple-contractors?start=0&limit=200');
       const result = await response.json();
       setContractors(result.contractors || []);
@@ -35,9 +37,10 @@ export default function HomePage() {
     }
 
     setIsSearching(true);
+    setSearchMode(true);
     try {
-      // Search across ALL contractors with no limit
-      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(query)}&start=0&limit=10000`);
+      // Search across ALL contractors but limit to reasonable amount for display
+      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(query)}&start=0&limit=1000`);
       const result = await response.json();
       setContractors(result.contractors || []);
     } catch (error) {
@@ -45,7 +48,7 @@ export default function HomePage() {
     } finally {
       setIsSearching(false);
     }
-  }, [setContractors]);
+  }, [setContractors, setSearchMode]);
 
   // Debounced search
   useEffect(() => {

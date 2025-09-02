@@ -13,6 +13,7 @@ interface ContractorStore {
   isLoading: boolean;
   hasMore: boolean;
   searchQuery: string;
+  isSearchMode: boolean;
   
   // Actions
   setContractors: (contractors: MergedContractor[]) => void;
@@ -25,6 +26,7 @@ interface ContractorStore {
   setLoading: (loading: boolean) => void;
   setHasMore: (hasMore: boolean) => void;
   setSearchQuery: (query: string) => void;
+  setSearchMode: (isSearchMode: boolean) => void;
   updateCampaignStatus: (
     businessId: string, 
     emailNumber: number, 
@@ -45,6 +47,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
   isLoading: false,
   hasMore: true,
   searchQuery: '',
+  isSearchMode: false,
   
   // Actions
   setContractors: (contractors) => {
@@ -214,6 +217,10 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
       filteredContractors: filtered,
       showingCount: filtered.length
     });
+  },
+
+  setSearchMode: (isSearchMode) => {
+    set({ isSearchMode });
   },
   
   updateCampaignStatus: async (businessId, emailNumber, status) => {

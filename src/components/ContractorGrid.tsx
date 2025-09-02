@@ -23,7 +23,8 @@ export default function ContractorGrid() {
     setLoading,
     hasMore,
     setHasMore,
-    setCurrentProfile
+    setCurrentProfile,
+    isSearchMode
   } = useContractorStore();
 
   // Load initial data
@@ -31,12 +32,12 @@ export default function ContractorGrid() {
     loadInitialData();
   }, []);
 
-  // Load more when scrolling
+  // Load more when scrolling (disabled in search mode)
   useEffect(() => {
-    if (inView && hasMore && !isLoading && page > 0) {
+    if (inView && hasMore && !isLoading && page > 0 && !isSearchMode) {
       loadMore();
     }
-  }, [inView, hasMore, isLoading, page]);
+  }, [inView, hasMore, isLoading, page, isSearchMode]);
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -61,7 +62,7 @@ export default function ContractorGrid() {
       setPage(1);
       
       // Check if there's more data
-      if (data.length < 100) {
+      if (data.length < 200) {
         setHasMore(false);
       }
     } catch (error) {
@@ -87,7 +88,7 @@ export default function ContractorGrid() {
         addContractors(newData);
         setHasMore(result.hasMore);
         setPage(prev => prev + 1);
-        if (newData.length < 99) {
+        if (newData.length < 200) {
           setHasMore(false);
         }
       }
@@ -141,25 +142,41 @@ export default function ContractorGrid() {
         ))}
       </div>
       
-      {/* Infinite scroll trigger */}
-      <div ref={ref} className="h-10 flex items-center justify-center">
-        {isLoading && (
-          <div className="flex items-center space-x-2 text-muted-foreground">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Loading more contractors...</span>
-          </div>
-        )}
-        {!hasMore && filteredContractors.length > 0 && (
+      {/* Infinite scroll trigger - hidden in search mode */}
+      {!isSearchMode && (
+        <div ref={ref} className="h-10 flex items-center justify-center">
+          {isLoading && (
+            <div className="flex items-center space-x-2 text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Loading more contractors...</span>
+            </div>
+          )}
+          {!hasMore && filteredContractors.length > 0 && (
+            <div className="text-center">
+              <p className="text-muted-foreground">
+                Showing all {filteredContractors.length} contractors
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Use filters to narrow down results
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Search mode info */}
+      {isSearchMode && filteredContractors.length > 0 && (
+        <div className="h-10 flex items-center justify-center">
           <div className="text-center">
             <p className="text-muted-foreground">
-              Showing all {filteredContractors.length} contractors
+              Found {filteredContractors.length} contractors matching your search
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Use filters to narrow down results
+              Clear search to browse all contractors with pagination
             </p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
 }

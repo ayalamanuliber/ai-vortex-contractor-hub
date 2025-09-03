@@ -39,29 +39,33 @@ export async function GET(request: NextRequest) {
       transformHeader: (header) => header.trim(),
     });
 
-    // Load campaigns JSON data (now array format)
-    let campaignsArray = [];
+    // Load campaigns JSON data (new object format with contractors key)
+    let campaignsData: any = { contractors: {} };
     try {
       const campaignsPath = path.join(process.cwd(), 'public', 'data', 'campaigns.json');
       const campaignsContent = await fs.readFile(campaignsPath, 'utf-8');
-      campaignsArray = JSON.parse(campaignsContent);
+      campaignsData = JSON.parse(campaignsContent);
     } catch (error) {
       console.log('No campaigns data found, using default');
-      campaignsArray = [];
+      campaignsData = { contractors: {} };
     }
 
     // Create campaigns lookup for performance
     const campaignsLookup: Record<string, any> = {};
-    campaignsArray.forEach((campaign: any) => {
-      if (campaign.business_id) {
+    const contractorsObj = campaignsData.contractors || {};
+    
+    Object.entries(contractorsObj).forEach(([contractorId, contractorData]: [string, any]) => {
+      if (contractorData.campaign_data) {
+        const campaign = contractorData.campaign_data;
+        
         // Store both padded and unpadded versions for flexible matching
-        const paddedId = campaign.business_id;
-        const unpaddedId = parseInt(campaign.business_id, 10).toString();
+        const paddedId = contractorId;
+        const unpaddedId = parseInt(contractorId, 10).toString();
         campaignsLookup[paddedId] = campaign;
         campaignsLookup[unpaddedId] = campaign;
         
         // Also store with various padding lengths for safety
-        const baseId = parseInt(campaign.business_id, 10);
+        const baseId = parseInt(contractorId, 10);
         campaignsLookup[baseId.toString().padStart(3, '0')] = campaign;
         campaignsLookup[baseId.toString().padStart(4, '0')] = campaign;
         campaignsLookup[baseId.toString().padStart(5, '0')] = campaign;

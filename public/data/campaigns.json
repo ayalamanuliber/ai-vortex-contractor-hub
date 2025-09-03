@@ -1,56 +1,56 @@
 {
   "database_info": {
     "generated_date": "2025-08-28T17:42:00.000000",
-    "total_contractors": 105,
+    "total_contractors": 103,
     "system_version": "FOCUS-INTEL V2.0",
-    "last_updated": "2025-08-30T09:10:56.549605"
+    "last_updated": "2025-09-03T15:35:37.606178"
   },
   "contractors": {
     "02184": {
       "company_name": "Sunflower State Exteriors",
       "trade": "Roofing contractor",
-      "location": "Hoisington, Kansas",
+      "location": "El Dorado, Kansas",
       "processing_status": "completed",
-      "timestamp": "2025-08-28T16:19:00.000000",
-      "cost": 0.0053,
-      "tokens": 43863,
-      "duration_minutes": 2.8,
+      "timestamp": "2025-08-30T09:01:34.531267",
+      "cost": 0.0056867,
+      "tokens": 40096,
+      "duration_minutes": 2.5882142861684163,
       "campaign_data": {
-        "business_id": "SSE-2025",
+        "business_id": "02184",
         "company_name": "Sunflower State Exteriors",
         "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
           "window_a_time": "6:30 AM",
           "window_b_time": "7:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your roofing business and online presence",
-            "send_day": "Tuesday",
+            "subject": "Your 1 Google Review: A Quick Fix for Sunflower State Exteriors?",
+            "send_day": "Monday",
             "send_time": "6:30 AM",
-            "body": "Brad,\n\nI noticed Sunflower State Exteriors and wanted to reach out directly. Your work looks solid, but I see some gaps in your online setup that could be costing you quality leads.\n\nI help contractors like you fix these issues quickly - things like website credibility, review management, and professional email setup.\n\nWould you be open to a brief, no-fluff overview of how we tackle this for roofing businesses? Just the facts, no sales pitch.\n\nManu"
+            "body": "Manu here. Saw your Google reviews – or lack thereof, with just one. For a business like Sunflower State Exteriors, that's a direct hit on new business and building trust. I've analyzed 5,500+ contractors and know exactly why this happens and how to fix it fast. No big team, just direct solutions. Want to see a quick info packet on how we turn that around?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your roofing business and online presence",
-            "send_day": "Thursday",
-            "send_time": "7:30 PM",
-            "body": "Brad,\n\nJust following up on my email from Tuesday. I know you're busy with jobs, but wanted to reiterate that my focus is on practical solutions for contractors.\n\nThe online credibility gaps I mentioned aren't just cosmetic - they're directly impacting your ability to attract and convert quality leads.\n\nStill interested in that brief overview? It's based on data from 5,500+ contractors and shows exactly what works.\n\nManu"
+            "subject": "Re: Your 1 Google Review: A Quick Fix for Sunflower State Exteriors?",
+            "send_day": "Wednesday",
+            "send_time": "6:30 AM",
+            "body": "Following up on my last email. That single Google review for Sunflower State Exteriors isn't just a number; it's a trust barrier costing you new leads. I specialize in fixing these exact problems for contractors like you, quickly and without overhead. My data shows how a strong online reputation directly translates to more calls. If you're serious about fixing this, I can send over an info packet outlining a practical plan."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your roofing business and online presence",
-            "send_day": "Monday",
+            "subject": "Quick question about your Google reviews",
+            "send_day": "Friday",
             "send_time": "6:30 AM",
-            "body": "Brad,\n\nOne last check on this. I understand if it's not the right time, but fixing your online presence could be a game-changer for Sunflower State Exteriors.\n\nMy approach is direct: identify what's holding you back, fix it fast, and get you attracting better clients.\n\nIf you'd like to see exactly how this works, just reply 'info' and I'll send the details. Otherwise, no worries.\n\nManu"
+            "body": "Still thinking about your Google reviews for Sunflower State Exteriors. Building trust online is critical for contractors today. If that 1 review is holding you back from new business, I have a straightforward approach to get you more, fast. I don't have testimonials yet, but I have the data and direct experience fixing this specific issue for others. Can I send you a quick info packet so you can see how? No pressure, just the facts."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Local references"
+          "proof_preference": "Local references/Case studies"
         }
       }
     },
@@ -59,10 +59,10 @@
       "trade": "Roofing contractor",
       "location": "Pocatello, Idaho",
       "processing_status": "completed",
-      "timestamp": "2025-08-28T21:36:29.259670",
-      "cost": 0.0059826,
-      "tokens": 38911,
-      "duration_minutes": 2.322221267223358,
+      "timestamp": "2025-08-29T20:55:57.057682",
+      "cost": 0.0054251,
+      "tokens": 39046,
+      "duration_minutes": 2.3247180501619975,
       "campaign_data": {
         "business_id": "00725",
         "company_name": "Wilson Roofing Inc.",
@@ -70,35 +70,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "7:00 AM",
-          "window_b_time": "5:30 PM"
+          "window_a_time": "06:30 AM",
+          "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your Wilson Roofing reviews are 1349 days old (and your netzero.net email)",
+            "subject": "Quick question about Wilson Roofing reviews",
             "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Wilson, I noticed your 13 reviews for Wilson Roofing are over 3 years old. That's a huge missed opportunity for new business, especially with your netzero.net email not building trust. I fix these kinds of problems for contractors, fast. No team, no overhead, just results based on analyzing 5,500+ other contractors. Want a quick rundown of what's costing you?"
+            "send_time": "06:30 AM",
+            "body": "I noticed your 13 reviews are 1349 days old. For a roofing company like Wilson Roofing, that's usually a sign you're losing out on new jobs to competitors with fresher feedback.\n\nI specialize in fixing this exact problem for contractors. My data from 5,500+ contractors shows exactly why this happens and how to get those new reviews flowing without adding more work to your plate.\n\nWould you be open to a quick email exchange to see how we could get your online reputation working for you again?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your Wilson Roofing reviews are 1349 days old (and your netzero.net email)",
+            "subject": "Re: Quick question about Wilson Roofing reviews",
             "send_day": "Thursday",
-            "send_time": "7:00 AM",
-            "body": "Wilson, following up on your outdated reviews and email. Most contractors I talk to lose out on 15-20% of potential leads because of these issues. It's not just about reviews; it impacts your cash flow and overall efficiency. I can show you exactly how other roofers are fixing this. No commitment, just a simple explanation. Interested in seeing the data?"
+            "send_time": "07:30 PM",
+            "body": "Following up on my last email about your outdated reviews.\n\nMany contractors I've analyzed face the same issue: great work, but no system to turn satisfied customers into new online reviews. This directly impacts new lead generation and cash flow.\n\nWhile I don't have testimonials yet, I have the data and a clear process to get your review system back on track, fast. No complex packages, just direct execution.\n\nIf you're interested in stopping those missed opportunities, let me know. I can send a brief breakdown of my approach."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your Wilson Roofing reviews are 1349 days old (and your netzero.net email)",
+            "subject": "Re: Quick question about Wilson Roofing reviews",
             "send_day": "Monday",
-            "send_time": "7:00 AM",
-            "body": "Wilson, one last time about those old reviews and your netzero.net email. I know you're busy, but ignoring these means you're leaving money on the table. My process is direct, no fluff, and built on real data from thousands of contractors. If you want to see a clear plan to get your online presence working for you, just reply \"Send info.\" I'll send a brief overview, no strings attached."
+            "send_time": "06:30 AM",
+            "body": "One last check on your online reviews. An inactive review profile isn't just a small problem; it's a direct hit to your credibility and ability to win new jobs against competitors.\n\nMy goal is to fix this specific problem for Wilson Roofing, quickly and efficiently, so you can focus on your core business.\n\nIf improving your online reputation and getting more leads from it is a priority, reply to this email. We can quickly discuss if my direct approach is the right fit for you. If not, no worries."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data/Local references"
+          "proof_preference": "Local references"
         }
       }
     },
@@ -107,10 +107,10 @@
       "trade": "Roofing contractor",
       "location": "Kansas City, Kansas",
       "processing_status": "completed",
-      "timestamp": "2025-08-28T21:47:13.444948",
-      "cost": 0.006266300000000001,
-      "tokens": 42312,
-      "duration_minutes": 2.6295244336128234,
+      "timestamp": "2025-08-30T09:05:52.986635",
+      "cost": 0.006002400000000001,
+      "tokens": 41105,
+      "duration_minutes": 2.662491766611735,
       "campaign_data": {
         "business_id": "02824",
         "company_name": "1 Core Construction LLC",
@@ -118,35 +118,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "6:45 AM",
-          "window_b_time": "6:30 PM"
+          "window_a_time": "06:45 AM",
+          "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your 30 reviews are 570 days old. Problem?",
+            "subject": "Your 570-day old reviews at 1 Core Construction",
             "send_day": "Tuesday",
-            "send_time": "6:45 AM",
-            "body": "I noticed your last Google review for 1 Core Construction was almost two years ago. That's a missed opportunity for new leads. In our trade, an outdated online presence can cost you jobs, especially when potential clients are checking out newer, more active competitors. I help contractors like you fix these kinds of gaps quickly. Want a quick rundown on what's working for others?"
+            "send_time": "06:45 AM",
+            "body": "I noticed your last 30 reviews for 1 Core Construction are over 570 days old. For contractors, this often means losing out on good leads because potential clients see a stale online presence. I help owners like you fix these specific reputation problems fast, without the usual headaches. Want to see how?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your 30 reviews are 570 days old. Problem?",
+            "subject": "Re: Your 570-day old reviews at 1 Core Construction",
             "send_day": "Thursday",
-            "send_time": "6:45 AM",
-            "body": "Following up on my last email about your online reviews. An inactive online profile often means fewer qualified leads coming in, directly impacting your project pipeline and cash flow. I've analyzed over 5,500 contractors and know what moves the needle. I don't have testimonials yet, but I have data showing how an updated online presence brings in more consistent work. Can I send you a brief explanation?"
+            "send_time": "07:30 PM",
+            "body": "Following up on my last email about your outdated reviews. A stale online reputation doesn't just look bad; it directly impacts your lead flow and trust. I've analyzed data from 5,500+ contractors and know exactly what it takes to refresh your online presence and bring in new, qualified leads. If you're open to a quick fix, let me know."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your 30 reviews are 570 days old. Problem?",
+            "subject": "Re: Your 570-day old reviews at 1 Core Construction",
             "send_day": "Monday",
-            "send_time": "6:45 AM",
-            "body": "One last thought on your online reputation. Stale reviews tell potential clients you might not be active or reliable, pushing them to your competition. My focus is fixing specific contractor problems fast, without the usual overhead. If getting more current reviews and boosting your lead flow is on your mind, I can send you a short, no-fluff info packet explaining my approach. No commitment."
+            "send_time": "06:45 AM",
+            "body": "One last check on your outdated reviews. Many contractors struggle with this, letting valuable leads slip away. I offer fast, direct solutions to get your online reputation back on track, often impacting cash flow and efficiency. No fluff, just execution. If this is a problem you want solved, reply to this email and we can discuss your specific situation."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data/Local references"
+          "proof_preference": "Data"
         }
       }
     },
@@ -249,12 +249,12 @@
     "05199": {
       "company_name": "XTREME Roofing & Construction",
       "trade": "Roofing contractor",
-      "location": "N/A, N/A",
+      "location": "Lexington area, Kentucky",
       "processing_status": "completed",
-      "timestamp": "2025-08-28T22:13:38.891740",
-      "cost": 0.006024300000000001,
-      "tokens": 46336,
-      "duration_minutes": 3.0588160037994383,
+      "timestamp": "2025-08-30T09:01:34.189946",
+      "cost": 0.0058582,
+      "tokens": 38816,
+      "duration_minutes": 2.482763969898224,
       "campaign_data": {
         "business_id": "05199",
         "company_name": "XTREME Roofing & Construction",
@@ -262,35 +262,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "06:30 AM",
+          "window_a_time": "07:00 AM",
           "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your online reviews are costing you jobs",
+            "subject": "Your 3.2-star rating is losing XTREME Roofing jobs",
             "send_day": "Tuesday",
-            "send_time": "06:30 AM",
-            "body": "I saw XTREME Roofing & Construction's online reviews and know they're costing you new business. This isn't about minor fixes; it's about real money walking out the door. Your yahoo.com email also doesn't help with trust. I've analyzed 5,500+ contractors and can show you exactly what's going wrong and how to fix it fast. No fluff, just results. Want a quick breakdown of what I found?"
+            "send_time": "07:00 AM",
+            "body": "I noticed XTREME Roofing & Construction's online reviews average 3.2 stars. This directly impacts your lead flow and trust with new customers. I specialize in fixing these exact problems for contractors, turning poor ratings into new business. I've analyzed data from 5,500+ contractors and know what works. Want to see how to fix this and get more qualified leads? Reply to this email."
           },
           {
             "email_number": 2,
-            "subject": "Re: Your online reviews are costing you jobs",
+            "subject": "Re: Your 3.2-star rating is losing XTREME Roofing jobs",
             "send_day": "Thursday",
-            "send_time": "06:30 AM",
-            "body": "Following up on my last email. If your online reputation isn't bringing in new leads, you're leaving money on the table. Many contractors struggle with this, and it impacts cash flow and growth. I don't have testimonials yet, but my data shows exactly what works to turn reviews into revenue. I can send you a short, direct overview of how to fix this without wasting your time. Just reply \"send info.\""
+            "send_time": "07:00 AM",
+            "body": "Following up on your online reviews. Many contractors overlook how much a low rating costs them in lost bids and wasted marketing spend. My approach isn't a generic package; it's about targeting your specific issues to improve your reputation fast. I don't have testimonials yet, but my data shows exactly what works. Let me know if you're open to a quick email exchange to discuss how."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your online reviews are costing you jobs - A quick fix",
+            "subject": "Re: Your 3.2-star rating is losing XTREME Roofing jobs",
             "send_day": "Monday",
-            "send_time": "06:30 AM",
-            "body": "Last attempt on this. Your online presence, including those reviews and even your yahoo.com email, is a bottleneck for new business. This isn't a complex problem, but it needs a direct solution. If you're serious about stopping the bleeding and getting more quality leads, I can provide a clear plan based on real contractor data. No sales pitch, just the facts. Reply if you want the details."
+            "send_time": "07:00 AM",
+            "body": "If your online reputation isn't bringing in enough new business, it's a problem that needs fixing. I can show you the exact steps to improve your reviews and get more trust from potential customers, directly impacting your bottom line. This isn't about fluff; it's about measurable results based on what works for thousands of other contractors. If you're serious about getting more jobs, just reply."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data"
+          "proof_preference": "Local references"
         }
       }
     },
@@ -347,10 +347,10 @@
       "trade": "Roofing contractor",
       "location": "Pocatello, Idaho",
       "processing_status": "completed",
-      "timestamp": "2025-08-28T22:35:23.688343",
-      "cost": 0.0058796000000000005,
-      "tokens": 45593,
-      "duration_minutes": 2.7634620666503906,
+      "timestamp": "2025-08-29T20:55:53.319205",
+      "cost": 0.0059021,
+      "tokens": 41262,
+      "duration_minutes": 2.4162717700004577,
       "campaign_data": {
         "business_id": "00625",
         "company_name": "Idaho Elite Roofing",
@@ -358,35 +358,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "7:00 AM",
-          "window_b_time": "5:30 PM"
+          "window_a_time": "6:30 AM - 7:30 AM",
+          "window_b_time": "6:00 PM - 7:00 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Is your online reputation costing Idaho Elite Roofing jobs?",
+            "subject": "Your online reviews: Losing jobs in Idaho?",
             "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "I noticed your business, Idaho Elite Roofing, and specifically a detail like your email address that can impact trust. My analysis of 5,500+ contractors shows small things like this often turn away potential customers before they even call. This isn't about general marketing; it's about fixing specific perception issues that cost you leads and jobs. I've got data on how this affects companies like yours. Would you be open to a quick info packet on how we identify and fix these reputation gaps?"
+            "send_time": "6:30 AM - 7:30 AM",
+            "body": "I saw a couple of recent negative reviews for Idaho Elite Roofing, and in our market, that can instantly cost you thousands in lost bids. I've analyzed 5,500+ contractors and know exactly why this happens and how to fix it fast. My process helps you turn that around, secure more leads, and improve your cash flow without any long-term contracts. Want to hear how? Reply to this email."
           },
           {
             "email_number": 2,
-            "subject": "Re: Is your online reputation costing Idaho Elite Roofing jobs?",
+            "subject": "Re: Your online reviews: Losing jobs in Idaho?",
             "send_day": "Thursday",
-            "send_time": "7:00 AM",
-            "body": "Following up on my last email. That small detail I mentioned about your online presence isn't just cosmetic; it's often a direct reason customers choose a competitor. My data shows how quickly trust is lost when professionalism isn't consistent across all touchpoints. I don't sell packages; I solve *your* specific problems quickly. If you're tired of losing out on good jobs due to perception, let me send over a brief breakdown of what's working for top contractors."
+            "send_time": "6:00 PM - 7:00 PM",
+            "body": "Just following up on my last email. That issue with negative reviews isn't just about appearances; it directly impacts your lead flow and cash position. I specialize in fixing these exact problems for contractors like you, getting measurable results quickly. I don't sell packages; I solve your specific issue. If you're serious about stopping the bleeding from bad reviews and getting more qualified leads, reply to this email and let me know."
           },
           {
             "email_number": 3,
-            "subject": "Quick question about Idaho Elite Roofing's online image",
+            "subject": "Re: Your online reviews: Losing jobs in Idaho?",
             "send_day": "Monday",
-            "send_time": "5:30 PM",
-            "body": "One last check on your online reputation. If potential customers are searching for Idaho Elite Roofing and finding anything that makes them pause, you're leaving money on the table. My approach is direct, data-driven, and focused on fast execution to fix these issues. No big teams or overhead here. If you're serious about ensuring your online image consistently attracts and converts more leads, just reply \"Send Info\" and I'll forward the details."
+            "send_time": "6:30 AM - 7:30 AM",
+            "body": "One last time on this: your online reputation is costing you real money every week. I understand you're busy, but ignoring this means more lost bids and harder lead generation. My approach is direct and gets results without wasting your time or money on fluff. I'm a one-man operation focused on fast execution. If you want to discuss a specific plan to fix your review problem and boost your business, just hit reply."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Local references, Data"
+          "proof_preference": "Local references"
         }
       }
     },
@@ -500,10 +500,10 @@
       "trade": "Roofing contractor",
       "location": "Birmingham, Alabama",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T17:37:19.754282",
-      "cost": 0.0057741,
-      "tokens": 41501,
-      "duration_minutes": 2.5276497999827066,
+      "timestamp": "2025-08-29T20:50:42.586078",
+      "cost": 0.006239300000000001,
+      "tokens": 41169,
+      "duration_minutes": 2.5205965797106424,
       "campaign_data": {
         "business_id": "00009",
         "company_name": "Best Choice Roofing",
@@ -511,35 +511,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "7:00 AM",
-          "window_b_time": "6:30 PM"
+          "window_a_time": "6:30 AM",
+          "window_b_time": "8:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your Reputation: Losing Business to Bad Reviews?",
+            "subject": "Your Best Choice Roofing Domain Expires in 34 Days",
             "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "I'm reaching out because I've seen how negative online reviews can directly hit a roofing business like Best Choice Roofing. My data from 5,500+ contractors shows that even a few bad reviews can cost you significant leads and trust. I can pinpoint exactly where your online reputation is vulnerable and fix it fast. This isn't about generic SEO; it's about protecting your name and your bottom line. Reply to learn how."
+            "send_time": "6:30 AM",
+            "body": "Manu here. I noticed your domain, bestchoiceroofing.com, is set to expire in 34 days. This is a critical issue that can shut down your website and email, impacting your leads and reputation. I help contractors like you fix urgent problems fast. If you're slammed, I can take this off your plate immediately. Just reply to this email."
           },
           {
             "email_number": 2,
-            "subject": "Re: Your Reputation: Losing Business to Bad Reviews?",
+            "subject": "Re: Your Best Choice Roofing Domain Expires in 34 Days",
             "send_day": "Thursday",
-            "send_time": "7:00 AM",
-            "body": "Following up on how your online reputation directly impacts your lead flow and cash. Many contractors miss out on jobs because potential clients see outdated info or negative feedback first. I specialize in fixing these gaps, from managing reviews to ensuring your online presence is solid. My analysis shows specific areas for improvement for Best Choice Roofing. Let me know if you want a quick breakdown."
+            "send_time": "6:30 AM",
+            "body": "Following up on your domain expiry. This isn't just about your website; it directly impacts your lead generation and online reputation. My data from 5,500+ contractors shows how these issues snowball into bigger problems like inconsistent leads or negative reviews. Let me know if you want to quickly solve this and discuss other bottlenecks. Reply to this email."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your Reputation: Losing Business to Bad Reviews? - Quick Fix",
+            "subject": "Re: Your Best Choice Roofing Domain Expires in 34 Days - Next Steps",
             "send_day": "Monday",
-            "send_time": "7:00 AM",
-            "body": "One last time on getting your online reputation working for you, not against you. Ignoring negative reviews or a weak online presence is like leaving money on the table. I can show you the exact data on how this impacts Best Choice Roofing and offer a direct solution. No big teams, no overhead, just fast execution to fix your specific problem. Reply to schedule a quick chat."
+            "send_time": "8:30 PM",
+            "body": "Still on my radar: your domain expiry. I understand you're busy on roofs, but this needs attention. Beyond this immediate fix, I specialize in streamlining operations and boosting lead flow for contractors. I don't have testimonials yet, but my data-driven approach gets results. If you're serious about tackling these issues, just reply to this email."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data"
+          "proof_preference": "Data/Local references"
         }
       }
     },
@@ -598,10 +598,10 @@
       "trade": "Roofing Service",
       "location": "Bonners Ferry, Idaho",
       "processing_status": "completed",
-      "timestamp": "2025-08-28T23:57:27.496906",
-      "cost": 0.005849300000000001,
-      "tokens": 45039,
-      "duration_minutes": 3.080249599615733,
+      "timestamp": "2025-08-29T20:53:28.173127",
+      "cost": 0.0060142,
+      "tokens": 43992,
+      "duration_minutes": 2.6955800652503967,
       "campaign_data": {
         "business_id": "00611",
         "company_name": "Black Mountain Roofing LLC",
@@ -609,35 +609,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "7:30 AM",
-          "window_b_time": "7:30 PM"
+          "window_a_time": "7:00 AM",
+          "window_b_time": "6:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your mobile speed score: 36/100",
+            "subject": "Black Mountain Roofing: Your online reviews are costing you jobs",
             "send_day": "Tuesday",
-            "send_time": "7:30 AM",
-            "body": "Manu here. I just ran a quick check on your Black Mountain Roofing website, and your mobile speed score came back at 36 out of 100. This is critical because slow sites on phones often mean lost calls and potential customers who just move on. I specialize in fixing these exact problems for contractors like you, no fancy packages, just direct solutions. Would you be open to a quick info sheet on how this impacts your business?"
+            "send_time": "7:00 AM",
+            "body": "Hi [Owner Name],\n\nI'm Manu. I noticed your online reviews aren't fully showcasing Black Mountain Roofing's quality. In this market, a strong reputation and fresh reviews are critical for winning new jobs.\n\nI help contractors like you fix this. My data from analyzing 5,500+ contractors shows exactly how to build a dominant online reputation that brings in more leads.\n\nWant to see how to start getting more 5-star reviews? Just reply to this email with \"Show me how.\""
           },
           {
             "email_number": 2,
-            "subject": "Re: Your mobile speed score: 36/100",
+            "subject": "Re: Black Mountain Roofing: Your online reviews are costing you jobs",
             "send_day": "Thursday",
-            "send_time": "7:30 AM",
-            "body": "Following up on my last email. That 36/100 mobile speed score isn't just a number; it's a real barrier for customers trying to reach you on their phones. I've analyzed data from 5,500+ contractors and this is a common killer for leads. My goal is to fix this specific issue for Black Mountain Roofing, getting your site loading fast so you don't miss out on calls. Can I send you a one-page breakdown of what's happening and how I'd approach it?"
+            "send_time": "7:00 AM",
+            "body": "Hi [Owner Name],\n\nFollowing up on your online reputation. Many contractors struggle to consistently get good reviews, which means losing out to competitors with better online scores. It's a direct hit to your lead generation.\n\nI specialize in quick, direct fixes to boost your review count and overall standing, without the usual hassle. No big team, just fast execution.\n\nIf you're serious about improving your reputation and getting more qualified leads, let me know. A quick email reply is all it takes."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your mobile speed score: 36/100 (Quick fix for Black Mountain Roofing?)",
+            "subject": "Re: Black Mountain Roofing: Your online reviews are costing you jobs",
             "send_day": "Monday",
-            "send_time": "7:30 AM",
-            "body": "One last time on your website's mobile speed. If your site isn't performing well on phones, you're essentially handing business to competitors who load faster. I can pinpoint the exact issues causing your 36/100 score and implement a fix quickly, without the usual agency overhead. No long-term contracts, just getting your site working right. If you're serious about not losing more potential jobs, let me know if you want that info sheet."
+            "send_time": "7:00 AM",
+            "body": "Hi [Owner Name],\n\nOne last time about your Black Mountain Roofing's online reviews. I know you're busy, but your reputation is your biggest asset for attracting new customers. If it's not working for you, you're leaving money on the table.\n\nMy data from 5,500+ contractors shows exactly how to turn your review situation around. I can fix this for you quickly and without fuss.\n\nIf you want to stop losing leads due to a weaker online reputation, reply to this email. Let's get it sorted."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data"
+          "proof_preference": "Data/Local references"
         }
       }
     },
@@ -646,10 +646,10 @@
       "trade": "Roofing contractor",
       "location": "Kansas City, Kansas",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T00:17:28.729724",
-      "cost": 0.0059579,
-      "tokens": 45935,
-      "duration_minutes": 2.9145934343338014,
+      "timestamp": "2025-08-30T08:58:59.175776",
+      "cost": 0.005836000000000001,
+      "tokens": 40626,
+      "duration_minutes": 2.441178647677104,
       "campaign_data": {
         "business_id": "01901",
         "company_name": "Two States Exteriors",
@@ -657,35 +657,35 @@
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM",
-          "window_b_time": "6:30 PM"
+          "window_a_time": "06:45 AM",
+          "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your Two States Exteriors site speed: 33/100",
+            "subject": "Your Mobile Site Speed is Costing You Leads",
             "send_day": "Tuesday",
-            "send_time": "1:00 PM",
-            "body": "Manu,\nI noticed your Two States Exteriors website scored 33/100 on mobile speed. That's a critical issue that can cost you leads, especially when homeowners are looking for contractors on their phones. I specialize in fixing these exact problems for guys like you, getting your site running fast so you don't miss out on calls. Want a quick breakdown of how this impacts your business and what it takes to fix it?"
+            "send_time": "06:45 AM",
+            "body": "Manu here. I noticed your mobile site for Two States Exteriors scored a critical 33 points on speed. That's a red flag. In my analysis of 5,500+ contractors, slow sites like yours mean potential customers bounce before seeing your work, costing you real leads and revenue. I specialize in fixing these exact problems fast, without the usual overhead. Want to see how?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your Two States Exteriors site speed: 33/100",
+            "subject": "Re: Your Mobile Site Speed is Costing You Leads",
             "send_day": "Thursday",
-            "send_time": "1:00 PM",
-            "body": "Manu,\nJust following up on your website's mobile speed issue. A slow site isn't just an inconvenience; it directly impacts your lead flow and how many jobs you can book. I've analyzed data from over 5,500 contractors and know what makes sites convert. I can send you a simple, no-obligation explanation of the exact steps needed to fix your speed and boost your lead capture."
+            "send_time": "06:45 AM",
+            "body": "Following up on my last email. That 33-point mobile speed score isn't just a number; it directly impacts your lead flow and customer experience. I've seen contractors lose thousands in potential business because their site couldn't keep up. I don't sell packages; I fix your specific problem. I have data showing the direct link between speed and conversions. If you're serious about getting more quality leads, hit reply."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your Two States Exteriors site speed: 33/100",
+            "subject": "Last Chance: Fix Your Slow Site, Get More Leads",
             "send_day": "Monday",
-            "send_time": "1:00 PM",
-            "body": "Manu,\nOne last check on your site speed. I understand you're busy, but this isn't a problem that fixes itself. My process is direct and focused on getting results without wasting your time or money. If you're serious about getting more quality leads from your website, let me send you a straightforward info packet. No sales pitch, just the facts on how I can solve this for Two States Exteriors."
+            "send_time": "06:45 AM",
+            "body": "This is my final reach out about your mobile site speed. That 33-point score is a measurable problem that's likely turning away potential customers right now. My data from thousands of contractors confirms this. If you're content losing leads, no worries. But if you want a fast, direct solution to boost your online performance and get more calls, just reply to this email. Otherwise, I'll assume you're all set."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Local references/Data"
+          "proof_preference": "Local references"
         }
       }
     },
@@ -1078,10 +1078,10 @@
       "trade": "Roofing contractor",
       "location": "Manhattan, Kansas",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T11:58:57.447628",
-      "cost": 0.0056985000000000004,
-      "tokens": 42698,
-      "duration_minutes": 2.648859663804372,
+      "timestamp": "2025-08-29T20:57:03.405511",
+      "cost": 0.006045000000000001,
+      "tokens": 39553,
+      "duration_minutes": 2.4521456003189086,
       "campaign_data": {
         "business_id": "01728",
         "company_name": "Superior Roofing & Exteriors",
@@ -1090,29 +1090,29 @@
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
           "window_a_time": "07:00 AM",
-          "window_b_time": "07:30 PM"
+          "window_b_time": "08:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Are your online reviews costing you good leads?",
+            "subject": "Are your online reviews costing you roofing jobs?",
             "send_day": "Tuesday",
             "send_time": "07:00 AM",
-            "body": "I noticed a few recent reviews for Superior Roofing & Exteriors that might be impacting new leads. In this market, your online reputation is often the first thing potential customers see, and it can directly affect whether they call you or a competitor.\nI specialize in fixing these kinds of problems for contractors, helping you turn your online presence into a lead-generating asset.\nWould you be open to me sending over a quick breakdown of how this usually works?"
+            "body": "I'm Manu, and I fix problems for contractors like Superior Roofing & Exteriors. I've analyzed over 5,500 contractor profiles, and I've noticed a few things about your online reviews that could be actively turning potential customers away. This isn't about generic SEO; it's about real reputation issues impacting your lead flow.\n\nI can show you exactly what's happening and how to fix it fast. No team, no overhead, just direct execution.\n\nReply to this email if you want to see the specific data."
           },
           {
             "email_number": 2,
-            "subject": "Re: Are your online reviews costing you good leads?",
+            "subject": "Re: Are your online reviews costing you roofing jobs?",
             "send_day": "Thursday",
             "send_time": "07:00 AM",
-            "body": "Just following up on my previous email. I know you're busy on job sites, but I wanted to quickly highlight how often I see good contractors lose out on profitable jobs simply because their online reviews aren't working for them.\nBeyond reviews, an inefficient online presence can also create cash flow issues by slowing down new business. My approach is direct: identify specific leaks in your lead generation and fix them fast.\nLet me know if you'd like that quick info packet on how we could tackle this."
+            "body": "Just following up on my last email about your online reputation.\n\nI know you're busy, but this isn't a problem that fixes itself. Poor reviews or a lack of recent positive ones directly impacts trust and the number of leads you get. My data shows this clearly across thousands of contractors.\n\nIf you're tired of losing out on good jobs because of what people are saying (or not saying) online, let's talk for 15 minutes. No obligation, just a direct look at your specific situation.\n\nWhat's a good time for a quick call this week?"
           },
           {
             "email_number": 3,
-            "subject": "Re: Are your online reviews costing you good leads?",
+            "subject": "Re: Are your online reviews costing you roofing jobs? - Quick thought",
             "send_day": "Monday",
             "send_time": "07:00 AM",
-            "body": "One last time on this. My goal isn't to sell you a big package, but to offer a clear solution to a real problem: turning your online reputation into a steady source of new, quality leads.\nI've analyzed thousands of contractors and know what moves the needle. While I don't have testimonials yet, I have the data and the direct approach to solve *your* specific challenges with reviews and online presence, improving your efficiency and cash flow.\nIf you're interested in seeing how, just reply 'Send info' and I'll get it right over."
+            "body": "One last thought on your online reputation and lead generation.\n\nMany contractors struggle with this, and it often leads to inconsistent cash flow and wasted marketing spend. My approach is direct: identify the exact issues with your online presence and implement quick, effective fixes based on what I know works from analyzing 5,500+ other businesses.\n\nI don't have testimonials yet, but I have the data. If you're serious about solving this specific problem and getting more qualified leads, reply to this email. If not, no worries."
           }
         ],
         "messaging_preferences": {
@@ -2753,7 +2753,7 @@
         }
       }
     },
-    "4008": {
+    "04008": {
       "company_name": "SaveMyDeck",
       "trade": "Construction company",
       "location": "Vine Grove, Kentucky",
@@ -2763,7 +2763,7 @@
       "tokens": 43409,
       "duration_minutes": 2.8987324674924215,
       "campaign_data": {
-        "business_id": "4008_",
+        "business_id": "04008",
         "company_name": "SaveMyDeck",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -2801,7 +2801,7 @@
         }
       }
     },
-    "305": {
+    "00305": {
       "company_name": "Benchmark Development Company LLC",
       "trade": "Construction company",
       "location": "McCall, Idaho",
@@ -2811,7 +2811,7 @@
       "tokens": 38150,
       "duration_minutes": 2.6046716849009197,
       "campaign_data": {
-        "business_id": "305_C",
+        "business_id": "00305",
         "company_name": "Benchmark Development Company LLC",
         "contact_timing": {
           "best_day_email_1": "Monday",
@@ -2849,7 +2849,7 @@
         }
       }
     },
-    "278": {
+    "00278": {
       "company_name": "Collom Construction LLC",
       "trade": "General contractor",
       "location": "Lewiston, Idaho",
@@ -2859,7 +2859,7 @@
       "tokens": 40250,
       "duration_minutes": 2.6252378026644387,
       "campaign_data": {
-        "business_id": "278_C",
+        "business_id": "00278",
         "company_name": "Collom Construction LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -2897,7 +2897,7 @@
         }
       }
     },
-    "745": {
+    "00745": {
       "company_name": "Buffaloe Contracting",
       "trade": "Contractor",
       "location": "Pocatello, Idaho",
@@ -2907,7 +2907,7 @@
       "tokens": 43731,
       "duration_minutes": 2.7726488669713336,
       "campaign_data": {
-        "business_id": "745_C",
+        "business_id": "00745",
         "company_name": "Buffaloe Contracting",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -2945,7 +2945,7 @@
         }
       }
     },
-    "2392": {
+    "02392": {
       "company_name": "Caledonian Customs LLC",
       "trade": "General contractor",
       "location": "Overland Park, Kansas",
@@ -2955,7 +2955,7 @@
       "tokens": 42087,
       "duration_minutes": 2.7177876035372415,
       "campaign_data": {
-        "business_id": "2392_",
+        "business_id": "02392",
         "company_name": "Caledonian Customs LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -2993,7 +2993,7 @@
         }
       }
     },
-    "4083": {
+    "04083": {
       "company_name": "S.T.O.M. Contracting LLC",
       "trade": "Construction company",
       "location": "Berea, Kentucky",
@@ -3003,7 +3003,7 @@
       "tokens": 38934,
       "duration_minutes": 2.433289313316345,
       "campaign_data": {
-        "business_id": "4083_",
+        "business_id": "04083",
         "company_name": "S.T.O.M. Contracting LLC",
         "contact_timing": {
           "best_day_email_1": "Monday",
@@ -3041,7 +3041,7 @@
         }
       }
     },
-    "3993": {
+    "03993": {
       "company_name": "Burris Home Improvement",
       "trade": "Construction company",
       "location": "Columbia, Kentucky",
@@ -3051,7 +3051,7 @@
       "tokens": 40705,
       "duration_minutes": 2.313880181312561,
       "campaign_data": {
-        "business_id": "3993_",
+        "business_id": "03993",
         "company_name": "Burris Home Improvement",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3089,7 +3089,7 @@
         }
       }
     },
-    "1393": {
+    "01393": {
       "company_name": "Bowman Building Inc",
       "trade": "General contractor",
       "location": "Southern Idaho, Idaho",
@@ -3099,7 +3099,7 @@
       "tokens": 41386,
       "duration_minutes": 2.6082170685132344,
       "campaign_data": {
-        "business_id": "1393_",
+        "business_id": "01393",
         "company_name": "Bowman Building Inc",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3137,7 +3137,7 @@
         }
       }
     },
-    "1116": {
+    "01116": {
       "company_name": "Mikesell Construction LLC",
       "trade": "Construction company",
       "location": "Boise, Idaho",
@@ -3147,7 +3147,7 @@
       "tokens": 40145,
       "duration_minutes": 2.3715773502985638,
       "campaign_data": {
-        "business_id": "1116_",
+        "business_id": "01116",
         "company_name": "Mikesell Construction LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3185,7 +3185,7 @@
         }
       }
     },
-    "2919": {
+    "02919": {
       "company_name": "Allen Building Specialties",
       "trade": "General contractor",
       "location": "Kansas City area, Kansas",
@@ -3195,7 +3195,7 @@
       "tokens": 42920,
       "duration_minutes": 2.860419980684916,
       "campaign_data": {
-        "business_id": "2919_",
+        "business_id": "02919",
         "company_name": "Allen Building Specialties",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3233,7 +3233,7 @@
         }
       }
     },
-    "1064": {
+    "01064": {
       "company_name": "Trusst Buildings",
       "trade": "Construction company",
       "location": "Shelley, Idaho",
@@ -3243,7 +3243,7 @@
       "tokens": 37968,
       "duration_minutes": 2.385684434572856,
       "campaign_data": {
-        "business_id": "1064_",
+        "business_id": "01064",
         "company_name": "Trusst Buildings",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3281,7 +3281,7 @@
         }
       }
     },
-    "480": {
+    "00480": {
       "company_name": "ClearPlan Construction",
       "trade": "Construction company",
       "location": "Blackfoot, Idaho",
@@ -3291,7 +3291,7 @@
       "tokens": 40449,
       "duration_minutes": 2.498774703343709,
       "campaign_data": {
-        "business_id": "480_C",
+        "business_id": "00480",
         "company_name": "ClearPlan Construction",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3329,7 +3329,7 @@
         }
       }
     },
-    "114": {
+    "00114": {
       "company_name": "Idaho Pro Remodelers",
       "trade": "Construction company",
       "location": "Post Falls, Idaho",
@@ -3339,7 +3339,7 @@
       "tokens": 41628,
       "duration_minutes": 2.6397438327471416,
       "campaign_data": {
-        "business_id": "114_C",
+        "business_id": "00114",
         "company_name": "Idaho Pro Remodelers",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3377,7 +3377,7 @@
         }
       }
     },
-    "888": {
+    "00888": {
       "company_name": "NEX Construction LLC",
       "trade": "Construction company",
       "location": "Rexburg, Idaho",
@@ -3387,7 +3387,7 @@
       "tokens": 40504,
       "duration_minutes": 2.4998788158098857,
       "campaign_data": {
-        "business_id": "888_C",
+        "business_id": "00888",
         "company_name": "NEX Construction LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3425,7 +3425,7 @@
         }
       }
     },
-    "3399": {
+    "03399": {
       "company_name": "A&E Remodeling LLC",
       "trade": "General contractor",
       "location": "Wichita, Kansas",
@@ -3435,7 +3435,7 @@
       "tokens": 43655,
       "duration_minutes": 2.81872976620992,
       "campaign_data": {
-        "business_id": "3399_",
+        "business_id": "03399",
         "company_name": "A&E Remodeling LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3473,7 +3473,7 @@
         }
       }
     },
-    "3443": {
+    "03443": {
       "company_name": "RETROPROS",
       "trade": "Contractor",
       "location": "Kansas area, Kansas",
@@ -3483,7 +3483,7 @@
       "tokens": 44101,
       "duration_minutes": 2.8063397844632467,
       "campaign_data": {
-        "business_id": "3443_",
+        "business_id": "03443",
         "company_name": "RETROPROS",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3521,7 +3521,7 @@
         }
       }
     },
-    "3127": {
+    "03127": {
       "company_name": "Torgeson Electric",
       "trade": "Contractor",
       "location": "Topeka, Kansas",
@@ -3531,7 +3531,7 @@
       "tokens": 43053,
       "duration_minutes": 2.756021265188853,
       "campaign_data": {
-        "business_id": "3127_",
+        "business_id": "03127",
         "company_name": "Torgeson Electric",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3569,7 +3569,7 @@
         }
       }
     },
-    "893": {
+    "00893": {
       "company_name": "Ferguson SE Line LLC",
       "trade": "General contractor",
       "location": "Chubbuck, Idaho",
@@ -3579,7 +3579,7 @@
       "tokens": 41250,
       "duration_minutes": 2.487827980518341,
       "campaign_data": {
-        "business_id": "893_C",
+        "business_id": "00893",
         "company_name": "Ferguson SE Line LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3617,7 +3617,7 @@
         }
       }
     },
-    "660": {
+    "00660": {
       "company_name": "Flow State Construction LLC",
       "trade": "General Contractor",
       "location": "Boise, Idaho",
@@ -3627,7 +3627,7 @@
       "tokens": 38957,
       "duration_minutes": 2.4113204717636108,
       "campaign_data": {
-        "business_id": "660_C",
+        "business_id": "00660",
         "company_name": "Flow State Construction LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3665,7 +3665,7 @@
         }
       }
     },
-    "489": {
+    "00489": {
       "company_name": "Baker Brothers Construction",
       "trade": "Construction company",
       "location": "Jerome, Idaho",
@@ -3675,7 +3675,7 @@
       "tokens": 38764,
       "duration_minutes": 2.2782923142115274,
       "campaign_data": {
-        "business_id": "489_C",
+        "business_id": "00489",
         "company_name": "Baker Brothers Construction",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3713,199 +3713,103 @@
         }
       }
     },
-    "9": {
-      "company_name": "Best Choice Roofing",
-      "trade": "Roofing contractor",
-      "location": "Birmingham, Alabama",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:50:42.586078",
-      "cost": 0.006239300000000001,
-      "tokens": 41169,
-      "duration_minutes": 2.5205965797106424,
-      "campaign_data": {
-        "business_id": "9_COM",
-        "company_name": "Best Choice Roofing",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM",
-          "window_b_time": "8:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your Best Choice Roofing Domain Expires in 34 Days",
-            "send_day": "Tuesday",
-            "send_time": "6:30 AM",
-            "body": "Manu here. I noticed your domain, bestchoiceroofing.com, is set to expire in 34 days. This is a critical issue that can shut down your website and email, impacting your leads and reputation. I help contractors like you fix urgent problems fast. If you're slammed, I can take this off your plate immediately. Just reply to this email."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your Best Choice Roofing Domain Expires in 34 Days",
-            "send_day": "Thursday",
-            "send_time": "6:30 AM",
-            "body": "Following up on your domain expiry. This isn't just about your website; it directly impacts your lead generation and online reputation. My data from 5,500+ contractors shows how these issues snowball into bigger problems like inconsistent leads or negative reviews. Let me know if you want to quickly solve this and discuss other bottlenecks. Reply to this email."
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Your Best Choice Roofing Domain Expires in 34 Days - Next Steps",
-            "send_day": "Monday",
-            "send_time": "8:30 PM",
-            "body": "Still on my radar: your domain expiry. I understand you're busy on roofs, but this needs attention. Beyond this immediate fix, I specialize in streamlining operations and boosting lead flow for contractors. I don't have testimonials yet, but my data-driven approach gets results. If you're serious about tackling these issues, just reply to this email."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Data/Local references"
-        }
-      }
-    },
-    "475": {
+    "00475": {
       "company_name": "Idaho Roofing Solutions",
       "trade": "Roofing contractor",
       "location": "Southern Idaho, Idaho",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T20:50:46.276577",
-      "cost": 0.0056852000000000005,
-      "tokens": 38873,
-      "duration_minutes": 2.4251158197720843,
+      "timestamp": "2025-09-03T11:32:52.975802",
+      "cost": 0.0056944000000000005,
+      "tokens": 40048,
+      "duration_minutes": 2.6628910501797995,
       "campaign_data": {
-        "business_id": "475_C",
+        "business_id": "00475",
         "company_name": "Idaho Roofing Solutions",
         "contact_timing": {
           "best_day_email_1": "Monday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM",
-          "window_b_time": "7:30 PM"
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
+          "window_a_time": "06:30 AM",
+          "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your Idaho Roofing Solutions reviews",
+            "subject": "Your Squarespace site: Reputation & Leads",
             "send_day": "Monday",
-            "send_time": "6:30 AM",
-            "body": "Manu,\nI noticed your online reviews could be working harder for Idaho Roofing Solutions. My analysis of 5,500+ contractors shows strong reviews are critical for new business. I can show you how to quickly improve yours without hassle. Interested in a 5-minute email exchange on how?"
+            "send_time": "06:30 AM",
+            "body": "Manu, I saw your Squarespace site for Idaho Roofing. It's sending an amateur signal, damaging your professional reputation and costing you good leads. I fix contractor websites fast. Can I send you a quick info packet showing how I identify these issues and get real results for other roofers?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your Idaho Roofing Solutions reviews",
-            "send_day": "Thursday",
-            "send_time": "6:30 AM",
-            "body": "Manu,\nFollowing up on your online reviews. Many contractors struggle turning happy customers into 5-star ratings. I specialize in fixing these gaps quickly. This isn't about a new platform, it's about a process that gets results. Can I send you one specific example of how other roofers quickly boosted their scores?"
+            "subject": "Re: Your Squarespace site: Reputation & Leads",
+            "send_day": "Wednesday",
+            "send_time": "07:30 PM",
+            "body": "Following up on your Squarespace site. That amateur signal directly impacts your reputation, lead flow, and cash. I use data from 5,500+ contractors to fix these issues, not guesswork. Can I send you that quick info packet?"
           },
           {
             "email_number": 3,
-            "subject": "Re: Your Idaho Roofing Solutions reviews",
-            "send_day": "Monday",
-            "send_time": "6:30 AM",
-            "body": "Manu,\nOne last thought on your reviews and how they impact your Squarespace website's performance. Strong reviews are the fastest way to make your site convert better. If your current online presence isn't bringing in the calls you need, let me know. I can share one actionable idea by email."
+            "subject": "Re: Your Squarespace site: Reputation & Leads",
+            "send_day": "Friday",
+            "send_time": "06:30 AM",
+            "body": "Last check on your Squarespace site. If you're serious about fixing that amateur signal, improving your reputation, and getting more quality leads, I can help. I'm a one-man operation, focused on fast, direct solutions. Reply if you want that info packet. No obligation."
           }
         ],
         "messaging_preferences": {
           "email_length": "A",
-          "proof_preference": "Local references"
+          "proof_preference": "Data/Case studies"
         }
       }
     },
-    "892": {
+    "00892": {
       "company_name": "Harrington & Company- Roofing and Hardware Supply",
       "trade": "Roofing supply store",
       "location": "Pocatello, Idaho",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T20:50:57.638625",
-      "cost": 0.0056451,
-      "tokens": 39352,
-      "duration_minutes": 2.400553278128306,
+      "timestamp": "2025-09-03T11:35:30.275161",
+      "cost": 0.0055351,
+      "tokens": 39108,
+      "duration_minutes": 2.6184970855712892,
       "campaign_data": {
-        "business_id": "892_C",
+        "business_id": "00892",
         "company_name": "Harrington & Company - Roofing and Hardware Supply",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM",
-          "window_b_time": "7:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your website speed is hurting your reputation",
-            "send_day": "Tuesday",
-            "send_time": "6:30 AM",
-            "body": "Manu, I'm reaching out because I noticed your website speed for Harrington & Company is at 57.0/100. In my experience with 5,500+ contractors, slow sites frustrate customers and can directly impact your reputation and sales. I also saw your domain expires in 74 days – that's a critical risk. I fix these kinds of contractor problems fast. I can send you a quick info packet on how to improve your site speed, protect your domain, and boost your online reputation, specific to your business."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your website speed is hurting your reputation",
-            "send_day": "Thursday",
-            "send_time": "6:30 AM",
-            "body": "Following up. That slow website speed isn't just an inconvenience; it's actively damaging your customer's perception of your business and potentially costing you good reviews. And don't forget that domain expiry. These issues often stem from the platform you're using. My data shows many contractors lose out because of these exact problems. I don't sell packages; I fix *your* specific issues quickly. Would you like that info packet I mentioned, detailing a plan to fix your site speed, secure your domain, and improve your online standing?"
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Your website speed is hurting your reputation - Quick fix needed?",
-            "send_day": "Monday",
-            "send_time": "6:30 AM",
-            "body": "Manu here again. Your website's performance and the upcoming domain expiry are urgent issues that can directly impact your sales and reputation. I understand you're busy, so I'll be direct: I can solve these problems for you, fast. I've got the data and expertise to fix this without disrupting your operations. If you're serious about protecting your business and improving your online presence, let me send over that tailored info packet. It outlines exactly how I'd approach your specific challenges."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Data/Local references"
-        }
-      }
-    },
-    "694": {
-      "company_name": "Northwest Commercial Roofing",
-      "trade": "Roofing contractor",
-      "location": "Sandpoint, Idaho",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:51:07.668795",
-      "cost": 0.0063785000000000005,
-      "tokens": 43507,
-      "duration_minutes": 2.6713420351346335,
-      "campaign_data": {
-        "business_id": "694_C",
-        "company_name": "Northwest Commercial Roofing",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM",
+          "window_a_time": "7:30 AM",
           "window_b_time": "6:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your 4 Google Reviews: A quick fix for Northwest Commercial Roofing",
+            "subject": "Urgent: Your domain, website speed & reputation (Harrington & Company)",
             "send_day": "Tuesday",
-            "send_time": "6:30 AM",
-            "body": "I noticed Northwest Commercial Roofing only has 4 Google reviews. For commercial work, that's a trust barrier that's likely costing you bids and new leads. I've analyzed data from 5,500+ contractors and know exactly why this happens and how to fix it fast. I can get you more active, positive reviews without the usual marketing fluff. Want to hear how? Reply to this email."
+            "send_time": "7:30 AM",
+            "body": "Manu here. Your domain for Harrington & Company expires in 74 days. On top of that, I'm seeing your website speed at 57/100, which means customers are likely leaving before they even see what you offer. This impacts your online reputation and bottom line. I specialize in fixing these exact problems for contractors like you, quickly and without fuss.\n\nReply to this email if you want a direct plan to get this sorted."
           },
           {
             "email_number": 2,
-            "subject": "Re: Your 4 Google Reviews: A quick fix for Northwest Commercial Roofing",
+            "subject": "Re: Urgent: Your domain, website speed & reputation (Harrington & Company) - Lost leads?",
             "send_day": "Thursday",
-            "send_time": "6:30 PM",
-            "body": "Just following up on my last email about your Google reviews. That low number isn't just a vanity metric; it directly impacts how many new commercial clients trust you enough to even call. I specialize in fixing these kinds of reputation issues for contractors, quickly and directly. My approach cuts through the noise and gets results you can measure. Let me know if you're interested in a quick explanation."
+            "send_time": "7:30 AM",
+            "body": "Following up on my last email. A slow website and an expiring domain aren't just technical issues; they directly hit your ability to get new leads and maintain your professional reputation. Your Squarespace platform is likely part of the problem. I can show you how to fix these specific issues, not just patch them.\n\nReply if you're ready to stop losing potential business and secure your online presence."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your 4 Google Reviews: A quick fix for Northwest Commercial Roofing - Next steps?",
+            "subject": "Re: Urgent: Your domain, website speed & reputation (Harrington & Company) - Last chance to fix?",
             "send_day": "Monday",
-            "send_time": "6:30 AM",
-            "body": "Still thinking about those 4 Google reviews and how they're affecting your lead flow. I understand you're busy, but this is a problem that won't fix itself. I offer a straightforward solution to boost your online reputation and get more qualified commercial leads. No long-term contracts, just a clear project to get this handled. If you want to stop losing business because of this, just reply to this email, and I'll send over the simple details."
+            "send_time": "7:30 AM",
+            "body": "This is my last attempt regarding your domain expiration and slow website. These aren't minor issues; they're costing you money and risking your online reputation. I don't have testimonials yet, but I have data from thousands of contractors and I know how to get results. I fix problems directly, no fluff.\n\nIf you want a clear, no-nonsense plan to fix these specific issues, reply to this email. Otherwise, I'll assume you're all set."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data/Case studies"
+          "proof_preference": "Local references"
         }
       }
     },
-    "1217": {
+    "01217": {
       "company_name": "Elias Roofing Remodel & Repair LLC",
       "trade": "Roofing contractor",
       "location": "Nampa, Idaho",
@@ -3915,7 +3819,7 @@
       "tokens": 42298,
       "duration_minutes": 2.6492934505144756,
       "campaign_data": {
-        "business_id": "1217_",
+        "business_id": "01217",
         "company_name": "Elias Roofing Remodel & Repair LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -3953,199 +3857,103 @@
         }
       }
     },
-    "345": {
+    "00345": {
       "company_name": "3 Peaks Northwest Roofing LLC",
       "trade": "Roofing contractor",
       "location": "ID area, ID",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T20:53:08.712293",
-      "cost": 0.0057527,
-      "tokens": 40021,
-      "duration_minutes": 2.43256151676178,
+      "timestamp": "2025-09-03T11:30:12.975606",
+      "cost": 0.006039900000000001,
+      "tokens": 40864,
+      "duration_minutes": 2.7130231698354086,
       "campaign_data": {
-        "business_id": "345_C",
+        "business_id": "00345",
         "company_name": "3 Peaks Northwest Roofing LLC",
         "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "07:30 AM",
+          "best_day_email_1": "Wednesday",
+          "best_day_email_2": "Friday",
+          "best_day_email_3": "Tuesday",
+          "window_a_time": "06:30 AM",
           "window_b_time": "07:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your Wix site: losing leads?",
-            "send_day": "Tuesday",
-            "send_time": "07:30 AM",
-            "body": "Manu here. I noticed 3 Peaks Northwest Roofing's website is built on Wix. For contractors, this often signals an amateur setup and can actively turn away good leads looking for a professional outfit. My data from 5,500+ contractors shows how much a solid online presence impacts lead flow. I can quickly identify why your current site might be costing you business and fix it. Interested in seeing a quick breakdown of where you stand? Reply to this email."
+            "subject": "Your Wix site is costing you trust (3 Peaks NW Roofing)",
+            "send_day": "Wednesday",
+            "send_time": "07:30 PM",
+            "body": "Manu here. I noticed your 3 Peaks Northwest Roofing site is on Wix. Frankly, it gives an amateur signal that undermines your expertise and trust with potential clients. This isn't about looking fancy; it's about looking credible. A professional online presence directly impacts how many good leads call you. I've analyzed 5,500+ contractors and know what works.\n\nWant a quick breakdown of how your site might be hurting your reputation and what to do about it?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your Wix site: losing leads?",
-            "send_day": "Thursday",
-            "send_time": "07:30 AM",
-            "body": "Just following up on my last email about your Wix site. Beyond just looking unprofessional, a builder platform like Wix often limits your ability to rank high on Google and convert visitors into actual calls. This directly impacts your lead quality and cash flow. I specialize in fixing these specific bottlenecks for contractors, turning wasted clicks into paying customers. No generic packages, just direct solutions. Let me know if you're open to a quick email exchange about improving your lead generation."
+            "subject": "Re: Your Wix site is costing you trust (3 Peaks NW Roofing)",
+            "send_day": "Friday",
+            "send_time": "07:30 PM",
+            "body": "Following up on my last email. Beyond the Wix site, many contractors struggle with getting consistent, high-quality reviews – which is another major trust signal. If your online reputation isn't strong, even a good website won't bring in enough calls. My data shows how crucial this is for predictable lead flow. I fix these specific problems fast, without the usual agency overhead.\n\nI can send you a brief overview of how strong reviews tie into your online presence and what we can fix."
           },
           {
             "email_number": 3,
-            "subject": "Last thought on 3 Peaks Northwest Roofing's online presence",
-            "send_day": "Monday",
-            "send_time": "07:30 AM",
-            "body": "One last message regarding your online presence and lead generation. I understand you're busy, but ignoring an underperforming website is like leaving money on the table. My analysis of 5,500+ contractors shows that even small improvements can significantly boost your bottom line. If you're serious about getting more quality leads and improving your online image, a quick email is all it takes to start. I'm not selling a package, I'm offering to solve a real problem. Reply if you want to explore this further."
+            "subject": "Still losing jobs to your competitors? (3 Peaks NW Roofing)",
+            "send_day": "Tuesday",
+            "send_time": "07:30 PM",
+            "body": "Manu again. If your Wix site and online reputation aren't where they need to be, you're likely losing jobs to competitors who look more professional online. This isn't about minor tweaks; it's about securing your business's future. I don't have testimonials yet, but I have the data and execution to solve your specific problems directly.\n\nIf you're ready to stop leaving money on the table, reply to this email, and I’ll send you a brief info packet on how we can fix your site and review issues."
           }
         ],
         "messaging_preferences": {
           "email_length": "B",
-          "proof_preference": "Data/Local references"
+          "proof_preference": "Local references"
         }
       }
     },
-    "902": {
+    "00902": {
       "company_name": "Valley",
       "trade": "Roofing Service",
       "location": "Meridian, Idaho",
       "processing_status": "completed",
-      "timestamp": "2025-08-29T20:53:27.712978",
-      "cost": 0.0059915,
-      "tokens": 40750,
-      "duration_minutes": 2.498492968082428,
+      "timestamp": "2025-09-03T13:54:51.719045",
+      "cost": 0.005610700000000001,
+      "tokens": 38131,
+      "duration_minutes": 2.3645652174949645,
       "campaign_data": {
-        "business_id": "902_C",
+        "business_id": "00902",
         "company_name": "Valley",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM - 7:00 AM",
-          "window_b_time": "5:30 PM - 6:30 PM"
+          "window_a_time": "07:30 AM",
+          "window_b_time": "08:00 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your online presence: costing you bids?",
+            "subject": "Valley: Your online reviews are costing you jobs",
             "send_day": "Tuesday",
-            "send_time": "6:30 AM - 7:00 AM",
-            "body": "Valley, I noticed your company is using a Wix website and a gmail.com email. This setup often leads to losing bids or looking less credible to potential clients compared to competitors with more professional online presences. My data from 5,500+ contractors shows this is a common leak. I can fix these specific issues quickly so you stop missing out.\n\nWant to see how? Just reply to this email."
+            "send_time": "07:30 AM",
+            "body": "Manu here. I noticed your recent online reviews show a pattern that's likely turning away new clients. I've analyzed 5,500+ contractors and can show you exactly how to fix this fast, without hassle. Interested in a quick email exchange to see how?"
           },
           {
             "email_number": 2,
-            "subject": "Re: Your online presence: costing you bids?",
+            "subject": "Re: Valley: Your online reviews are costing you jobs",
             "send_day": "Thursday",
-            "send_time": "5:30 PM - 6:30 PM",
-            "body": "Following up on my last email. That Wix site and generic Gmail address aren't just cosmetic issues; they directly impact your ability to attract and close qualified leads. Many contractors struggle with getting enough good leads. My analysis shows this basic online setup can be a major barrier. I help contractors like you fix these foundational problems to improve your lead flow and close rate.\n\nNo pressure, but if getting more qualified leads is a priority, let me know."
+            "send_time": "07:30 AM",
+            "body": "Following up on my last email. That review pattern isn't just cosmetic; it's a direct hit to your lead flow. I have specific data on how much this impacts contractors like Valley. A quick email reply is all it takes to learn more."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your online presence: costing you bids? (Final check-in)",
+            "subject": "Re: Valley: Your online reviews are costing you jobs - Last chance",
             "send_day": "Monday",
-            "send_time": "6:30 AM - 7:00 AM",
-            "body": "Valley, one last check-in about your online presence. I understand you're busy on site, but these small details (Wix site, gmail.com) are often the silent killers of a contractor's growth, impacting everything from lead quality to overall efficiency. I specialize in fast, direct solutions for these exact problems, backed by data, not just theory. I don't have testimonials yet, but I have the data to back up what works.\n\nIf you're interested in fixing this and improving your lead generation, a quick email reply is all it takes. Otherwise, I'll assume you're all set."
+            "send_time": "07:30 AM",
+            "body": "One last time on your online reviews. This problem won't fix itself, and every day it's costing you potential clients. My approach is direct and gets results. If you want to stop losing jobs, just reply to this email. Otherwise, I'll assume you're all set."
           }
         ],
         "messaging_preferences": {
-          "email_length": "B",
+          "email_length": "A",
           "proof_preference": "Data/Local references"
         }
       }
     },
-    "611": {
-      "company_name": "Black Mountain Roofing LLC",
-      "trade": "Roofing Service",
-      "location": "Bonners Ferry, Idaho",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:53:28.173127",
-      "cost": 0.0060142,
-      "tokens": 43992,
-      "duration_minutes": 2.6955800652503967,
-      "campaign_data": {
-        "business_id": "611_C",
-        "company_name": "Black Mountain Roofing LLC",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "7:00 AM",
-          "window_b_time": "6:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Black Mountain Roofing: Your online reviews are costing you jobs",
-            "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Hi [Owner Name],\n\nI'm Manu. I noticed your online reviews aren't fully showcasing Black Mountain Roofing's quality. In this market, a strong reputation and fresh reviews are critical for winning new jobs.\n\nI help contractors like you fix this. My data from analyzing 5,500+ contractors shows exactly how to build a dominant online reputation that brings in more leads.\n\nWant to see how to start getting more 5-star reviews? Just reply to this email with \"Show me how.\""
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Black Mountain Roofing: Your online reviews are costing you jobs",
-            "send_day": "Thursday",
-            "send_time": "7:00 AM",
-            "body": "Hi [Owner Name],\n\nFollowing up on your online reputation. Many contractors struggle to consistently get good reviews, which means losing out to competitors with better online scores. It's a direct hit to your lead generation.\n\nI specialize in quick, direct fixes to boost your review count and overall standing, without the usual hassle. No big team, just fast execution.\n\nIf you're serious about improving your reputation and getting more qualified leads, let me know. A quick email reply is all it takes."
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Black Mountain Roofing: Your online reviews are costing you jobs",
-            "send_day": "Monday",
-            "send_time": "7:00 AM",
-            "body": "Hi [Owner Name],\n\nOne last time about your Black Mountain Roofing's online reviews. I know you're busy, but your reputation is your biggest asset for attracting new customers. If it's not working for you, you're leaving money on the table.\n\nMy data from 5,500+ contractors shows exactly how to turn your review situation around. I can fix this for you quickly and without fuss.\n\nIf you want to stop losing leads due to a weaker online reputation, reply to this email. Let's get it sorted."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Data/Local references"
-        }
-      }
-    },
-    "724": {
-      "company_name": "CCX Roofing Siding Gutters",
-      "trade": "Roofing contractor",
-      "location": "Pocatello, Idaho",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:53:37.414686",
-      "cost": 0.0060637,
-      "tokens": 40813,
-      "duration_minutes": 2.4930122534434003,
-      "campaign_data": {
-        "business_id": "724_C",
-        "company_name": "CCX Roofing Siding Gutters",
-        "contact_timing": {
-          "best_day_email_1": "Monday",
-          "best_day_email_2": "Wednesday",
-          "best_day_email_3": "Friday",
-          "window_a_time": "7:00 AM - 8:00 AM",
-          "window_b_time": "7:00 PM - 8:00 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your online reviews: Are they costing you jobs?",
-            "send_day": "Monday",
-            "send_time": "7:30 AM",
-            "body": "Saw your business, CCX Roofing. Getting consistent 5-star reviews and managing your online reputation is tough, especially when you're busy on jobs. Most contractors struggle to turn good work into good reviews that actually bring in new business. I fix this directly. No big teams, just fast results. Want to quickly see how we can get you more positive reviews and boost your online standing? Reply to this email."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your online reviews: Are they costing you jobs?",
-            "send_day": "Wednesday",
-            "send_time": "7:30 AM",
-            "body": "Just following up on my last email. Many contractors I've analyzed, like CCX Roofing, are leaving money on the table by not having a solid system for getting reviews. It's not just about getting them, it's about making them work for you. I've got data from 5,500+ contractors showing exactly what moves the needle. If your Squarespace site isn't converting or you're too reliant on GCs, better reviews help. Interested in a quick chat via email on how to fix this?"
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Your online reviews: Are they costing you jobs? - Final thought",
-            "send_day": "Friday",
-            "send_time": "7:30 AM",
-            "body": "One last thought on your online reviews and reputation for CCX Roofing. Without a strong online presence and a steady stream of positive feedback, it's hard to attract direct homeowner leads and stand out from competition. My approach is direct: identify the exact gaps and fix them fast. No long-term contracts, just results. If you're serious about getting more direct business and improving your online reputation, hit reply. Otherwise, no worries."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Local references / Data"
-        }
-      }
-    },
-    "1331": {
+    "01331": {
       "company_name": "NW Peak Roofing LLC",
       "trade": "Roofing contractor",
       "location": "Post Falls, Idaho",
@@ -4155,7 +3963,7 @@
       "tokens": 39863,
       "duration_minutes": 2.5050981998443604,
       "campaign_data": {
-        "business_id": "1331_",
+        "business_id": "01331",
         "company_name": "NW Peak Roofing LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4193,7 +4001,7 @@
         }
       }
     },
-    "1052": {
+    "01052": {
       "company_name": "CTX Roofing LLC",
       "trade": "Roofing contractor",
       "location": "Southern Idaho, Idaho",
@@ -4203,7 +4011,7 @@
       "tokens": 38001,
       "duration_minutes": 2.253733531634013,
       "campaign_data": {
-        "business_id": "1052_",
+        "business_id": "01052",
         "company_name": "CTX Roofing LLC",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4241,199 +4049,7 @@
         }
       }
     },
-    "625": {
-      "company_name": "Idaho Elite Roofing",
-      "trade": "Roofing contractor",
-      "location": "Pocatello, Idaho",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:55:53.319205",
-      "cost": 0.0059021,
-      "tokens": 41262,
-      "duration_minutes": 2.4162717700004577,
-      "campaign_data": {
-        "business_id": "625_C",
-        "company_name": "Idaho Elite Roofing",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "6:30 AM - 7:30 AM",
-          "window_b_time": "6:00 PM - 7:00 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your online reviews: Losing jobs in Idaho?",
-            "send_day": "Tuesday",
-            "send_time": "6:30 AM - 7:30 AM",
-            "body": "I saw a couple of recent negative reviews for Idaho Elite Roofing, and in our market, that can instantly cost you thousands in lost bids. I've analyzed 5,500+ contractors and know exactly why this happens and how to fix it fast. My process helps you turn that around, secure more leads, and improve your cash flow without any long-term contracts. Want to hear how? Reply to this email."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your online reviews: Losing jobs in Idaho?",
-            "send_day": "Thursday",
-            "send_time": "6:00 PM - 7:00 PM",
-            "body": "Just following up on my last email. That issue with negative reviews isn't just about appearances; it directly impacts your lead flow and cash position. I specialize in fixing these exact problems for contractors like you, getting measurable results quickly. I don't sell packages; I solve your specific issue. If you're serious about stopping the bleeding from bad reviews and getting more qualified leads, reply to this email and let me know."
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Your online reviews: Losing jobs in Idaho?",
-            "send_day": "Monday",
-            "send_time": "6:30 AM - 7:30 AM",
-            "body": "One last time on this: your online reputation is costing you real money every week. I understand you're busy, but ignoring this means more lost bids and harder lead generation. My approach is direct and gets results without wasting your time or money on fluff. I'm a one-man operation focused on fast execution. If you want to discuss a specific plan to fix your review problem and boost your business, just hit reply."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Local references"
-        }
-      }
-    },
-    "725": {
-      "company_name": "Wilson Roofing Inc.",
-      "trade": "Roofing contractor",
-      "location": "Pocatello, Idaho",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:55:57.057682",
-      "cost": 0.0054251,
-      "tokens": 39046,
-      "duration_minutes": 2.3247180501619975,
-      "campaign_data": {
-        "business_id": "725_C",
-        "company_name": "Wilson Roofing Inc.",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "06:30 AM",
-          "window_b_time": "07:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Quick question about Wilson Roofing reviews",
-            "send_day": "Tuesday",
-            "send_time": "06:30 AM",
-            "body": "I noticed your 13 reviews are 1349 days old. For a roofing company like Wilson Roofing, that's usually a sign you're losing out on new jobs to competitors with fresher feedback.\n\nI specialize in fixing this exact problem for contractors. My data from 5,500+ contractors shows exactly why this happens and how to get those new reviews flowing without adding more work to your plate.\n\nWould you be open to a quick email exchange to see how we could get your online reputation working for you again?"
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Quick question about Wilson Roofing reviews",
-            "send_day": "Thursday",
-            "send_time": "07:30 PM",
-            "body": "Following up on my last email about your outdated reviews.\n\nMany contractors I've analyzed face the same issue: great work, but no system to turn satisfied customers into new online reviews. This directly impacts new lead generation and cash flow.\n\nWhile I don't have testimonials yet, I have the data and a clear process to get your review system back on track, fast. No complex packages, just direct execution.\n\nIf you're interested in stopping those missed opportunities, let me know. I can send a brief breakdown of my approach."
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Quick question about Wilson Roofing reviews",
-            "send_day": "Monday",
-            "send_time": "06:30 AM",
-            "body": "One last check on your online reviews. An inactive review profile isn't just a small problem; it's a direct hit to your credibility and ability to win new jobs against competitors.\n\nMy goal is to fix this specific problem for Wilson Roofing, quickly and efficiently, so you can focus on your core business.\n\nIf improving your online reputation and getting more leads from it is a priority, reply to this email. We can quickly discuss if my direct approach is the right fit for you. If not, no worries."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Local references"
-        }
-      }
-    },
-    "1728": {
-      "company_name": "Superior Roofing & Exteriors",
-      "trade": "Roofing contractor",
-      "location": "Manhattan, Kansas",
-      "processing_status": "completed",
-      "timestamp": "2025-08-29T20:57:03.405511",
-      "cost": 0.006045000000000001,
-      "tokens": 39553,
-      "duration_minutes": 2.4521456003189086,
-      "campaign_data": {
-        "business_id": "1728_",
-        "company_name": "Superior Roofing & Exteriors",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "07:00 AM",
-          "window_b_time": "08:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Are your online reviews costing you roofing jobs?",
-            "send_day": "Tuesday",
-            "send_time": "07:00 AM",
-            "body": "I'm Manu, and I fix problems for contractors like Superior Roofing & Exteriors. I've analyzed over 5,500 contractor profiles, and I've noticed a few things about your online reviews that could be actively turning potential customers away. This isn't about generic SEO; it's about real reputation issues impacting your lead flow.\n\nI can show you exactly what's happening and how to fix it fast. No team, no overhead, just direct execution.\n\nReply to this email if you want to see the specific data."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Are your online reviews costing you roofing jobs?",
-            "send_day": "Thursday",
-            "send_time": "07:00 AM",
-            "body": "Just following up on my last email about your online reputation.\n\nI know you're busy, but this isn't a problem that fixes itself. Poor reviews or a lack of recent positive ones directly impacts trust and the number of leads you get. My data shows this clearly across thousands of contractors.\n\nIf you're tired of losing out on good jobs because of what people are saying (or not saying) online, let's talk for 15 minutes. No obligation, just a direct look at your specific situation.\n\nWhat's a good time for a quick call this week?"
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Are your online reviews costing you roofing jobs? - Quick thought",
-            "send_day": "Monday",
-            "send_time": "07:00 AM",
-            "body": "One last thought on your online reputation and lead generation.\n\nMany contractors struggle with this, and it often leads to inconsistent cash flow and wasted marketing spend. My approach is direct: identify the exact issues with your online presence and implement quick, effective fixes based on what I know works from analyzing 5,500+ other businesses.\n\nI don't have testimonials yet, but I have the data. If you're serious about solving this specific problem and getting more qualified leads, reply to this email. If not, no worries."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Data"
-        }
-      }
-    },
-    "1901": {
-      "company_name": "Two States Exteriors",
-      "trade": "Roofing contractor",
-      "location": "Kansas City, Kansas",
-      "processing_status": "completed",
-      "timestamp": "2025-08-30T08:58:59.175776",
-      "cost": 0.005836000000000001,
-      "tokens": 40626,
-      "duration_minutes": 2.441178647677104,
-      "campaign_data": {
-        "business_id": "1901_",
-        "company_name": "Two States Exteriors",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "06:45 AM",
-          "window_b_time": "07:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your Mobile Site Speed is Costing You Leads",
-            "send_day": "Tuesday",
-            "send_time": "06:45 AM",
-            "body": "Manu here. I noticed your mobile site for Two States Exteriors scored a critical 33 points on speed. That's a red flag. In my analysis of 5,500+ contractors, slow sites like yours mean potential customers bounce before seeing your work, costing you real leads and revenue. I specialize in fixing these exact problems fast, without the usual overhead. Want to see how?"
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your Mobile Site Speed is Costing You Leads",
-            "send_day": "Thursday",
-            "send_time": "06:45 AM",
-            "body": "Following up on my last email. That 33-point mobile speed score isn't just a number; it directly impacts your lead flow and customer experience. I've seen contractors lose thousands in potential business because their site couldn't keep up. I don't sell packages; I fix your specific problem. I have data showing the direct link between speed and conversions. If you're serious about getting more quality leads, hit reply."
-          },
-          {
-            "email_number": 3,
-            "subject": "Last Chance: Fix Your Slow Site, Get More Leads",
-            "send_day": "Monday",
-            "send_time": "06:45 AM",
-            "body": "This is my final reach out about your mobile site speed. That 33-point score is a measurable problem that's likely turning away potential customers right now. My data from thousands of contractors confirms this. If you're content losing leads, no worries. But if you want a fast, direct solution to boost your online performance and get more calls, just reply to this email. Otherwise, I'll assume you're all set."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Local references"
-        }
-      }
-    },
-    "4043": {
+    "04043": {
       "company_name": "R&R Roofing",
       "trade": "Roofing contractor",
       "location": "Alexandria, Kentucky",
@@ -4443,7 +4059,7 @@
       "tokens": 38391,
       "duration_minutes": 2.353172699610392,
       "campaign_data": {
-        "business_id": "4043_",
+        "business_id": "04043",
         "company_name": "R&R Roofing",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4481,103 +4097,7 @@
         }
       }
     },
-    "5199": {
-      "company_name": "XTREME Roofing & Construction",
-      "trade": "Roofing contractor",
-      "location": "Lexington area, Kentucky",
-      "processing_status": "completed",
-      "timestamp": "2025-08-30T09:01:34.189946",
-      "cost": 0.0058582,
-      "tokens": 38816,
-      "duration_minutes": 2.482763969898224,
-      "campaign_data": {
-        "business_id": "5199_",
-        "company_name": "XTREME Roofing & Construction",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Thursday",
-          "best_day_email_3": "Monday",
-          "window_a_time": "07:00 AM",
-          "window_b_time": "07:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your 3.2-star rating is losing XTREME Roofing jobs",
-            "send_day": "Tuesday",
-            "send_time": "07:00 AM",
-            "body": "I noticed XTREME Roofing & Construction's online reviews average 3.2 stars. This directly impacts your lead flow and trust with new customers. I specialize in fixing these exact problems for contractors, turning poor ratings into new business. I've analyzed data from 5,500+ contractors and know what works. Want to see how to fix this and get more qualified leads? Reply to this email."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your 3.2-star rating is losing XTREME Roofing jobs",
-            "send_day": "Thursday",
-            "send_time": "07:00 AM",
-            "body": "Following up on your online reviews. Many contractors overlook how much a low rating costs them in lost bids and wasted marketing spend. My approach isn't a generic package; it's about targeting your specific issues to improve your reputation fast. I don't have testimonials yet, but my data shows exactly what works. Let me know if you're open to a quick email exchange to discuss how."
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Your 3.2-star rating is losing XTREME Roofing jobs",
-            "send_day": "Monday",
-            "send_time": "07:00 AM",
-            "body": "If your online reputation isn't bringing in enough new business, it's a problem that needs fixing. I can show you the exact steps to improve your reviews and get more trust from potential customers, directly impacting your bottom line. This isn't about fluff; it's about measurable results based on what works for thousands of other contractors. If you're serious about getting more jobs, just reply."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Local references"
-        }
-      }
-    },
-    "2184": {
-      "company_name": "Sunflower State Exteriors",
-      "trade": "Roofing contractor",
-      "location": "El Dorado, Kansas",
-      "processing_status": "completed",
-      "timestamp": "2025-08-30T09:01:34.531267",
-      "cost": 0.0056867,
-      "tokens": 40096,
-      "duration_minutes": 2.5882142861684163,
-      "campaign_data": {
-        "business_id": "2184_",
-        "company_name": "Sunflower State Exteriors",
-        "contact_timing": {
-          "best_day_email_1": "Monday",
-          "best_day_email_2": "Wednesday",
-          "best_day_email_3": "Friday",
-          "window_a_time": "6:30 AM",
-          "window_b_time": "7:30 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your 1 Google Review: A Quick Fix for Sunflower State Exteriors?",
-            "send_day": "Monday",
-            "send_time": "6:30 AM",
-            "body": "Manu here. Saw your Google reviews – or lack thereof, with just one. For a business like Sunflower State Exteriors, that's a direct hit on new business and building trust. I've analyzed 5,500+ contractors and know exactly why this happens and how to fix it fast. No big team, just direct solutions. Want to see a quick info packet on how we turn that around?"
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your 1 Google Review: A Quick Fix for Sunflower State Exteriors?",
-            "send_day": "Wednesday",
-            "send_time": "6:30 AM",
-            "body": "Following up on my last email. That single Google review for Sunflower State Exteriors isn't just a number; it's a trust barrier costing you new leads. I specialize in fixing these exact problems for contractors like you, quickly and without overhead. My data shows how a strong online reputation directly translates to more calls. If you're serious about fixing this, I can send over an info packet outlining a practical plan."
-          },
-          {
-            "email_number": 3,
-            "subject": "Quick question about your Google reviews",
-            "send_day": "Friday",
-            "send_time": "6:30 AM",
-            "body": "Still thinking about your Google reviews for Sunflower State Exteriors. Building trust online is critical for contractors today. If that 1 review is holding you back from new business, I have a straightforward approach to get you more, fast. I don't have testimonials yet, but I have the data and direct experience fixing this specific issue for others. Can I send you a quick info packet so you can see how? No pressure, just the facts."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "B",
-          "proof_preference": "Local references/Case studies"
-        }
-      }
-    },
-    "2172": {
+    "02172": {
       "company_name": "Bumble Roofing of Greater Kansas City",
       "trade": "Roofing contractor",
       "location": "Kansas City area, Kansas",
@@ -4587,7 +4107,7 @@
       "tokens": 37906,
       "duration_minutes": 2.4383515159289044,
       "campaign_data": {
-        "business_id": "2172_",
+        "business_id": "02172",
         "company_name": "Bumble Roofing of Greater Kansas City",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4625,7 +4145,7 @@
         }
       }
     },
-    "2383": {
+    "02383": {
       "company_name": "Rainbow Roofing",
       "trade": "Roofing contractor",
       "location": "Basehor, Kansas",
@@ -4635,7 +4155,7 @@
       "tokens": 38881,
       "duration_minutes": 2.4948124210039775,
       "campaign_data": {
-        "business_id": "2383_",
+        "business_id": "02383",
         "company_name": "Rainbow Roofing",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4673,7 +4193,7 @@
         }
       }
     },
-    "4099": {
+    "04099": {
       "company_name": "Ark Covering & Restoration - Richmond",
       "trade": "Roofing contractor",
       "location": "Richmond, Kentucky",
@@ -4683,7 +4203,7 @@
       "tokens": 40197,
       "duration_minutes": 2.4959112842877706,
       "campaign_data": {
-        "business_id": "4099_",
+        "business_id": "04099",
         "company_name": "Ark Covering & Restoration - Richmond",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4721,7 +4241,7 @@
         }
       }
     },
-    "2187": {
+    "02187": {
       "company_name": "Great Plains Roofing & Exterior",
       "trade": "Roofing contractor",
       "location": "Hutchinson, Kansas",
@@ -4731,7 +4251,7 @@
       "tokens": 37725,
       "duration_minutes": 2.372433296839396,
       "campaign_data": {
-        "business_id": "2187_",
+        "business_id": "02187",
         "company_name": "Great Plains Roofing & Exterior",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4769,7 +4289,7 @@
         }
       }
     },
-    "2339": {
+    "02339": {
       "company_name": "Cloud Nine Roofing and Exteriors",
       "trade": "Roofing contractor",
       "location": "Hoisington, Kansas",
@@ -4779,7 +4299,7 @@
       "tokens": 42098,
       "duration_minutes": 3.8950381835301715,
       "campaign_data": {
-        "business_id": "2339_",
+        "business_id": "02339",
         "company_name": "Cloud Nine Roofing and Exteriors",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4817,46 +4337,46 @@
         }
       }
     },
-    "2824": {
-      "company_name": "1 Core Construction LLC",
+    "02457": {
+      "company_name": "KanMo Roofing & Exterior Services",
       "trade": "Roofing contractor",
-      "location": "Kansas City, Kansas",
+      "location": "Kansas City area, Kansas",
       "processing_status": "completed",
-      "timestamp": "2025-08-30T09:05:52.986635",
-      "cost": 0.006002400000000001,
-      "tokens": 41105,
-      "duration_minutes": 2.662491766611735,
+      "timestamp": "2025-09-03T14:12:53.366931",
+      "cost": 0.005947000000000001,
+      "tokens": 40910,
+      "duration_minutes": 2.7909841020901998,
       "campaign_data": {
-        "business_id": "2824_",
-        "company_name": "1 Core Construction LLC",
+        "business_id": "02457",
+        "company_name": "KanMo Roofing & Exterior Services",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
           "best_day_email_2": "Thursday",
           "best_day_email_3": "Monday",
-          "window_a_time": "06:45 AM",
-          "window_b_time": "07:30 PM"
+          "window_a_time": "7:00 AM",
+          "window_b_time": "8:30 PM"
         },
         "email_sequences": [
           {
             "email_number": 1,
-            "subject": "Your 570-day old reviews at 1 Core Construction",
+            "subject": "Your 1 Google Review: Losing KanMo Roofing Leads?",
             "send_day": "Tuesday",
-            "send_time": "06:45 AM",
-            "body": "I noticed your last 30 reviews for 1 Core Construction are over 570 days old. For contractors, this often means losing out on good leads because potential clients see a stale online presence. I help owners like you fix these specific reputation problems fast, without the usual headaches. Want to see how?"
+            "send_time": "7:00 AM",
+            "body": "Manu here. I noticed KanMo Roofing & Exterior Services only has one Google review. For contractors, this is a huge trust barrier and directly impacts how many leads you get. My data from 5,500+ contractors shows this is a common bottleneck. I fix problems like this fast.\n\nIf you're interested in boosting your online reputation and getting more calls, reply to this email."
           },
           {
             "email_number": 2,
-            "subject": "Re: Your 570-day old reviews at 1 Core Construction",
+            "subject": "Re: Your 1 Google Review: Losing KanMo Roofing Leads?",
             "send_day": "Thursday",
-            "send_time": "07:30 PM",
-            "body": "Following up on my last email about your outdated reviews. A stale online reputation doesn't just look bad; it directly impacts your lead flow and trust. I've analyzed data from 5,500+ contractors and know exactly what it takes to refresh your online presence and bring in new, qualified leads. If you're open to a quick fix, let me know."
+            "send_time": "7:00 AM",
+            "body": "Following up on my last email about your Google reviews. That single review isn't just a number; it's actively turning potential customers away, especially when they check your site.\n\nI also saw your website is on Wix. An unprofessional site combined with low reviews is a double hit to your credibility. I can show you how to quickly fix both, leveraging data from what works for other contractors.\n\nWorth a quick email reply if you want to see how."
           },
           {
             "email_number": 3,
-            "subject": "Re: Your 570-day old reviews at 1 Core Construction",
+            "subject": "Re: Your 1 Google Review: Losing KanMo Roofing Leads?",
             "send_day": "Monday",
-            "send_time": "06:45 AM",
-            "body": "One last check on your outdated reviews. Many contractors struggle with this, letting valuable leads slip away. I offer fast, direct solutions to get your online reputation back on track, often impacting cash flow and efficiency. No fluff, just execution. If this is a problem you want solved, reply to this email and we can discuss your specific situation."
+            "send_time": "7:00 AM",
+            "body": "Still thinking about your Google review count and Wix site. These aren't just cosmetic issues; they directly impact your lead flow and cash flow.\n\nMy approach is direct: I identify your specific problem (like these), and I fix it quickly, no fluff. I don't have testimonials yet, but I have the data from thousands of contractors to back up what works.\n\nIf you're serious about fixing these bottlenecks and getting more business, shoot me an email."
           }
         ],
         "messaging_preferences": {
@@ -4865,55 +4385,7 @@
         }
       }
     },
-    "2457": {
-      "company_name": "KanMo Roofing & Exterior Services",
-      "trade": "Roofing contractor",
-      "location": "Kansas City area, Kansas",
-      "processing_status": "completed",
-      "timestamp": "2025-08-30T09:07:27.095687",
-      "cost": 0.0055694,
-      "tokens": 38878,
-      "duration_minutes": 2.521916715304057,
-      "campaign_data": {
-        "business_id": "2457_",
-        "company_name": "KanMo Roofing & Exterior Services",
-        "contact_timing": {
-          "best_day_email_1": "Tuesday",
-          "best_day_email_2": "Friday",
-          "best_day_email_3": "Wednesday",
-          "window_a_time": "7:00 AM",
-          "window_b_time": "8:00 PM"
-        },
-        "email_sequences": [
-          {
-            "email_number": 1,
-            "subject": "Your 1 Google review: Quick fix?",
-            "send_day": "Tuesday",
-            "send_time": "7:00 AM",
-            "body": "Noticed KanMo Roofing has just one Google review. That's a huge trust barrier and likely costing you good leads. I fix this fast. Want to know how we can get you more 5-star reviews quickly? Email me back."
-          },
-          {
-            "email_number": 2,
-            "subject": "Re: Your 1 Google review: Quick fix?",
-            "send_day": "Friday",
-            "send_time": "7:00 AM",
-            "body": "Following up on your Google review. A weak online reputation costs good jobs. I've analyzed 5,500+ contractors and know what's holding you back. No complex packages, just direct action. Want a quick plan to fix this?"
-          },
-          {
-            "email_number": 3,
-            "subject": "Re: Your 1 Google review: Quick fix?",
-            "send_day": "Wednesday",
-            "send_time": "8:00 PM",
-            "body": "Last check on your Google review. Your online presence is critical for new leads. I can help you build trust and get more calls, fast. If you're serious about fixing this, just reply 'Yes' for a brief overview."
-          }
-        ],
-        "messaging_preferences": {
-          "email_length": "A",
-          "proof_preference": "Local references"
-        }
-      }
-    },
-    "2410": {
+    "02410": {
       "company_name": "Aspen Roofing Inc",
       "trade": "Roofing contractor",
       "location": "Kansas City, Kansas",
@@ -4923,7 +4395,7 @@
       "tokens": 41729,
       "duration_minutes": 2.4942447702089945,
       "campaign_data": {
-        "business_id": "2410_",
+        "business_id": "02410",
         "company_name": "Aspen Roofing Inc",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -4961,7 +4433,7 @@
         }
       }
     },
-    "3086": {
+    "03086": {
       "company_name": "Grace Roofing And Solar",
       "trade": "Roofing contractor",
       "location": "Kansas area, Kansas",
@@ -4971,7 +4443,7 @@
       "tokens": 39720,
       "duration_minutes": 2.5769689798355104,
       "campaign_data": {
-        "business_id": "3086_",
+        "business_id": "03086",
         "company_name": "Grace Roofing And Solar",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -5009,7 +4481,7 @@
         }
       }
     },
-    "3219": {
+    "03219": {
       "company_name": "Larson McDonald Roofing",
       "trade": "Roofing contractor",
       "location": "Topeka area, Kansas",
@@ -5019,7 +4491,7 @@
       "tokens": 40906,
       "duration_minutes": 2.4798500180244445,
       "campaign_data": {
-        "business_id": "3219_",
+        "business_id": "03219",
         "company_name": "Larson McDonald Roofing",
         "contact_timing": {
           "best_day_email_1": "Tuesday",
@@ -5054,6 +4526,447 @@
         "messaging_preferences": {
           "email_length": "A",
           "proof_preference": "Local references, Case studies"
+        }
+      }
+    },
+    "01747": {
+      "company_name": "FreeState Roofing LLC",
+      "trade": "Roofing contractor",
+      "location": "Lawrence, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:22:46.452275",
+      "cost": 0.0060301,
+      "tokens": 42104,
+      "duration_minutes": 2.6953219850858052,
+      "campaign_data": {
+        "business_id": "01747",
+        "company_name": "FreeState Roofing LLC",
+        "trade": "Roofing contractor",
+        "location": "Lawrence, Kansas",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Tuesday",
+          "best_day_email_3": "Tuesday",
+          "window_a_time": "7:00 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "FreeState Roofing LLC - optimization opportunity in Lawrence roofing contractor market",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Hi there,\n\nNoticed FreeState Roofing LLC while researching established roofing contractor operations in Lawrence.\n\nYour service approach and Lawrence presence show solid business fundamentals.\n\nFrom analyzing 4,517+ roofing contractor contractors, I identified an optimization pattern that companies at your stage typically benefit from.\n\nMost established roofing contractor businesses miss 30-40% of their lead conversion potential due to positioning gaps.\n\nI help roofing contractor contractors unlock hidden revenue through Business Optimization Systems.\n\nWorth exploring the opportunity together?\n\nBest,\nManu\n\nP.S. Kansas roofing contractor contractors implementing these optimizations see 40%+ revenue increase within 90 days."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: FreeState Roofing LLC - Lawrence market analysis completed",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Hi there,\n\nCompleted the Lawrence roofing contractor market analysis I mentioned.\n\nHere's what the data shows for FreeState Roofing LLC:\n\n**CURRENT POSITION:**\n• Lawrence market has 47 active roofing contractor competitors\n• Your setup ranks in top 60% for service capability\n• Missing 3 key positioning elements that premium contractors use\n\n**REVENUE GAP ANALYSIS:**\n• Average roofing contractor project value in Lawrence: $2,847\n• Premium-positioned competitors average: $4,230 (+48%)\n• Your estimated monthly opportunity cost: $8,400-$12,600\n\n**THE PATTERN:**\nSuccessful Lawrence roofing contractor contractors implement these 3 elements:\n1. Professional platform presence (not Custom)\n2. Credible email positioning (not Professional)  \n3. Authority-building review systems\n\nI can show you exactly how to implement all 3 for FreeState Roofing LLC.\n\nWant me to send the Lawrence-specific implementation roadmap?\n\nBest,\nManu\n\nP.S. The contractors who implement this system typically see results within 30-45 days."
+          },
+          {
+            "email_number": 3,
+            "subject": "FreeState Roofing LLC - 15-minute solution preview ready",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Hi there,\n\nBuilt out the FreeState Roofing LLC optimization preview I mentioned.\n\nSince I don't have a long list of testimonials yet (just launched this system), I created something better - a live demonstration.\n\n**WHAT I'LL SHOW YOU:**\n• Exact professional setup that premium roofing contractor contractors use\n• Your specific implementation roadmap (company-customized)\n• roofing contractor-specific authority positioning strategy\n• Expected ROI timeline and revenue projections\n\n**THE PREVIEW PROCESS:**\n15-minute screen share where you'll see:\n1. Your current positioning analysis (already completed)\n2. Professional setup transformation (built for FreeState Roofing LLC)  \n3. Implementation timeline and investment breakdown\n\nNo sales pitch - just showing you exactly what the solution looks like for your specific situation.\n\nI spent three days analyzing 5,609+ roofing contractor contractors to build this system.\n\nWorth 15 minutes to see how it applies to FreeState Roofing LLC?\n\nBest,\nManu\n\nP.S. If it's not a perfect fit for your situation, I'll tell you honestly - no time wasted."
+          },
+          {
+            "email_number": 4,
+            "subject": "Final note - FreeState Roofing LLC optimization window",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Hi there,\n\nFinal follow-up about the FreeState Roofing LLC optimization opportunity.\n\n**THE TIMING REALITY:**\nMost roofing contractor contractors optimize their positioning during August-September before the busy season planning period.\n\nOctober-December is when commercial clients and homeowners start researching contractors for next year's projects.\n\n**YOUR SPECIFIC SITUATION:**\nFreeState Roofing LLC has solid fundamentals - the optimization work would take 2-3 weeks to implement.\n\nThat puts you ready for the October opportunity window when Lawrence clients start their contractor research.\n\n**THE DECISION POINT:**\nI can take on 3 more roofing contractor contractors this month.\n\nAfter that, the next availability is November (which positions for February opportunity instead of October).\n\nIf you want to see the FreeState Roofing LLC optimization preview, let's schedule it this week.\n\nIf not, no worries - I'll focus on the other Lawrence roofing contractor contractors who are ready to move.\n\nBest,\nManu\n\nP.S. The contractors who implement professional positioning before their busy season consistently report 40-60% revenue increases. But timing is everything in this business."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "03713": {
+      "company_name": "Bellator Roofing & Restoration LLC",
+      "trade": "Roofing Service",
+      "location": "Corbin, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:22:56.392776",
+      "cost": 0.006037,
+      "tokens": 38790,
+      "duration_minutes": 2.445803149541219,
+      "campaign_data": {
+        "business_id": "03713",
+        "company_name": "Bellator Roofing & Restoration LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Bellator Roofing: Your online reviews are costing jobs",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "I noticed negative reviews are hurting your chances with new clients. My data from 5,500+ contractors shows this costs thousands monthly. I can show you exactly where and how to fix it quickly. Reply if you want to see the numbers."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Bellator Roofing: Your online reviews are costing jobs",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM",
+            "body": "Just following up on how negative reviews are impacting your pipeline. My analysis shows a direct link to lost bids. I can pinpoint the exact reviews and offer a fast solution. A quick reply is all it takes to get started."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Bellator Roofing: Your online reviews are costing jobs",
+            "send_day": "Monday",
+            "send_time": "7:00 AM",
+            "body": "If those lost jobs from online reviews are still a concern, I have a straightforward plan. No long meetings or sales pitches, just a direct fix based on solid data. Let me know if you're ready to stop losing business."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "01824": {
+      "company_name": "Murphy's Seamless Roofing",
+      "trade": "Roofing contractor",
+      "location": "St Marys, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:25:14.486156",
+      "cost": 0.005779200000000001,
+      "tokens": 38116,
+      "duration_minutes": 2.4264330665270486,
+      "campaign_data": {
+        "business_id": "01824",
+        "company_name": "Murphy's Seamless Roofing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "5:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Urgent: Your Domain Expires in 75 Days",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Murphy, your domain, murphysseamlessroofing.com, expires in 75 days. If not renewed, your website and email could go offline, costing you leads and trust. This is a critical fix.\n\nI also noticed you only have 4 Google reviews. That's a huge barrier for new customers. I've analyzed 5,500+ contractors and know how to fix these issues fast.\n\nReply to this email if you want to get this sorted out."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Urgent: Your Domain Expires in 75 Days",
+            "send_day": "Thursday",
+            "send_time": "6:30 AM",
+            "body": "Murphy, following up on your domain and Google reviews. Losing your website would be a big hit to your business, and 4 reviews isn't enough to compete.\n\nI specialize in fixing these exact problems for contractors like you, quickly and without overhead. My data shows how critical these are for lead generation.\n\nLet me know if you want a quick plan to secure your domain and boost your online reputation. Just reply to this email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Urgent: Your Domain Expires in 75 Days (Final Check)",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Murphy, this is my final check on your domain expiry and low Google reviews. These aren't minor issues; they directly impact your lead flow and cash.\n\nI can get these problems sorted out for you fast. No sales pitch, just a direct solution based on what works for thousands of contractors.\n\nIf you're serious about protecting your business and getting more leads, reply to this email. Otherwise, I'll assume you've got it handled."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "03760": {
+      "company_name": "Western KY Commercial Roofing",
+      "trade": "Roofing contractor",
+      "location": "Pembroke, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:25:43.907302",
+      "cost": 0.0065022000000000005,
+      "tokens": 41560,
+      "duration_minutes": 2.788946036497752,
+      "campaign_data": {
+        "business_id": "03760",
+        "company_name": "Western KY Commercial Roofing",
+        "contact_timing": {
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
+          "window_a_time": "6:00 AM - 7:30 AM",
+          "window_b_time": "7:00 PM - 9:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Western KY Roofing: Your 3 Google reviews",
+            "send_day": "Monday",
+            "send_time": "6:00 AM - 7:30 AM",
+            "body": "Manu here. I noticed Western KY Commercial Roofing only has 3 Google reviews. For commercial clients, that's a trust barrier that's likely costing you bids. I've analyzed data from 5,500+ contractors and can show you exactly how this impacts your lead flow and what to do about it, fast. No fluff, just results.\n\nIf you're open to a quick email exchange on this, let me know."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Western KY Roofing: Your 3 Google reviews",
+            "send_day": "Wednesday",
+            "send_time": "6:00 AM - 7:30 AM",
+            "body": "Following up on my last email about your Google reviews. Beyond the trust issue, low review counts also hurt your local search rankings, meaning fewer commercial clients even find you.\n\nI specialize in fixing these exact problems for contractors like you, using data-backed strategies. No big team, just direct execution.\n\nWorth a quick reply if you want to see the data on how this impacts your specific market."
+          },
+          {
+            "email_number": 3,
+            "subject": "Still seeing Western KY Roofing's review gap",
+            "send_day": "Friday",
+            "send_time": "6:00 AM - 7:30 AM",
+            "body": "One last thought on your 3 Google reviews. I know you're busy, but this isn't just a \"nice to have\" – it's a measurable gap that competitors are exploiting.\n\nI can show you the specific data on how much business you're losing and outline a plan to fix it quickly. My goal is to solve *your* problem, not sell a generic package.\n\nIf this isn't a priority, no worries. Otherwise, a simple \"yes\" reply gets you the breakdown."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Local references"
+        }
+      }
+    },
+    "01854": {
+      "company_name": "Unique Roofing Co",
+      "trade": "Roofing contractor",
+      "location": "Garden City, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:27:56.869208",
+      "cost": 0.0056482,
+      "tokens": 42229,
+      "duration_minutes": 2.7024624149004617,
+      "campaign_data": {
+        "business_id": "01854",
+        "company_name": "Unique Roofing Co",
+        "contact_timing": {
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Unique Roofing Co. domain expires in 74 days",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu here. I noticed your Unique Roofing Co. domain is set to expire soon. Losing that means losing your website, email, and online presence – a major headache.\nBeyond that, your current gmail.com email and Squarespace site are likely costing you trust and leads. I fix these exact problems fast, without the usual hassle.\nReply to this email if you want a quick fix before it's too late."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Unique Roofing Co. domain expires in 74 days",
+            "send_day": "Thursday",
+            "send_time": "7:30 PM",
+            "body": "Just following up on your domain expiry. Losing it means losing your website, email, and online presence. Your current gmail.com email and Squarespace site also signal amateur status to potential clients, costing you trust and leads.\nI fix these exact issues for contractors. No big teams or long projects, just direct, fast execution.\nReply to this email if you want a quick fix before these problems cost you more."
+          },
+          {
+            "email_number": 3,
+            "subject": "Last chance: Unique Roofing Co. online presence",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "This is my last message regarding your expiring domain, unprofessional email, and Squarespace site. These issues directly impact your credibility and new business.\nI fix these problems for contractors quickly, without the usual overhead. I'm new, so no testimonials yet, but my data from 5,500+ contractors proves I know what works.\nIf you want to fix your online image and stop losing leads, reply to this email. Let's get it done."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references, Data"
+        }
+      }
+    },
+    "03769": {
+      "company_name": "Pegasus Roofing and Construction",
+      "trade": "Roofing contractor",
+      "location": "Georgetown, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:28:06.952162",
+      "cost": 0.0062176,
+      "tokens": 37387,
+      "duration_minutes": 2.3809134642283123,
+      "campaign_data": {
+        "business_id": "03769",
+        "company_name": "Pegasus Roofing and Construction",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "06:30 AM",
+          "window_b_time": "07:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Pegasus Roofing: Your Wix site & Reputation",
+            "send_day": "Tuesday",
+            "send_time": "06:30 AM",
+            "body": "I noticed your website for Pegasus Roofing is built on Wix. From analyzing over 5,500 contractors, I've seen how this can unintentionally hurt a professional image and negatively impact reputation, often leading to missed quality leads. My data shows these builder platforms signal amateurism, directly affecting trust. I can fix this specific issue for you quickly.\n\nWant to hear how? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Pegasus Roofing: Your Wix site & Reputation",
+            "send_day": "Thursday",
+            "send_time": "07:30 PM",
+            "body": "Following up on my last email. That Wix site isn't just a design choice; it's actively undermining your reputation and costing you good business. When potential clients see it, they question your professionalism before you even get a chance to bid. I specialize in turning these types of strategic gaps into advantages, fast.\n\nIf you're serious about fixing this and improving your online perception, hit reply."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Pegasus Roofing: Your Wix site & Reputation",
+            "send_day": "Monday",
+            "send_time": "06:30 AM",
+            "body": "One last time on your Wix site. It's a direct drag on your reputation and lead generation. I get that you're busy, but this is a problem that compounds over time. I don't have testimonials yet, but my data from thousands of contractors shows exactly what works to solve this. I can deliver a direct solution, no fluff.\n\nReply if you want to finally fix this problem."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "03852": {
+      "company_name": "First Choice Roofing",
+      "trade": "Roofing contractor",
+      "location": "Lexington, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:30:42.694345",
+      "cost": 0.005947200000000001,
+      "tokens": 41487,
+      "duration_minutes": 2.5925613164901735,
+      "campaign_data": {
+        "business_id": "03852",
+        "company_name": "First Choice Roofing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Online Reputation & First Choice Roofing's Website",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "I noticed First Choice Roofing's website speed score is 54/100. That's directly impacting your Google ranking and how many customers stick around, which hurts your online reputation. Also, using a gmail.com email can make you look less established, affecting trust. I specialize in fixing these exact issues for contractors quickly, without the usual overhead. Can I send a quick email outlining how I'd boost your site speed and professional image?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Online Reputation & First Choice Roofing's Website",
+            "send_day": "Thursday",
+            "send_time": "7:30 PM",
+            "body": "Following up on my last email about your website speed and professional email. These aren't just cosmetic fixes; they directly impact your online reputation, lead generation, and trust with potential clients. Many contractors I analyze face similar challenges that cost them business daily. I have specific data showing what works. Reply if you're open to seeing a quick, no-obligation plan to improve these areas."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your Online Reputation & First Choice Roofing (Final Check-in)",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "One last check-in regarding your website performance and professional online presence. My analysis shows these are common bottlenecks for roofing contractors, often leading to lost bids and missed opportunities due to a perceived lack of professionalism. I don't sell packages; I solve specific problems with fast execution. If these issues are on your radar, just reply to this email. Otherwise, I'll assume you're all set."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references / Case studies"
+        }
+      }
+    },
+    "03885": {
+      "company_name": "Bourbon Country Exteriors",
+      "trade": "Roofing contractor",
+      "location": "Elizabethtown, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:33:30.447372",
+      "cost": 0.0064086,
+      "tokens": 43845,
+      "duration_minutes": 2.7929943323135378,
+      "campaign_data": {
+        "business_id": "03885",
+        "company_name": "Bourbon Country Exteriors",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your outdated reviews are costing you",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "I noticed your 44 reviews for Bourbon Country Exteriors are 255 days old. My data from 5,500+ contractors shows this directly impacts new lead conversion. I can show you how to fix it fast."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your outdated reviews are costing you",
+            "send_day": "Thursday",
+            "send_time": "7:30 PM",
+            "body": "Just following up. Beyond your reviews, I also saw your website speed is 55.0/100. Slow sites lose leads. My system fixes these specific problems, quickly, without the usual BS."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your outdated reviews are costing you",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu here again. If getting more fresh reviews and a faster website isn't a priority right now, no worries. But if you're serious about boosting your online presence and lead flow, reply to this email. I can outline a plan in 5 minutes."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Data/Case studies/Local references"
+        }
+      }
+    },
+    "00694": {
+      "company_name": "Northwest Commercial Roofing",
+      "trade": "Roofing contractor",
+      "location": "Sandpoint, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T12:36:03.810298",
+      "cost": 0.0063805,
+      "tokens": 42658,
+      "duration_minutes": 2.710672314961751,
+      "campaign_data": {
+        "business_id": "00694",
+        "company_name": "Northwest Commercial Roofing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:45 AM",
+          "window_b_time": "5:45 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 4 Google Reviews: Costing You Jobs?",
+            "send_day": "Tuesday",
+            "send_time": "6:45 AM",
+            "body": "I noticed Northwest Commercial Roofing only has 4 Google reviews, which is a critical trust barrier for potential commercial clients looking for a reliable roofer. This low count, combined with your website's 43/100 speed score, is likely costing you valuable leads and making it harder to stand out. I can show you exactly how to fix these specific issues to improve your online reputation and attract more high-value projects. Reply to this email if you're interested in a quick analysis of what you're losing."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 4 Google Reviews: Costing You Jobs?",
+            "send_day": "Thursday",
+            "send_time": "5:45 PM",
+            "body": "Just following up on my last email about your 4 Google reviews and website speed. I understand you're busy, especially this time of year. My analysis of 5,500+ contractors shows these specific issues directly impact lead flow and project acquisition. I'm not selling a package; I fix *your* problems directly, quickly, and without overhead. If you're serious about getting more high-paying commercial projects, a quick email exchange can show you how."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 4 Google Reviews: Costing You Jobs?",
+            "send_day": "Monday",
+            "send_time": "6:45 AM",
+            "body": "One last check-in regarding your online reputation and website performance. If your current lead generation isn't where it needs to be, these specific problems (4 Google reviews, 43/100 speed) are likely the bottleneck. My approach is direct: identify the exact fix, execute it fast, and get measurable results. No long-term contracts, just solutions. If you're ready to tackle these issues head-on, reply to this email, and I'll outline a specific plan for Northwest Commercial Roofing."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
         }
       }
     }

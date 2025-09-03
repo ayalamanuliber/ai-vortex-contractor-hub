@@ -159,11 +159,11 @@ export async function GET(request: NextRequest) {
         nombre: nombreChanges[id] || nombreChanges[originalId] || nombreChanges[paddedId] || row['nombre'] || '',
         hasCampaign,
         hasFocusGroup: !!campaignData?.focus_group_generated,
-        campaignData: campaignData || null,
+        campaignData: campaignData ? { campaign_data: campaignData } : null,
         cost: campaignData?.cost || 0,
         sessionDuration: campaignData?.duration_minutes || 0,
         tokensUsed: campaignData?.tokens || 0,
-        emailSequences: campaignData?.campaign_data?.email_sequences?.length || 0,
+        emailSequences: campaignData?.email_sequences?.length || 0,
         notes: [],
         // Include raw CSV data for detailed intelligence
         rawData: row,

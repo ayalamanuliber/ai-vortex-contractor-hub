@@ -1,9 +1,9 @@
 {
   "database_info": {
     "generated_date": "2025-08-28T17:42:00.000000",
-    "total_contractors": 130,
+    "total_contractors": 168,
     "system_version": "FOCUS-INTEL V2.0",
-    "last_updated": "2025-09-03T17:03:39.781579"
+    "last_updated": "2025-09-03T19:06:35.293582"
   },
   "contractors": {
     "02184": {
@@ -6258,6 +6258,1830 @@
             "send_day": "Tuesday",
             "send_time": "06:30 AM",
             "body": "Last check on your reviews and overall business health. If negative feedback is costing you leads, or you're tired of other contractor headaches, let's talk. I offer fast execution and measurable results. Reply for a quick chat."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "02212": {
+      "company_name": "Cozy Heating and Air conditioning",
+      "trade": "HVAC contractor",
+      "location": "Kansas City area, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:03:48.021593",
+      "cost": 0.0062788,
+      "tokens": 41494,
+      "duration_minutes": 2.708413751920064,
+      "campaign_data": {
+        "business_id": "02212",
+        "company_name": "Cozy Heating and Air conditioning",
+        "contact_timing": {
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "8:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 714-day-old reviews",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu,\n\nI noticed your last customer review for Cozy Heating and Air conditioning was over two years ago. In today's market, that's a big hurdle for new customers looking for reliable HVAC work.\n\nI help contractors like you fix problems like this, fast. No big team, no overhead, just direct solutions based on what actually works.\n\nCan I send over a quick, one-page overview of how we get your reviews active again and working for you?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 714-day-old reviews",
+            "send_day": "Thursday",
+            "send_time": "8:00 PM",
+            "body": "Manu,\n\nJust following up on my last email. Those old reviews aren't just a number; they're costing you new leads who go straight to the competition with fresh feedback.\n\nI've analyzed over 5,500 contractors and know the exact steps to turn inactive reviews into a consistent flow of new customer trust. I don't have testimonials yet because I just started, but the data is clear.\n\nIf you're interested in boosting your online reputation and getting more calls, reply and I'll send that quick overview."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 714-day-old reviews (Quick thought)",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu,\n\nI know you're busy running Cozy Heating and Air conditioning. My goal isn't to waste your time, but to solve a real problem: those outdated reviews hurting your new business.\n\nI can implement a strategy to get fresh reviews flowing, quickly and efficiently. No long-term contracts, just results.\n\nIf you're serious about getting your online reputation working for you, let me know. I can send a short info packet explaining exactly how I'd tackle this for you."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references/Case studies"
+        }
+      }
+    },
+    "04961": {
+      "company_name": "Stephens Heating and Cooling, LLC",
+      "trade": "HVAC contractor",
+      "location": "Lexington area, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:06:16.045998",
+      "cost": 0.0057536,
+      "tokens": 39598,
+      "duration_minutes": 2.6026368459065754,
+      "campaign_data": {
+        "business_id": "04961",
+        "company_name": "Stephens Heating and Cooling, LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:30 AM",
+          "window_b_time": "6:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reviews: a quick fix",
+            "send_day": "Tuesday",
+            "send_time": "7:30 AM",
+            "body": "I noticed your online reviews might be costing you calls. My data from 5,500+ contractors shows exactly why. I can fix this specific problem quickly, without selling you a big package. Interested in a practical solution?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reviews: a quick fix",
+            "send_day": "Thursday",
+            "send_time": "7:30 AM",
+            "body": "Just following up on your online reputation. Beyond reviews, your Google Sites website and aol.com email also send the wrong signal. I can show you simple, fast changes that get you more leads and trust. Want to hear how?"
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your online reviews: a quick fix",
+            "send_day": "Monday",
+            "send_time": "7:30 AM",
+            "body": "Manu here. I understand you're busy, but ignoring these online issues costs you real money daily. I don't have testimonials yet, but my analysis of 5,500+ contractors works. Let me show you the data for your specific situation. Reply if you're ready to stop losing calls."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "01264": {
+      "company_name": "Sasquatch Heating and Cooling",
+      "trade": "HVAC contractor",
+      "location": "Dalton Gardens, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:06:28.044718",
+      "cost": 0.006213,
+      "tokens": 40830,
+      "duration_minutes": 2.6640681346257526,
+      "campaign_data": {
+        "business_id": "01264",
+        "company_name": "Sasquatch Heating and Cooling",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM - 7:00 AM",
+          "window_b_time": "7:00 PM - 8:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Sasquatch Heating: Your Online Reputation & Critical Website Alert",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM - 7:00 AM",
+            "body": "Manu here. I was checking local HVAC companies and noticed a couple of critical things with Sasquatch Heating and Cooling. Your domain is set to expire in 188 days – that's a huge risk for your online presence. Plus, your site has mobile performance issues that are likely costing you leads. I've analyzed data from 5,500+ contractors and can fix these fast. Want to know more about what I found? Just reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Sasquatch Heating: Your Online Reputation & Critical Website Alert",
+            "send_day": "Thursday",
+            "send_time": "6:30 AM - 7:00 AM",
+            "body": "Just following up on my last email. That domain expiry and mobile site speed are bigger problems than they seem, directly impacting your ability to get new customers and protect your business. Many contractors overlook these until it's too late. I specialize in fixing these exact issues quickly, without the typical agency overhead. I'm not selling a package; I solve your specific problems. Let me know if you want a quick breakdown of what needs to happen."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Sasquatch Heating: Your Online Reputation & Critical Website Alert - Next Steps",
+            "send_day": "Monday",
+            "send_time": "6:30 AM - 7:00 AM",
+            "body": "One last check on your domain expiry and website performance. These aren't just technical issues; they're business roadblocks that stop new leads and can damage your reputation. I understand you're busy, so I'll keep it simple. I can outline a precise plan to secure your domain and boost your site's speed within a week. No obligation, just clear answers. If you're ready to tackle these, reply here and we can talk specifics."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references, data specific to my industry"
+        }
+      }
+    },
+    "02003": {
+      "company_name": "Superior Comfort Heating & Air LLC",
+      "trade": "HVAC contractor",
+      "location": "Atchison, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:08:44.315568",
+      "cost": 0.005987200000000001,
+      "tokens": 38846,
+      "duration_minutes": 2.4699461340904234,
+      "campaign_data": {
+        "business_id": "02003",
+        "company_name": "Superior Comfort Heating & Air LLC",
+        "contact_timing": {
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "8:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Is Your Online Reputation Costing You Jobs?",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "You're probably too busy to notice, but your online reputation might be costing you serious money – losing jobs to competitors with better reviews, even when your work is superior. I've analyzed 5,500+ contractors and can fix this for you, fast. Want to see how? Reply to this email if you want a quick breakdown."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Is Your Online Reputation Costing You Jobs?",
+            "send_day": "Wednesday",
+            "send_time": "6:30 AM",
+            "body": "Following up on my last email. Losing good jobs because of a few bad reviews or not enough good ones is frustrating. I see it constantly. My data shows specific, fast actions you can take to turn this around. No fluff, just results. Interested in the specifics? Reply 'Yes' if you want me to send you a quick overview."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Is Your Online Reputation Costing You Jobs? (Last Chance)",
+            "send_day": "Friday",
+            "send_time": "6:30 AM",
+            "body": "One last try. If you're tired of losing profitable jobs to competitors just because their online presence looks better, I can help. I don't have testimonials yet, but my data-backed approach works. Let's fix this problem for good. Still interested in a real solution? Reply to this email to get the info. No pressure."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Data/Case studies/Local references"
+        }
+      }
+    },
+    "02215": {
+      "company_name": "Bill Dean Mechanical LLC",
+      "trade": "HVAC contractor",
+      "location": "Tonganoxie, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:08:59.417652",
+      "cost": 0.005576800000000001,
+      "tokens": 38665,
+      "duration_minutes": 2.519999929269155,
+      "campaign_data": {
+        "business_id": "02215",
+        "company_name": "Bill Dean Mechanical LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "06:45 AM",
+          "window_b_time": ""
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 3 Google Reviews & Lost Jobs",
+            "send_day": "Tuesday",
+            "send_time": "06:45 AM",
+            "body": "Bill, I noticed Bill Dean Mechanical LLC only has 3 Google reviews, and that's costing you leads right now. Your Hotmail email also gives an unprofessional first impression.\n\nI've analyzed data from 5,500+ contractors and can show you exactly how these issues are hurting your bottom line. I can fix these specific problems quickly, without the usual overhead.\n\nWant to see the numbers on what you're losing? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 3 Google Reviews & Lost Jobs",
+            "send_day": "Thursday",
+            "send_time": "06:45 AM",
+            "body": "Bill, following up on my last email about your Google reviews and Hotmail address. These aren't just cosmetic issues; they directly impact how many new customers call you versus your competition.\n\nMany contractors struggle with this, losing out on high-profit jobs daily. My analysis shows clear patterns. I can implement solutions that get you more reviews and a professional email, boosting your credibility and lead flow.\n\nLet me know if you're open to a quick email exchange to discuss the specific data for your business."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 3 Google Reviews & Lost Jobs - Quick Fix?",
+            "send_day": "Monday",
+            "send_time": "06:45 AM",
+            "body": "Bill, one last time regarding your online presence. If your Google reviews and Hotmail email aren't addressed, you'll keep losing good leads.\n\nI specialize in fast, direct solutions for contractors, leveraging data from thousands of others. I don't have testimonials yet because I just started, but I deliver measurable results. I can get your online reputation and professionalism sorted out, so you attract more of the right customers.\n\nIf you're serious about fixing this and stopping the bleed, reply to this email and let's get it done."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "00631": {
+      "company_name": "Infinite Comfort Solutions LLC",
+      "trade": "HVAC contractor",
+      "location": "New Plymouth, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:11:14.770915",
+      "cost": 0.005964800000000001,
+      "tokens": 39744,
+      "duration_minutes": 2.506589384873708,
+      "campaign_data": {
+        "business_id": "00631",
+        "company_name": "Infinite Comfort Solutions LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "07:00 AM",
+          "window_b_time": "04:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 295-day old reviews: Are they costing you sales?",
+            "send_day": "Tuesday",
+            "send_time": "07:00 AM",
+            "body": "As a contractor myself, I know how hard it is to keep your online reputation fresh, especially when your last review for Infinite Comfort Solutions was 295 days ago. This isn't just a number; it means you're likely losing leads and wasting money on ads that aren't converting because potential customers don't trust outdated info. I've analyzed data from 5,500+ contractors and can show you exactly how to fix this fast. Reply to this email if you want to see the numbers."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 295-day old reviews: Are they costing you sales?",
+            "send_day": "Thursday",
+            "send_time": "04:30 PM",
+            "body": "Following up on my last email. That outdated review problem isn't just about appearances; it directly impacts your bottom line. My data shows contractors with old reviews see a measurable drop in new lead conversions, even with a strong ad spend. We can pinpoint exactly where you're bleeding money and get your online reputation working for you again, driving more qualified calls. If you're serious about stopping the bleed, reply to this email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 295-day old reviews: Are they costing you sales?",
+            "send_day": "Monday",
+            "send_time": "07:00 AM",
+            "body": "One last thought on your online reputation. I get it, you're busy running Infinite Comfort Solutions. But ignoring those old reviews means you're leaving money on the table every day. My process is quick, focused on your specific issues, and based on hard data, not guesswork. No long-term commitments, just fast execution to get your reviews fresh and your leads flowing. If you're ready to stop losing business to outdated reviews, a quick email reply is all it takes."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "02494": {
+      "company_name": "Service Guru",
+      "trade": "HVAC contractor",
+      "location": "Kansas City area, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T17:11:49.937617",
+      "cost": 0.0060311,
+      "tokens": 43608,
+      "duration_minutes": 2.83911376396815,
+      "campaign_data": {
+        "business_id": "02494",
+        "company_name": "Service Guru",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
+          "window_a_time": "07:30 AM",
+          "window_b_time": "06:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 739-day old reviews",
+            "send_day": "Tuesday",
+            "send_time": "07:30 AM",
+            "body": "Manu here. Noticed your 8 reviews on Service Guru are 739 days old. For contractors, fresh reviews mean new leads. Stale ones? Not so much.\nI fix this for contractors like you, turning current jobs into consistent new reviews. No fluff, just results.\nWant to see how?\nReply to this email if you're interested in boosting your online reputation."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 739-day old reviews",
+            "send_day": "Wednesday",
+            "send_time": "07:30 AM",
+            "body": "Following up on my last email. That 739-day gap in your reviews is a missed opportunity for new business.\nMany contractors struggle to get customers to leave reviews, even after great work. I've analyzed 5,500+ contractors and know exactly why this happens and how to fix it.\nMy process is simple, quick, and designed to get you new reviews consistently.\nLet me know if you want the quick rundown."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 739-day old reviews - A solution for Service Guru",
+            "send_day": "Friday",
+            "send_time": "07:30 AM",
+            "body": "One last thought on your online presence. Every day without new reviews is a day competitors with fresher feedback gain an edge.\nI specialize in solving this exact problem, helping contractors like Service Guru get new reviews flowing without adding to your workload. No long-term contracts, just a direct fix.\nIf getting more consistent reviews and a stronger online reputation is a priority, reply here. If not, no worries, I'll take the hint."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "02358": {
+      "company_name": "Connelly Plumbing Solutions",
+      "trade": "Plumber",
+      "location": "Lenexa, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:09:35.958820",
+      "cost": 0.0062569,
+      "tokens": 37583,
+      "duration_minutes": 2.3102594017982483,
+      "campaign_data": {
+        "business_id": "02358",
+        "company_name": "Connelly Plumbing Solutions",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Friday",
+          "best_day_email_3": "Wednesday",
+          "window_a_time": "06:00 AM",
+          "window_b_time": "07:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reputation & website speed",
+            "send_day": "Tuesday",
+            "send_time": "06:00 AM",
+            "body": "Connelly,\n\nI noticed your website takes a while to load on mobile and you're still using a gmail.com email. Both these things can make you look less professional and cost you new plumbing jobs.\n\nMy data from 5,500+ contractors shows exactly how these issues hurt your reputation and lead flow.\n\nWant to see how? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reputation & website speed",
+            "send_day": "Friday",
+            "send_time": "07:30 PM",
+            "body": "Connelly,\n\nFollowing up on my last email. A slow mobile site and a generic email address are quick ways to lose trust with potential customers before they even call you. It's a direct hit to your professional image.\n\nI've seen this problem with many other plumbers. I can get your website loading fast and set you up with a professional email, improving your first impression and getting more calls.\n\nJust reply to this email if you want to know more. No obligation."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your online reputation & website speed",
+            "send_day": "Wednesday",
+            "send_time": "06:00 AM",
+            "body": "Connelly,\n\nOne last time on your website speed and email. These small issues are making your business look less credible and driving potential customers to your competition. It's a simple fix that has a big impact on your reputation and leads.\n\nI specialize in fixing these exact problems quickly, without the typical consultant BS. I don't have testimonials yet, but I have the data to back up what works.\n\nIf you're serious about fixing your online reputation and getting more leads, reply to this email."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "03995": {
+      "company_name": "Roney Plumbing Inc",
+      "trade": "Plumber",
+      "location": "Somerset, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:09:39.600351",
+      "cost": 0.0059315,
+      "tokens": 40238,
+      "duration_minutes": 2.4923582832018534,
+      "campaign_data": {
+        "business_id": "03995",
+        "company_name": "Roney Plumbing Inc",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "8:45 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reviews are costing Roney Plumbing Inc. jobs.",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "I noticed a few recent reviews for Roney Plumbing Inc. that might be impacting your new lead flow and causing you to lose bids. I've analyzed data from 5,500+ contractors and see patterns that directly affect your online reputation. I can show you exactly what's happening and how to fix it fast.\n\nWould you be open to a quick info packet on how to turn this around?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reviews are costing Roney Plumbing Inc. jobs.",
+            "send_day": "Thursday",
+            "send_time": "8:45 PM",
+            "body": "Following up on my last email. That data from 5,500+ contractors shows that a few negative reviews can block new business for months. I specialize in fixing these specific problems for plumbing companies like yours, without generic packages. My approach is direct and execution-focused.\n\nI put together a brief info packet on the common pitfalls and quick fixes. Interested?"
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your online reviews are costing Roney Plumbing Inc. jobs.",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Just checking in one last time regarding your online reputation. Losing bids due to a weaker online presence is a fixable problem. I don't have a team or overhead, just fast, direct solutions based on real contractor data. No generic advice, just what works for your specific situation.\n\nIf you're serious about winning more bids, let me send you that info packet. It explains my process."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "03300": {
+      "company_name": "Integrity Trade Services LLC",
+      "trade": "Plumber",
+      "location": "Wichita, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:09:47.421459",
+      "cost": 0.006631,
+      "tokens": 38859,
+      "duration_minutes": 2.4190813144048056,
+      "campaign_data": {
+        "business_id": "03300",
+        "company_name": "Integrity Trade Services LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:45 AM",
+          "window_b_time": "6:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Stop losing jobs to bad reviews",
+            "send_day": "Tuesday",
+            "send_time": "6:45 AM",
+            "body": "Manu here. I've analyzed 5,500+ contractors and see a pattern: inconsistent online reviews are killing lead quality. If your reviews aren't consistently 5-star, you're leaving money on the table. I fix this. I can show you how to get more quality leads by improving your online reputation, without adding more work to your plate.\n\nWould you be open to a quick email exchange about how we can fix your review problem?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Stop losing jobs to bad reviews",
+            "send_day": "Thursday",
+            "send_time": "6:30 PM",
+            "body": "Just following up on my last email. That review problem isn't just about a few bad comments; it directly impacts the *quality* of leads you get. My data shows contractors with inconsistent reviews spend more time chasing tire-kickers. I can implement a system to consistently generate positive reviews for you.\n\nIf you're tired of sifting through unqualified leads because of your online reputation, shoot me an email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Stop losing jobs to bad reviews - Your lead quality",
+            "send_day": "Monday",
+            "send_time": "6:45 AM",
+            "body": "Manu again. Look, I get it, you're busy. But this review issue isn't going away. It's a direct bottleneck to getting the *right* kind of jobs. I don't have testimonials yet, but my analysis of thousands of contractors shows exactly what works to turn around a flagging online reputation and bring in better leads.\n\nIf you're serious about fixing your online reviews and getting better leads, just reply to this email. Let's talk specifics."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "02169": {
+      "company_name": "Plumbing Mysteries & Solutions",
+      "trade": "Plumber",
+      "location": "Hutchinson, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:09:48.208176",
+      "cost": 0.005292300000000001,
+      "tokens": 36628,
+      "duration_minutes": 2.218504619598389,
+      "campaign_data": {
+        "business_id": "02169",
+        "company_name": "Plumbing Mysteries & Solutions",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Is your online reputation turning away new plumbing jobs?",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Hey [My Name],\n\nI noticed your Plumbing Mysteries & Solutions website is on Wix and you're still using a gmail.com email.\n\nFrom analyzing over 5,500 contractors, these signals often make potential customers question professionalism, directly impacting your online reputation and costing you new jobs.\n\nI fix these exact problems quickly, without the typical agency fluff. No big team, just fast execution to get your online presence working for you.\n\nCurious how? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Is your online reputation turning away new plumbing jobs?",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM",
+            "body": "Hey [My Name],\n\nFollowing up on my last email.\n\nMany contractors struggle with an online presence that doesn't reflect their quality work, leading to missed opportunities. A professional website and email are foundational for building trust and attracting the right clients.\n\nI specialize in fixing these specific issues, ensuring your digital front door looks as good as your plumbing work. I have data, not just promises, on what makes contractors stand out.\n\nWant to see the data? Just reply."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Is your online reputation turning away new plumbing jobs?",
+            "send_day": "Monday",
+            "send_time": "7:00 AM",
+            "body": "Hey [My Name],\n\nOne last thought on your online reputation.\n\nIf your website or email address makes even one potential customer hesitate, that's lost revenue. My goal is to eliminate those hesitations by quickly upgrading your online professionalism.\n\nI'm a one-man operation, so no fancy testimonials yet, but I can show you the data from 5,500+ contractors that proves my approach works.\n\nIf you're serious about getting more jobs from your online presence, reply and let me know."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references/Data"
+        }
+      }
+    },
+    "01560": {
+      "company_name": "Kansas Plumbing Solutions LLC",
+      "trade": "Plumber",
+      "location": "Lawrence, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:10:06.038652",
+      "cost": 0.006253100000000001,
+      "tokens": 42794,
+      "duration_minutes": 2.633307715257009,
+      "campaign_data": {
+        "business_id": "01560",
+        "company_name": "Kansas Plumbing Solutions LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "9:00 AM - 10:30 AM",
+          "window_b_time": "6:00 PM - 7:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reviews are costing you jobs.",
+            "send_day": "Tuesday",
+            "send_time": "morning time",
+            "body": "I've been analyzing contractor data, and I noticed your online reviews might be turning away potential customers. This directly impacts new calls and your bottom line. I specialize in fixing these kinds of problems quickly and without a big team. I can show you exactly where the gaps are and how to turn your reputation into a lead-generating asset. Want a quick email breakdown of what I found?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reviews are costing you jobs.",
+            "send_day": "Thursday",
+            "send_time": "morning time",
+            "body": "Just following up on my last email. Many contractors struggle with managing their online reputation, which leads to lost opportunities and cash flow issues. My data shows specific areas where improvements can lead to more quality leads and better efficiency. I don't sell packages; I solve *your* specific problem. If you're serious about stopping the bleed, reply to this email, and I'll send over a brief analysis."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your online reviews are costing you jobs.",
+            "send_day": "Monday",
+            "send_time": "morning time",
+            "body": "One last time on this. If you're losing jobs because your online reputation isn't where it needs to be, you're leaving money on the table. My approach is direct, fast, and based on data from thousands of contractors. No long sales pitches. If you want to see how to fix this specific problem and start getting more calls, just reply to this email. If not, no worries, I'll assume you're all set."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "01641": {
+      "company_name": "Kastl Plumbing",
+      "trade": "Plumber",
+      "location": "Lawrence, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:12:00.092559",
+      "cost": 0.0053543,
+      "tokens": 37237,
+      "duration_minutes": 2.2090348680814107,
+      "campaign_data": {
+        "business_id": "01641",
+        "company_name": "Kastl Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your KastlPlumbing.com domain is expiring soon.",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Manu here. Saw your domain for KastlPlumbing.com is up for renewal in 30 days. That's a critical piece of your business. Also noticed the Wix site – it's probably costing you good leads and making you look less professional than you are. I fix these kinds of problems fast for contractors like you, no nonsense. Want to quickly discuss how to secure your domain and upgrade your online presence without the usual headaches? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your KastlPlumbing.com domain is expiring soon.",
+            "send_day": "Thursday",
+            "send_time": "7:30 PM",
+            "body": "Following up on my last email. Losing your domain or having a weak website can seriously hurt your business and reputation. I've analyzed over 5,500 contractors and know what works to bring in quality leads. If your current setup isn't generating enough calls or you're tired of missed opportunities, I can help. No big teams, just direct solutions. Interested in a quick chat about getting more of the right jobs? Just hit reply."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your KastlPlumbing.com domain is expiring soon.",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu again. Look, your domain and website are often the first impression customers get. If they're not solid, you're leaving money on the table. I specialize in fixing these exact issues for contractors – getting your online presence sorted, improving your lead flow, and making sure you look like the professional operation you are. I don't have testimonials yet, but my data shows what's holding businesses back. If you're ready to fix these problems, let's talk. Reply to this email with your biggest pain point right now."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references/Case studies"
+        }
+      }
+    },
+    "00998": {
+      "company_name": "Direct Plumbing Solutions",
+      "trade": "Plumber",
+      "location": "Moscow, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:12:10.628588",
+      "cost": 0.0056883,
+      "tokens": 37989,
+      "duration_minutes": 2.3703507502873737,
+      "campaign_data": {
+        "business_id": "00998",
+        "company_name": "Direct Plumbing Solutions",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "8:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Wix site is hurting your reputation, Direct Plumbing",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Manu, I'm looking at Direct Plumbing Solutions' Wix site right now. It's an amateur signal that's actively costing you good jobs and leads by hurting your online reputation. My data from 5,500+ contractors shows this is a major trust killer. I fix problems like this fast, without the usual overhead.\n\nReply to this email if you want to see how this impacts your bottom line."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Wix site is hurting your reputation, Direct Plumbing",
+            "send_day": "Thursday",
+            "send_time": "8:30 PM",
+            "body": "Manu here again. That Wix site isn't just a visual issue; it's a strategic problem hurting your lead flow and cash by damaging your professional reputation. My analysis shows a clear link between a weak online presence and lost revenue for plumbers like you. I can show you the specific gaps and how to fix them quickly.\n\nAre you open to a quick email exchange about how we can get your online presence working for you?"
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your Wix site is hurting your reputation, Direct Plumbing",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Look, I get it. You're busy. But ignoring your Wix site and weak online presence means you're leaving money on the table every day because your reputation is suffering. My data shows contractors who fix this see an immediate jump in qualified leads and trust. I can outline a direct fix for your specific situation.\n\nJust reply with \"Yes\" if you want me to send over a brief breakdown of what's possible for Direct Plumbing Solutions. No obligation."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "02909": {
+      "company_name": "Integrity Plumbing Solutions",
+      "trade": "Plumber",
+      "location": "Wellsville, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:12:15.759060",
+      "cost": 0.0058806,
+      "tokens": 40698,
+      "duration_minutes": 2.600391920407613,
+      "campaign_data": {
+        "business_id": "02909",
+        "company_name": "Integrity Plumbing Solutions",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "06:45 AM",
+          "window_b_time": "07:15 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reviews: a missed opportunity?",
+            "send_day": "Tuesday",
+            "send_time": "06:45 AM",
+            "body": "I help contractors like you fix specific problems that cost them money, and I noticed your online reviews might not be working hard enough to bring in new business. My data from 5,500+ contractors shows exactly how to turn this around. I can quickly identify why your Squarespace website isn't converting and how to get those consistent, high-quality reviews that bring in more qualified calls.\n\nWant to know more? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reviews: a missed opportunity?",
+            "send_day": "Thursday",
+            "send_time": "07:15 PM",
+            "body": "Just following up on my last email. Beyond getting more high-quality reviews, I also help contractors with issues on their builder platforms that can mess with job tracking and cash flow. These are common headaches I see. My analysis of thousands of contractors shows clear solutions to these efficiency and payment problems, often tied into your overall online presence and reputation.\n\nLet me know if these are hitting home for you. Reply to this email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Re: Your online reviews: a missed opportunity?",
+            "send_day": "Monday",
+            "send_time": "06:45 AM",
+            "body": "One last thought on your online reputation, website, and builder platform issues. My goal is to fix *your* specific problems quickly and effectively, not sell you a generic package. I don't have testimonials yet, but my data-driven approach consistently delivers measurable results for contractors in improving their online presence and cash flow. If you're serious about fixing these problems and getting more leads, I can help.\n\nReply to this email if you're ready to talk specifics."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "00066": {
+      "company_name": "Roto-Rooter Plumbing & Drain Service",
+      "trade": "Plumber",
+      "location": "Paragould, Arkansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:12:19.375815",
+      "cost": 0.0061568000000000005,
+      "tokens": 42317,
+      "duration_minutes": 2.721294645468394,
+      "campaign_data": {
+        "business_id": "00066",
+        "company_name": "Roto-Rooter Plumbing & Drain Service",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:30 AM",
+          "window_b_time": "6:45 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Quick fix for your Roto-Rooter reviews?",
+            "send_day": "Tuesday",
+            "send_time": "6:45 PM",
+            "body": "I noticed your Roto-Rooter's online reviews could be working harder for you, and that's costing you good jobs. My data from 5,500+ contractors shows exactly how much. I fix these specific problems fast. No testimonials yet, but I can show you the numbers. If you're open to seeing how, just hit reply."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Quick fix for your Roto-Rooter reviews?",
+            "send_day": "Thursday",
+            "send_time": "6:45 PM",
+            "body": "Following up on my last email about your online reviews. Beyond just reputation, poor reviews directly impact your lead costs and how many calls convert. I specialize in turning these issues around for contractors like you, quickly and without overhead. If you're looking to cut lead costs and boost conversions, reply and I can share some insights."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Quick fix for your Roto-Rooter reviews? (Final thought)",
+            "send_day": "Monday",
+            "send_time": "6:45 PM",
+            "body": "One last thought on your Roto-Rooter's online presence and lead generation. My approach isn't about generic packages; it's about solving *your* specific problems that affect your bottom line. I've analyzed enough contractor data to know what truly works. If improving your reviews, getting better leads, or boosting your technician efficiency is on your mind, reply to this email. No pressure, just a direct conversation."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "03800": {
+      "company_name": "Ken Tyson Plumbing",
+      "trade": "Plumber",
+      "location": "Georgetown, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:12:46.202945",
+      "cost": 0.0050698,
+      "tokens": 41190,
+      "duration_minutes": 2.6664127190907796,
+      "campaign_data": {
+        "business_id": "03800",
+        "company_name": "Ken Tyson Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM - 8:00 AM",
+          "window_b_time": ""
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your mobile speed is hurting your online reputation, Ken.",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM - 8:00 AM",
+            "body": "Ken, I saw your website's mobile speed is slow (35 points). When potential customers can't easily find you on their phone, it frustrates them and hurts your chances for good reviews or even getting the call. I fix this specific problem for contractors, fast. If you want to protect your reputation and get more calls, hit reply."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your mobile speed is hurting your online reputation, Ken.",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM - 8:00 AM",
+            "body": "Ken, following up on your website's mobile speed. A slow site creates a bad first impression, directly impacting your online reputation and future reviews. I also noticed your domain expires in 87 days. Losing your domain means losing your entire online presence and all your past reputation efforts. I can help secure that and get your site running fast. Just reply if you want to fix these."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your mobile speed is hurting your online reputation, Ken.",
+            "send_day": "Monday",
+            "send_time": "7:00 AM - 8:00 AM",
+            "body": "Ken, one last time on your mobile speed and domain. These are critical for your online reputation and getting new business. My work is direct: I identify your specific problems and fix them quickly, without the usual headaches. I don't have testimonials yet, but I have data showing what's costing you. If you're serious about protecting your reputation and securing your business, email me back."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "03105": {
+      "company_name": "JL Plumbing & Home Repair",
+      "trade": "Plumber",
+      "location": "Wichita, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:14:35.367593",
+      "cost": 0.0059801,
+      "tokens": 39426,
+      "duration_minutes": 2.5849222540855408,
+      "campaign_data": {
+        "business_id": "03105",
+        "company_name": "JL Plumbing & Home Repair",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "6:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Quick question about your online reviews",
+            "send_day": "Tuesday",
+            "send_time": "6:30 PM",
+            "body": "Manu here. I've been looking at how local plumbers like JL Plumbing get new work. Many struggle with inconsistent online reviews or dealing with a bad one that hurts their reputation. That usually means fewer good leads coming in.\nI've analyzed over 5,500 contractors and know what works. I can help fix this for you directly, without the usual agency fluff.\nWould you be open to a quick email exchange about how this might be impacting your business?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Quick question about your online reviews",
+            "send_day": "Thursday",
+            "send_time": "6:30 PM",
+            "body": "Just following up on my last email. If inconsistent reviews or a specific bad one is slowing down your quality leads, it's a problem I can tackle directly.\nI'm a one-man operation, no team or overhead, so I move fast. My approach is based on data from 5,500+ contractors, not guesswork.\nCould I send you a single, specific idea on how to improve your review situation this week? No strings attached."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Quick question about your online reviews",
+            "send_day": "Monday",
+            "send_time": "6:30 PM",
+            "body": "One last time on this. If getting more good reviews and better leads is on your plate, I can help.\nI don't have testimonials yet because I just started, but I deliver results based on hard data, not promises. I solve *your* specific problems.\nIf you're interested in a concrete solution for your online reputation and lead flow, just reply to this email with 'Yes, tell me more.' If not, no worries, I won't bother you again."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references / Case studies"
+        }
+      }
+    },
+    "00618": {
+      "company_name": "Old Idaho Plumbing",
+      "trade": "Plumber",
+      "location": "Cocolalla, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:14:47.416108",
+      "cost": 0.0055981,
+      "tokens": 41528,
+      "duration_minutes": 2.6096221804618835,
+      "campaign_data": {
+        "business_id": "00618",
+        "company_name": "Old Idaho Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:00 AM - 7:00 AM",
+          "window_b_time": "6:00 PM - 7:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Old Idaho Plumbing domain & online trust",
+            "send_day": "Tuesday",
+            "send_time": "6:00 AM - 7:00 AM",
+            "body": "Manu here. I noticed your oldidahoplumbing.com domain expires in 52 days. This is a critical risk to your online presence and reputation. Also, a gmail.com email can hurt trust with potential customers. I can fix these fast. Quick email back if you want to know how."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Old Idaho Plumbing domain & online trust",
+            "send_day": "Thursday",
+            "send_time": "6:00 AM - 7:00 AM",
+            "body": "Following up on your domain expiring and the gmail email. These issues directly impact your ability to get new leads and stand out from competitors. I've helped other local contractors with similar problems. Reply if you're ready to secure your online foundation."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your Old Idaho Plumbing domain & online trust - Final check",
+            "send_day": "Monday",
+            "send_time": "6:00 AM - 7:00 AM",
+            "body": "Last check on your domain expiration and professional email. Ignoring these can mean losing jobs and eroding customer trust. I specialize in fast, direct solutions for contractors. If you're serious about your online reputation, hit reply for a quick chat."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "02238": {
+      "company_name": "DMC Industries",
+      "trade": "Plumber",
+      "location": "Kansas City area, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:14:52.962193",
+      "cost": 0.0058064,
+      "tokens": 41293,
+      "duration_minutes": 2.5570788820584616,
+      "campaign_data": {
+        "business_id": "02238",
+        "company_name": "DMC Industries",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your unprofessional email & Wix site are costing you",
+            "send_day": "Tuesday",
+            "send_time": "7:30 AM",
+            "body": "Manu here. Your current email address and Wix site are hurting your professional image and likely costing you good leads. I've analyzed 5,500+ contractors and know exactly what signals kill trust. I can fix this fast. Reply if you want to see how."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your unprofessional email & Wix site are costing you",
+            "send_day": "Thursday",
+            "send_time": "7:30 AM",
+            "body": "Following up on your online image. Your current setup makes you look amateur, losing bids before you even speak. My data shows this is a common issue for contractors. I can quickly upgrade your digital presence to attract better clients. Let me know if you're interested in a quick fix."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your unprofessional email & Wix site are costing you",
+            "send_day": "Monday",
+            "send_time": "7:30 AM",
+            "body": "Still thinking about your online impression. An unprofessional email and Wix site directly impact your cash flow and lead quality. I specialize in fixing these exact problems for contractors like you, without the usual headaches. Ready to stop losing out? Just reply."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "03329": {
+      "company_name": "La Plumbing",
+      "trade": "Plumber",
+      "location": "Wichita, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:15:11.003862",
+      "cost": 0.005632,
+      "tokens": 39325,
+      "duration_minutes": 2.4119082490603128,
+      "campaign_data": {
+        "business_id": "03329",
+        "company_name": "La Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "06:45 AM - 07:15 AM",
+          "window_b_time": ""
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 441-day old reviews are costing you leads",
+            "send_day": "Tuesday",
+            "send_time": "06:45 AM - 07:15 AM",
+            "body": "Manu,\nI noticed your online reviews for La Plumbing haven't been updated in over a year. In today's market, that's a big reason why potential customers scroll past. Outdated reviews directly lead to inconsistent new leads, which I know is a constant headache.\n\nI've analyzed data from 5,500+ contractors and can show you what's actually working to fix this fast. I operate lean, so I can execute quickly on *your* specific problem.\n\nWould you be open to a quick info packet outlining how we can update your online presence and bring in more consistent leads?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 441-day old reviews are costing you leads",
+            "send_day": "Thursday",
+            "send_time": "06:45 AM - 07:15 AM",
+            "body": "Manu,\nFollowing up on my last email about your outdated online reviews. I know you're busy, but ignoring this issue means you're leaving money on the table every week. New customers are looking for recent feedback, and without it, they're likely calling someone else.\n\nMy data shows exactly how quickly this can be turned around, often with minimal effort on your end. My goal is to get you back to consistent, qualified leads without the usual overhead.\n\nStill interested in that info packet on how to refresh your online reputation and boost your lead flow?"
+          },
+          {
+            "email_number": 3,
+            "subject": "Quick question about your reviews at La Plumbing",
+            "send_day": "Monday",
+            "send_time": "06:45 AM - 07:15 AM",
+            "body": "Manu,\nOne last check on your outdated online reviews. I get that you're swamped, but this isn't a problem that fixes itself. Every day your reviews are 441+ days old, you're missing out on new business that your competitors are picking up.\n\nI specialize in fast execution to solve problems like inconsistent leads due to reputation issues. No fluff, just direct action based on what works for contractors.\n\nIf you're ready to stop losing out on new customers, let me send over that info packet. It clearly lays out how we can get your reviews updated and leads flowing again."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "01409": {
+      "company_name": "Hixx Plumbing",
+      "trade": "Plumber",
+      "location": "Lewiston, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:15:15.492974",
+      "cost": 0.0059287,
+      "tokens": 44939,
+      "duration_minutes": 2.9922431310017905,
+      "campaign_data": {
+        "business_id": "01409",
+        "company_name": "Hixx Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
+          "window_a_time": "6:30 AM - 7:30 AM",
+          "window_b_time": ""
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Hixx Plumbing: Your Online Reputation & Domain Risk",
+            "send_day": "Monday",
+            "send_time": "6:30 AM - 7:30 AM",
+            "body": "Manu here. I noticed your domain for Hixx Plumbing is set to expire in 73 days – a critical issue that could severely impact your online reputation and ability to generate leads.\n\nYour current Squarespace site also projects an amateur image, directly affecting how potential customers perceive your business. My data from analyzing 5,500+ contractors shows how quickly these issues cost you new business.\n\nWant a quick chat to protect your domain and build a professional online presence? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Hixx Plumbing: Your Online Reputation & Domain Risk",
+            "send_day": "Wednesday",
+            "send_time": "6:30 AM - 7:30 AM",
+            "body": "Just following up on your domain and website. Losing your domain would be a huge hit to your online reputation, and an amateur site is already costing you calls and trust.\n\nMy data from analyzing 5,500+ contractors shows exactly what works to get more leads and cash flow by fixing these online perception issues. I can fix your specific site and domain problems.\n\nIf these problems are costing you sleep or money, let's talk for 10 minutes. Just reply to this email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Hixx Plumbing: Your Online Reputation & Domain Risk",
+            "send_day": "Friday",
+            "send_time": "6:30 AM - 7:30 AM",
+            "body": "One last check on your domain expiring in 73 days and your Squarespace site. This isn't just about a website; it's about your professional reputation and consistent lead flow.\n\nI specialize in fast, direct solutions for contractor problems – no overhead, just execution. My insights come from real data, not guesswork, to protect and build your online standing.\n\nIf you're serious about fixing these issues and getting your online presence working for your reputation, hit reply. Otherwise, I'll assume you've got it handled."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Local references"
+        }
+      }
+    },
+    "01041": {
+      "company_name": "Heglar Creek Plumbing",
+      "trade": "Plumber",
+      "location": "Heyburn, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:17:06.512480",
+      "cost": 0.0058907000000000004,
+      "tokens": 40437,
+      "duration_minutes": 2.5180501619974773,
+      "campaign_data": {
+        "business_id": "01041",
+        "company_name": "Heglar Creek Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "6:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 252-day old reviews: Quick fix",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Manu here. Your 24 reviews for Heglar Creek Plumbing are nearly a year old, and that's costing you leads. I analyze data from 5,500+ contractors and know how to fix this fast to get you new business.\n\nWant to see how? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 252-day old reviews: Quick fix",
+            "send_day": "Thursday",
+            "send_time": "6:30 AM",
+            "body": "Just following up on your outdated reviews. Fresh reviews are critical for getting new plumbing leads, and your current situation is a missed opportunity. My data shows exactly what works to get new reviews flowing and bring in more customers.\n\nIf getting more quality leads is a priority, let me know."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 252-day old reviews: Quick fix",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu again. My data consistently shows that contractors with old reviews struggle to pull in new business. I can quickly implement a system to get you fresh reviews and improve your lead flow. No long-term contracts, just results.\n\nIf you're serious about fixing this, reply and we can discuss your specific situation."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "A",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "00576": {
+      "company_name": "Integrity plumbing services llc",
+      "trade": "Plumber",
+      "location": "Southern Idaho, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:17:22.196125",
+      "cost": 0.0059182,
+      "tokens": 41388,
+      "duration_minutes": 2.576501448949178,
+      "campaign_data": {
+        "business_id": "00576",
+        "company_name": "Integrity plumbing services llc",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your website speed & reputation: 57/100",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Your website's 57/100 speed score means customers are leaving before they even see your services. That's money walking out the door. Plus, that `gmail.com` address can make you look less professional and impact your reputation with potential clients. I've analyzed data from 5,500+ contractors and know how these issues directly impact your lead flow. Reply if you want to see how this is affecting your business specifically."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your website speed & reputation: 57/100",
+            "send_day": "Thursday",
+            "send_time": "7:30 PM",
+            "body": "Following up on your website speed and email professionalism. Slow sites lose leads, and a generic email address can hurt your reputation and trust. These aren't just minor details; they're costing you quality calls. I can show you concrete data on how quickly these issues can be fixed and the impact on your bottom line. Just reply to this email if you're interested in a quick fix."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your website speed & reputation: 57/100",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "One last check on your website speed and email. I understand you're busy, but these are critical for consistent lead generation and building client trust. My approach is direct, no fluff, just fast execution based on real contractor data. If you're serious about fixing these leaks in your business, reply to this email and I'll send you a brief, no-obligation breakdown of what's possible."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data / Local references"
+        }
+      }
+    },
+    "01197": {
+      "company_name": "Idaho Backflow Testing",
+      "trade": "Plumber",
+      "location": "Boise, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:17:29.138662",
+      "cost": 0.0057032,
+      "tokens": 41166,
+      "duration_minutes": 2.599918087323507,
+      "campaign_data": {
+        "business_id": "01197",
+        "company_name": "Idaho Backflow Testing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM - 8:00 AM",
+          "window_b_time": "6:00 PM - 7:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your slow website & weak reviews: Idaho Backflow",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM - 8:00 AM",
+            "body": "Manu,\nI noticed your Idaho Backflow Testing website loads slowly and you only have 3 Google reviews. This combination is probably costing you new customers right now. I've analyzed data from 5,500+ contractors and can fix these specific issues for you. No fluff, just direct execution.\n\nIf you're interested in getting more leads from your website and improving your online trust, reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your slow website & weak reviews: Idaho Backflow",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM - 8:00 AM",
+            "body": "Manu,\nFollowing up on my last email about your website speed and Google reviews. I understand you're busy, but these two things are critical for getting new customers online. My data shows contractors with slow sites and few reviews struggle significantly more. I can implement specific fixes quickly.\n\nI don't have testimonials yet, but my approach is based on real performance data. Want to discuss what specific changes would get your phone ringing more? Just reply here."
+          },
+          {
+            "email_number": 3,
+            "subject": "Quick thought on your Idaho Backflow online presence",
+            "send_day": "Monday",
+            "send_time": "6:00 PM - 7:00 PM",
+            "body": "Manu,\nOne last thought on your website and reviews. Fixing a slow site and building a strong online reputation isn't complicated, but it takes specific action. I'm a one-man operation, so I can move fast and focus directly on your problems without any overhead.\n\nIf you're serious about getting more new customers and improving how people find you online, send me an email with your biggest question. I'll give you a direct answer."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "02612": {
+      "company_name": "Pete's Plumbing",
+      "trade": "Plumber",
+      "location": "Scott City, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:17:42.927870",
+      "cost": 0.005599600000000001,
+      "tokens": 39766,
+      "duration_minutes": 2.4532230814297993,
+      "campaign_data": {
+        "business_id": "02612",
+        "company_name": "Pete's Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 4 Google Reviews & Slow Site Speed",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Pete, your website's slow load time and only 4 Google reviews are costing you new jobs. I've analyzed 5,500+ contractors and see this pattern daily. A slow site makes people leave, and low reviews kill trust. I can fix these specific issues quickly without selling you a big package. No overhead, just fast execution to get your site moving and build your online reputation.\n\nWant to see how I'd approach it for Pete's Plumbing? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 4 Google Reviews & Slow Site Speed",
+            "send_day": "Thursday",
+            "send_time": "6:30 AM",
+            "body": "Pete, just following up on your site's performance and review count. That slow speed and lack of trust from reviews directly impacts your lead flow and cash. I know you're busy, but ignoring these problems means potential customers are calling someone else. My data shows fixing these gets real results.\n\nIf you're tired of losing out, reply to this email for a quick rundown of my approach."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Quick question about Pete's Plumbing site",
+            "send_day": "Monday",
+            "send_time": "7:30 PM",
+            "body": "Pete, one last check on your website's speed and Google reviews. These aren't just minor issues; they're direct barriers to getting new business. I specialize in fixing these exact problems for contractors like you, fast and without the usual consultant fluff. No testimonials yet, but my data from thousands of contractors shows what works.\n\nIf you're ready to stop losing customers to a slow site or lack of reviews, reply to this email. No obligation, just a direct answer to your problem."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "03837": {
+      "company_name": "Marcums Maintenance ——— plumbing drain specialist",
+      "trade": "Plumber",
+      "location": "Middlesboro, Kentucky",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:17:45.156019",
+      "cost": 0.0055712,
+      "tokens": 40046,
+      "duration_minutes": 2.566365317503611,
+      "campaign_data": {
+        "business_id": "03837",
+        "company_name": "Marcums Maintenance ——— plumbing drain specialist",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Wix site & Gmail: costing you jobs?",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Marcums Maintenance,\n\nI was looking at your online presence and saw your Wix website and gmail.com email. These signals often make contractors look less professional, and my data from 5,500+ contractors shows it can directly lead to losing jobs and damaging your online reputation.\n\nI specialize in fixing these exact issues quickly, without the overhead of bigger firms. If you're tired of missing out on clients because of an amateur online image, reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Wix site & Gmail: costing you jobs?",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM",
+            "body": "Marcums Maintenance,\n\nJust following up on my last email about your Wix site and gmail.com address. I understand you're busy, but these aren't just cosmetic issues. They directly impact your online reputation and how many qualified calls you get.\n\nMy analysis of similar plumbing businesses shows that a professional website and email can significantly improve trust and lead conversion. I can show you how to fix this without a big, drawn-out project.\n\nIf you're interested in a quick, no-nonsense assessment of how your current setup is affecting your bottom line, just hit reply."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your Wix site & Gmail: costing you jobs?",
+            "send_day": "Monday",
+            "send_time": "7:00 AM",
+            "body": "Marcums Maintenance,\n\nOne last thought on your online presence. Many contractors I work with struggle with getting consistent, high-paying jobs. Often, the first hurdle is how they appear online – like with a Wix site or a generic email, which impacts their overall reputation.\n\nI don't have testimonials yet, as I'm just starting out, but my data from thousands of contractors clearly points to these as common problems that cost real money. I can outline a simple, fast solution specific to your business.\n\nIf you want to stop losing jobs due to an unprofessional online image and improve your reputation, reply to this email with a quick \"Yes.\""
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references, then data"
+        }
+      }
+    },
+    "00064": {
+      "company_name": "Regal Plumbers",
+      "trade": "Plumber",
+      "location": "Conway, Arkansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:20:03.973898",
+      "cost": 0.0063497,
+      "tokens": 42544,
+      "duration_minutes": 2.954994285106659,
+      "campaign_data": {
+        "business_id": "00064",
+        "company_name": "Regal Plumbers",
+        "contact_timing": {
+          "best_day_email_1": "Monday",
+          "best_day_email_2": "Wednesday",
+          "best_day_email_3": "Friday",
+          "window_a_time": "6:45 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 1 Google Review is Costing Regal Plumbers",
+            "send_day": "Monday",
+            "send_time": "6:45 AM",
+            "body": "I saw Regal Plumbers only has one Google review. That's a massive trust barrier and it's definitely costing you new customer calls right now. I'm Manu, a one-man operation, and I fix contractor problems like this fast. My data from analyzing 5,500+ contractors shows exactly how to get your reviews up quickly and turn that into more business. No fluff, just results.\n\nWant to know how? Just reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 1 Google Review is Costing Regal Plumbers",
+            "send_day": "Wednesday",
+            "send_time": "6:45 AM",
+            "body": "Following up on my last email. That single Google review isn't just a number; it's directly impacting your lead flow and cash. Most potential customers won't even call without seeing solid proof of your work. I specialize in turning these specific issues into measurable wins, based on real data, not guesswork. I don't have a big team or overhead, so I move fast.\n\nIf you're serious about fixing this and getting more calls, shoot me an email back."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 1 Google Review is Costing Regal Plumbers (Quick fix?)",
+            "send_day": "Friday",
+            "send_time": "6:45 AM",
+            "body": "One last time on the Google review issue for Regal Plumbers. This isn't a complex problem to solve, but it needs a direct approach. My analysis of thousands of contractors shows exactly what works to build a strong online reputation quickly, which then translates into consistent, quality leads. I can help you implement this without the usual runaround.\n\nIf you want to stop losing business over this, reply to this email. Let's talk specifics."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "00684": {
+      "company_name": "Buck Plumbing",
+      "trade": "Plumber",
+      "location": "Kellogg, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:20:11.417518",
+      "cost": 0.005645900000000001,
+      "tokens": 38984,
+      "duration_minutes": 2.471921380360921,
+      "campaign_data": {
+        "business_id": "00684",
+        "company_name": "Buck Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "8:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reviews: a quick look",
+            "send_day": "Tuesday",
+            "send_time": "8:30 PM",
+            "body": "Buck, I noticed your online reviews and there's a problem that's likely costing you jobs. Many potential customers check reviews before calling, and yours could be working against you. I fix these kinds of issues for contractors, quickly and directly. I don't have a team or overhead, just fast execution to get your reputation where it needs to be. Want to see what I found? Reply to this email."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reviews: a quick look",
+            "send_day": "Thursday",
+            "send_time": "8:30 PM",
+            "body": "Following up on my last email about your online reviews. Beyond just the number, I also noticed your Wix website and that your domain expires soon. These three things combined – reviews, an amateur site, and an expiring domain – are sending the wrong signals to potential customers and making it harder to win bids. I can fix these issues for you. No packages, just targeted solutions. Reply if you want to discuss which one is hitting you hardest right now."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your online reviews: a quick look",
+            "send_day": "Monday",
+            "send_time": "8:30 PM",
+            "body": "Buck, I know you're busy, so I'll be direct. If your online reputation, amateur website, or expiring domain aren't fixed, you'll keep losing potential jobs and looking less professional than your competitors. I specialize in solving these specific contractor problems without the usual fuss. I've analyzed data from 5,500+ contractors, so I know what works. If you're ready to stop leaving money on the table, just reply to this email and tell me which problem you want to tackle first."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Local references"
+        }
+      }
+    },
+    "01638": {
+      "company_name": "Infinity Tankless",
+      "trade": "Plumber",
+      "location": "Topeka area, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:20:16.436502",
+      "cost": 0.0062213,
+      "tokens": 43809,
+      "duration_minutes": 2.7834665020306906,
+      "campaign_data": {
+        "business_id": "01638",
+        "company_name": "Infinity Tankless",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "07:30 AM",
+          "window_b_time": "07:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your site speed & email are hurting your reputation (31/100)",
+            "send_day": "Tuesday",
+            "send_time": "07:30 AM",
+            "body": "I'm Manu. I looked at Infinity Tankless and saw your mobile speed is 31/100. That's a critical issue that makes potential customers leave your site and question your professionalism. I also noticed the gmail.com email address. These two things together are hurting your reputation and lead flow. I fix problems like this quickly. Want to know how?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your site speed & email are hurting your reputation (31/100)",
+            "send_day": "Thursday",
+            "send_time": "07:30 AM",
+            "body": "Following up on my last email about your mobile site speed, professional email, and how they impact your business reputation. These aren't just minor details; they directly affect how many qualified leads you get and how much trust customers place in your business. My analysis of 5,500+ contractors shows that fixing these specific issues leads to measurable improvements in lead conversion and overall perception. A quick fix here can significantly boost your bottom line."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your site speed & email are hurting your reputation (31/100)",
+            "send_day": "Monday",
+            "send_time": "07:30 AM",
+            "body": "Just checking in one last time about your website performance, professional email, and their effect on your reputation. I understand you're busy, but these are low-hanging fruit that are easy to fix and make a big difference in how you're perceived. I can get your mobile speed up and set you up with a professional email in days, not weeks. No big packages, just direct solutions to your problems. Reply if you're ready to improve your online image and stop losing potential customers."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data"
+        }
+      }
+    },
+    "00562": {
+      "company_name": "Plumb Perfect",
+      "trade": "Plumber",
+      "location": "Southern Idaho, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:21:06.068035",
+      "cost": 0.006286900000000001,
+      "tokens": 44367,
+      "duration_minutes": 2.8153342167536417,
+      "campaign_data": {
+        "business_id": "00562",
+        "company_name": "Plumb Perfect",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "10:30 AM - 11:30 AM",
+          "window_b_time": "6:30 PM - 8:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Plumb Perfect: Are your online reviews costing you new jobs?",
+            "send_day": "Tuesday",
+            "send_time": "6:30 PM - 8:00 PM",
+            "body": "Manu here. I've analyzed your online presence and noticed your reviews aren't as strong as they could be for Plumb Perfect. For a busy plumbing business, this isn't just a number – it means potential customers are choosing competitors. My data from 5,500+ contractors shows exactly what works to get more 5-star reviews and stand out. No packages, just a direct solution.\n\nWant to know how to boost your online reputation and get more calls? Just reply."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Plumb Perfect: Are your online reviews costing you new jobs?",
+            "send_day": "Thursday",
+            "send_time": "6:30 PM - 8:00 PM",
+            "body": "Following up on my last email. Beyond just getting more reviews, a lot of contractors like Plumb Perfect struggle to manage negative feedback or convert website visitors into positive reviewers. My data shows there's a clear process to turn your online reputation into a powerful lead-generating asset.\n\nI can show you how to improve your review score and attract more high-quality customers. No obligation, just direct insights.\n\nReply if you're interested in details."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Plumb Perfect: Are your online reviews costing you new jobs?",
+            "send_day": "Monday",
+            "send_time": "6:30 PM - 8:00 PM",
+            "body": "Just checking in one last time. My goal is simple: fix the problems that are costing Plumb Perfect money and customers, especially when it comes to your online reputation. I don't have testimonials yet, but my analysis is based on solid data from thousands of contractors.\n\nIf you're serious about getting your online reviews to bring in more high-quality calls and build trust, just reply to this email for more details on a tailored solution."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "01494": {
+      "company_name": "Method Plumbing & Drains",
+      "trade": "Plumber",
+      "location": "ID area, ID",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:21:26.166396",
+      "cost": 0.0061517,
+      "tokens": 45195,
+      "duration_minutes": 3.6809633493423464,
+      "campaign_data": {
+        "business_id": "01494",
+        "company_name": "Method Plumbing & Drains",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM - 7:00 AM",
+          "window_b_time": "7:00 PM - 8:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Method Plumbing reviews are costing you leads",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM - 7:00 AM",
+            "body": "Hi [Owner Name],\n\nI noticed your online reviews and Google Business Profile aren't pulling in the high-quality local leads they should be for Method Plumbing & Drains. Your current online presence isn't reflecting the quality of your work, and it's likely turning potential customers away.\n\nI've analyzed data from 5,500+ contractors and can show you exactly what's happening and how to fix it. I'm a one-man operation, no fluff, just fast execution.\n\nWould you be open to a quick email with an info packet showing specific examples for your area?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Method Plumbing reviews are costing you leads",
+            "send_day": "Thursday",
+            "send_time": "6:30 AM - 7:00 AM",
+            "body": "Hi [Owner Name],\n\nFollowing up on my last email. The issue with your online reputation isn't just about getting more stars; it's about converting lookers into callers. Many contractors lose out on good jobs because their online presence doesn't stand out or looks unprofessional.\n\nMy analysis shows specific gaps in your online profile that are directly impacting your lead flow. I don't have testimonials yet, but my data-driven approach consistently uncovers these issues.\n\nCould I send over a brief breakdown of these specific points for Method Plumbing & Drains? No obligation, just the facts."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your Method Plumbing reviews are costing you leads",
+            "send_day": "Monday",
+            "send_time": "6:30 AM - 7:00 AM",
+            "body": "Hi [Owner Name],\n\nOne last time on this. If your online reviews and overall professional online image aren't bringing in the quality leads you need, it's a problem that compounds over time. This directly impacts your cash flow and the type of jobs you get.\n\nI specialize in fixing these exact problems for contractors like you, with fast execution and no overhead. My goal is to get your online presence working for you, not against you.\n\nIf you're serious about fixing this and getting more consistent, high-paying jobs, reply to this email. I can send you a short, no-nonsense info packet detailing a direct solution."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Local references"
+        }
+      }
+    },
+    "00621": {
+      "company_name": "Burkhart Plumbing",
+      "trade": "Plumber",
+      "location": "ID area, ID",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:59:19.173821",
+      "cost": 0.0057955,
+      "tokens": 39336,
+      "duration_minutes": 2.4481408675511678,
+      "campaign_data": {
+        "business_id": "00621",
+        "company_name": "Burkhart Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM",
+          "window_b_time": "7:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 1 Google Review: A Trust Barrier for Burkhart Plumbing",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "I noticed Burkhart Plumbing only has 1 Google review. That's a huge trust barrier for new customers searching for a plumber. Most people won't even consider calling you. My data from 5,500+ contractors shows this directly impacts your lead flow and cash.\n\nI specialize in fixing this exact problem for contractors like you, quickly. Want to know how?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 1 Google Review: A Trust Barrier for Burkhart Plumbing",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM",
+            "body": "Following up on my last email about your single Google review. This isn't just about a number; it's about missed calls and lost jobs. Inactive reviews are essentially invisible to potential customers.\n\nI've helped other contractors turn this around fast, generating consistent positive feedback that builds real trust. This directly translates to more leads and better cash flow.\n\nIf you're interested in a quick chat about how I'd approach your specific situation, just reply to this email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 1 Google Review: A Trust Barrier for Burkhart Plumbing - Next Steps",
+            "send_day": "Monday",
+            "send_time": "7:00 PM",
+            "body": "One last thought on your Google reviews. Without a strong online reputation, even the best plumbing work goes unnoticed by new clients. It's a fundamental problem that impacts your entire business, from leads to overall efficiency.\n\nI understand I don't have testimonials yet, but my approach is based on hard data from thousands of contractors. I fix these problems with fast, direct execution, no overhead.\n\nIf you're serious about getting this fixed and improving your cash flow, reply with a quick question. I'll show you exactly how I can help."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "00564": {
+      "company_name": "Reliant Plumbing",
+      "trade": "Plumber",
+      "location": "Twin Falls, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T18:59:48.855712",
+      "cost": 0.0059944,
+      "tokens": 41613,
+      "duration_minutes": 2.6492389837900796,
+      "campaign_data": {
+        "business_id": "00564",
+        "company_name": "Reliant Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:00 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Reliant Plumbing: Your 454-day old reviews",
+            "send_day": "Tuesday",
+            "send_time": "7:00 AM",
+            "body": "Manu here. I noticed Reliant Plumbing's last customer review was over 450 days ago. That's a huge gap that's likely costing you new jobs and making you look less current.\n\nI specialize in fixing this exact problem for contractors, getting fresh reviews flowing without adding to your workload. No fancy packages, just direct solutions.\n\nWant a quick overview of how? Reply 'Yes' and I'll send a brief info packet explaining the process."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Reliant Plumbing: Your 454-day old reviews",
+            "send_day": "Thursday",
+            "send_time": "7:00 AM",
+            "body": "Just following up on my last email about your inactive reviews. I know you're busy, but this is a critical issue for attracting new customers and maintaining trust online.\n\nMost contractors struggle to consistently get new reviews. My approach is different because I focus on simple, fast execution tailored to your specific operations, not generic templates.\n\nIf you're serious about boosting your online reputation and getting more calls, let me know. I can send that info packet with no strings attached."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Reliant Plumbing: Your 454-day old reviews - A simple fix",
+            "send_day": "Monday",
+            "send_time": "7:00 AM",
+            "body": "One last thought on your review situation. An outdated online presence can make even a great plumbing business look less reliable to new prospects. It's a quick fix that pays off.\n\nMy goal isn't to sell you a big, complicated service. It's to solve your review problem quickly and effectively. I've analyzed thousands of contractors and know what works.\n\nIf you're ready to stop losing potential customers due to inactive reviews, just reply. I'll send the brief info packet explaining the straightforward solution."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "00445": {
+      "company_name": "Jetstream Plumbing Idaho",
+      "trade": "Plumber",
+      "location": "Nampa, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T19:01:50.072556",
+      "cost": 0.0059425,
+      "tokens": 40127,
+      "duration_minutes": 2.513044317563375,
+      "campaign_data": {
+        "business_id": "00445",
+        "company_name": "Jetstream Plumbing Idaho",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:45 AM",
+          "window_b_time": "8:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your online reviews: losing jobs?",
+            "send_day": "Tuesday",
+            "send_time": "6:45 AM",
+            "body": "Saw Jetstream Plumbing Idaho and know how critical online reviews are for getting new jobs. Many contractors struggle when negative feedback costs them calls. I've analyzed 5,500+ contractor businesses and can quickly pinpoint why you might be losing leads due to your online reputation, or even slow response times. No fluff, just direct solutions. Reply if you're curious about a quick analysis."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your online reviews: losing jobs?",
+            "send_day": "Thursday",
+            "send_time": "6:45 AM",
+            "body": "Just following up on my last email. For plumbers, a few bad reviews or slow responses can really hurt the bottom line. I've seen it countless times. My approach is to identify the *exact* issues costing you calls and then fix them fast. No long-term contracts, just measurable improvements. Is this something you're dealing with right now? Let me know."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your online reviews: losing jobs? - Quick fix for Jetstream?",
+            "send_day": "Monday",
+            "send_time": "6:45 AM",
+            "body": "One last check on your online reputation and lead flow. I specialize in quick, effective fixes for common contractor problems, like turning around bad reviews or speeding up lead response. I don't have testimonials yet, but my data from 5,500+ contractors shows exactly what works. If you're tired of losing good business, a quick email reply is all it takes to see if I can help."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "01407": {
+      "company_name": "Rigby Plumbing & Heating LLC",
+      "trade": "Plumber",
+      "location": "Grace, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T19:02:20.328402",
+      "cost": 0.0056971,
+      "tokens": 40585,
+      "duration_minutes": 2.519728648662567,
+      "campaign_data": {
+        "business_id": "01407",
+        "company_name": "Rigby Plumbing & Heating LLC",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:00 AM - 7:00 AM",
+          "window_b_time": "6:30 PM - 8:00 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Stop losing good jobs to bad reviews",
+            "send_day": "Tuesday",
+            "send_time": "6:30 PM - 8:00 PM",
+            "body": "Rigby, I noticed your online presence isn't bringing in the quality leads it should, and I know why. Many contractors like you are losing out because their online reputation isn't strong, or they're overwhelmed managing reviews. I've analyzed 5,500+ contractors and can show you exactly how to fix this, without the usual agency fluff.\n\nWant to see what's holding you back? Just hit reply."
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Stop losing good jobs to bad reviews",
+            "send_day": "Thursday",
+            "send_time": "6:30 PM - 8:00 PM",
+            "body": "Rigby, following up on my last email. That weak online reputation and outdated website (like your Wix site) are costing you money. I understand you're busy, but ignoring these issues means fewer high-paying jobs and more headaches.\n\nI can show you simple, direct steps to improve your online standing and attract better leads. No long meetings, just clear solutions.\n\nReady to talk specifics? Reply to this email."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Stop losing good jobs to bad reviews - Your online presence",
+            "send_day": "Monday",
+            "send_time": "6:30 PM - 8:00 PM",
+            "body": "Rigby, one last time on your online reputation and lead flow. You're a skilled plumber, but if customers can't find or trust you online, that skill isn't converting into enough business.\n\nI fix these problems for contractors like you, fast. No team, no overhead, just results based on solid data. My goal is to get you more of the *right* jobs.\n\nSend me an email if you're serious about fixing this."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Local references"
+        }
+      }
+    },
+    "01195": {
+      "company_name": "Smile Plumbing",
+      "trade": "Plumber",
+      "location": "Boise, Idaho",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T19:04:05.524219",
+      "cost": 0.005778,
+      "tokens": 38317,
+      "duration_minutes": 2.2555327653884887,
+      "campaign_data": {
+        "business_id": "01195",
+        "company_name": "Smile Plumbing",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "6:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your Professional Image & Reputation",
+            "send_day": "Tuesday",
+            "send_time": "6:30 AM",
+            "body": "Manu,\n\nI noticed your Smile Plumbing email is still a gmail.com address and your website is on Squarespace. For a plumbing business, these signal a lack of professionalism that can cost you trust and new leads.\n\nThis directly impacts your reputation and how many people choose to call you over a competitor. I've analyzed 5,500+ contractors and know how to fix these perception issues quickly.\n\nWant to see how we can upgrade your image and start building more trust?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your Professional Image & Reputation",
+            "send_day": "Thursday",
+            "send_time": "7:30 PM",
+            "body": "Manu,\n\nFollowing up on my last email. That unprofessional online presence (gmail.com, Squarespace) isn't just about looks – it's actively hurting your ability to get positive reviews and new customers.\n\nIt tells potential clients you might not be serious, which means they're going to the competition. My data shows this is a common problem for contractors, and it's fixable without a huge overhaul.\n\nLet me know if you're open to a quick chat about how to turn this around."
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your Professional Image & Reputation - Quick Fix",
+            "send_day": "Monday",
+            "send_time": "6:30 AM",
+            "body": "Manu,\n\nOne last thought on your professional image and reputation. That gmail.com email and Squarespace site are easy targets for competitors to outshine you online. It makes it harder to build the trust needed for great reviews and consistent leads.\n\nI specialize in fast execution, no overhead. I can fix these perception issues quickly and measurably, without the typical consultant runaround. No testimonials yet, but I've got the data from thousands of contractors to back up what works.\n\nIf you're serious about boosting your online trust and getting more calls, reply to this email."
+          }
+        ],
+        "messaging_preferences": {
+          "email_length": "B",
+          "proof_preference": "Data/Case studies"
+        }
+      }
+    },
+    "02726": {
+      "company_name": "Tevis Plumbing & Construction Services",
+      "trade": "Plumber",
+      "location": "Lyndon, Kansas",
+      "processing_status": "completed",
+      "timestamp": "2025-09-03T19:06:35.293559",
+      "cost": 0.005756600000000001,
+      "tokens": 38396,
+      "duration_minutes": 2.4926522811253866,
+      "campaign_data": {
+        "business_id": "02726",
+        "company_name": "Tevis Plumbing & Construction Services",
+        "contact_timing": {
+          "best_day_email_1": "Tuesday",
+          "best_day_email_2": "Thursday",
+          "best_day_email_3": "Monday",
+          "window_a_time": "7:30 AM",
+          "window_b_time": "7:30 PM"
+        },
+        "email_sequences": [
+          {
+            "email_number": 1,
+            "subject": "Your 2 Google reviews are costing you jobs.",
+            "send_day": "Tuesday",
+            "send_time": "7:30 AM",
+            "body": "Manu here. I saw your Tevis Plumbing listing. Your low Google reviews and Wix site are likely sending customers to competitors. I fix this fast. Want to know how?"
+          },
+          {
+            "email_number": 2,
+            "subject": "Re: Your 2 Google reviews are costing you jobs.",
+            "send_day": "Thursday",
+            "send_time": "7:30 AM",
+            "body": "Following up. That Wix site and low reviews are a real problem for getting new business. I've analyzed 5,500+ contractors and know what works to fix these gaps. Ready for a quick fix?"
+          },
+          {
+            "email_number": 3,
+            "subject": "Re: Your 2 Google reviews are costing you jobs.",
+            "send_day": "Monday",
+            "send_time": "7:30 AM",
+            "body": "Last try on this. If your Google reviews and Wix site aren't bringing in in leads, you're losing money daily. I can show you the data. Let me know if you want to see it."
           }
         ],
         "messaging_preferences": {

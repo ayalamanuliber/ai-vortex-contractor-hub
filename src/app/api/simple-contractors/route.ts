@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Load pending nombre changes
-    let nombreChanges = {};
+    let nombreChanges: { [key: string]: string } = {};
     try {
       const changesPath = path.join(process.cwd(), 'public', 'data', 'nombre_changes.json');
       const changesContent = await fs.readFile(changesPath, 'utf-8');

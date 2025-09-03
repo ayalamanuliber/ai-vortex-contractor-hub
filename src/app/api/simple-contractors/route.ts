@@ -56,9 +56,15 @@ export async function GET(request: NextRequest) {
       if (campaign.business_id) {
         // Store both padded and unpadded versions for flexible matching
         const paddedId = campaign.business_id;
-        const unpaddedId = String(campaign.business_id).replace(/^0+/, '') || '0';
+        const unpaddedId = parseInt(campaign.business_id, 10).toString();
         campaignsLookup[paddedId] = campaign;
         campaignsLookup[unpaddedId] = campaign;
+        
+        // Also store with various padding lengths for safety
+        const baseId = parseInt(campaign.business_id, 10);
+        campaignsLookup[baseId.toString().padStart(3, '0')] = campaign;
+        campaignsLookup[baseId.toString().padStart(4, '0')] = campaign;
+        campaignsLookup[baseId.toString().padStart(5, '0')] = campaign;
       }
     });
     
@@ -78,11 +84,15 @@ export async function GET(request: NextRequest) {
       const id = String(row['business_id']).replace(/^0+/, '').trim();
       const originalId = String(row['business_id']).trim(); // Keep original with leading zeros
       
-      // Check campaign data using lookup
-      const paddedId = id.padStart(5, '0'); // Convert "1062" to "01062"
+      // Check campaign data using lookup - try multiple formats
+      const numericId = parseInt(originalId, 10);
+      const paddedId = numericId.toString().padStart(5, '0');
       const campaignData = campaignsLookup[originalId] || 
                           campaignsLookup[id] || 
-                          campaignsLookup[paddedId];
+                          campaignsLookup[paddedId] ||
+                          campaignsLookup[numericId.toString()] ||
+                          campaignsLookup[numericId.toString().padStart(3, '0')] ||
+                          campaignsLookup[numericId.toString().padStart(4, '0')];
       const hasCampaign = !!campaignData; // New format: if exists in array, it's completed
       
       // Debug for contractor 1062

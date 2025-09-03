@@ -150,6 +150,49 @@ The app works with your existing data files:
 
 No additional configuration needed - just deploy and go!
 
+## 🔄 **SYNC MANUAL - Proceso de Sincronización**
+
+### **1. Verificar estado del sistema:**
+```bash
+cd /Users/manuayala/Documents/LAGOS/03_CONTRACTOR_INTELLIGENCE_HUB/contractor-intelligence-hub-v4
+python3 scripts/sync_system.py --status
+```
+
+### **2. Sync de nombres pendientes:**
+```bash
+# Ver cambios pendientes de nombres
+curl http://localhost:3000/api/contractors/update-nombre
+
+# Aplicar cambios pendientes al CSV principal
+python3 scripts/sync_system.py --sync-master-to-working
+```
+
+### **3. Sync de campaigns:**
+```bash
+# Copiar campaigns desde root al sistema
+cp campaigns.json public/data/campaigns.json
+cp campaigns.json /Users/manuayala/Documents/LAGOS/02_CAMPAIGN_GENERATOR/data/MASTER_CAMPAIGN_DATABASE.json
+
+# Ejecutar sync de campaigns
+python3 scripts/sync_system.py --sync-campaigns
+```
+
+### **4. Sync completo (Todo junto):**
+```bash
+python3 scripts/sync_system.py --full-sync
+```
+
+### **5. Backup antes de cambios importantes:**
+```bash
+python3 scripts/sync_system.py --backup
+```
+
+### **Sistema de Nombres Temporal:**
+- ✅ Los nombres se guardan temporalmente en `public/data/nombre_changes.json`
+- ✅ Se ven inmediatamente en la app sin necesidad de sync
+- ✅ Cuando hagas sync, se aplican permanentemente al CSV
+- ✅ Compatible con Vercel (sin dependencias Python en producción)
+
 ## 📧 Contact
 
 **GitHub**: ayalamanuliber  

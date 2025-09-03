@@ -39,16 +39,28 @@ export async function GET(request: NextRequest) {
       transformHeader: (header) => header.trim(),
     });
 
-    // Load campaigns JSON data
-    let campaignsData = null;
+    // Load campaigns JSON data (now array format)
+    let campaignsArray = [];
     try {
       const campaignsPath = path.join(process.cwd(), 'public', 'data', 'campaigns.json');
       const campaignsContent = await fs.readFile(campaignsPath, 'utf-8');
-      campaignsData = JSON.parse(campaignsContent);
+      campaignsArray = JSON.parse(campaignsContent);
     } catch (error) {
       console.log('No campaigns data found, using default');
-      campaignsData = { contractors: {} };
+      campaignsArray = [];
     }
+
+    // Create campaigns lookup for performance
+    const campaignsLookup: Record<string, any> = {};
+    campaignsArray.forEach((campaign: any) => {
+      if (campaign.business_id) {
+        // Store both padded and unpadded versions for flexible matching
+        const paddedId = campaign.business_id;
+        const unpaddedId = String(campaign.business_id).replace(/^0+/, '') || '0';
+        campaignsLookup[paddedId] = campaign;
+        campaignsLookup[unpaddedId] = campaign;
+      }
+    });
     
     // Load pending nombre changes
     let nombreChanges: { [key: string]: string } = {};
@@ -66,13 +78,12 @@ export async function GET(request: NextRequest) {
       const id = String(row['business_id']).replace(/^0+/, '').trim();
       const originalId = String(row['business_id']).trim(); // Keep original with leading zeros
       
-      // Check campaign data using multiple ID formats
-      // Try: original, trimmed, padded with zero
+      // Check campaign data using lookup
       const paddedId = id.padStart(5, '0'); // Convert "1062" to "01062"
-      const campaignData = campaignsData.contractors[originalId] || 
-                          campaignsData.contractors[id] || 
-                          campaignsData.contractors[paddedId];
-      const hasCampaign = !!campaignData && campaignData.processing_status === 'completed';
+      const campaignData = campaignsLookup[originalId] || 
+                          campaignsLookup[id] || 
+                          campaignsLookup[paddedId];
+      const hasCampaign = !!campaignData; // New format: if exists in array, it's completed
       
       // Debug for contractor 1062
       if (id === '1062') {
@@ -80,9 +91,9 @@ export async function GET(request: NextRequest) {
           id, 
           originalId,
           paddedId,
-          foundWithOriginal: !!campaignsData.contractors[originalId],
-          foundWithId: !!campaignsData.contractors[id],
-          foundWithPadded: !!campaignsData.contractors[paddedId],
+          foundWithOriginal: !!campaignsLookup[originalId],
+          foundWithId: !!campaignsLookup[id],
+          foundWithPadded: !!campaignsLookup[paddedId],
           campaignData: !!campaignData,
           hasCampaign
         });

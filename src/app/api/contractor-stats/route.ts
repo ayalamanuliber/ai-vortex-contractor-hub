@@ -54,38 +54,39 @@ export async function GET() {
       transformHeader: (header) => header.trim(),
     });
 
-    // Load campaigns JSON data
-    let campaignsData = null;
+    // Load campaigns JSON data (now array format)
+    let campaignsArray = [];
     try {
       const campaignsPath = path.join(process.cwd(), 'public', 'data', 'campaigns.json');
       const campaignsContent = await fs.readFile(campaignsPath, 'utf-8');
-      campaignsData = JSON.parse(campaignsContent);
+      campaignsArray = JSON.parse(campaignsContent);
     } catch (error) {
       console.log('No campaigns data found, using default stats');
-      campaignsData = { contractors: {} };
+      campaignsArray = [];
     }
+
+    // Create campaigns lookup for performance
+    const campaignsLookup: Record<string, any> = {};
+    campaignsArray.forEach((campaign: any) => {
+      if (campaign.business_id) {
+        // Store both padded and unpadded versions for flexible matching
+        const paddedId = campaign.business_id;
+        const unpaddedId = String(campaign.business_id).replace(/^0+/, '') || '0';
+        campaignsLookup[paddedId] = campaign;
+        campaignsLookup[unpaddedId] = campaign;
+      }
+    });
     
     // Process contractors for stats (faster processing)
     const contractors = parsed.data.map((row: any) => {
       const businessId = String(row['business_id']).replace(/^0+/, '').trim();
-      const campaignData = campaignsData.contractors[businessId];
+      const campaignData = campaignsLookup[businessId];
       
       // Determine campaign status
       let campaignStatus = 'NOT_SETUP';
       if (campaignData) {
-        switch (campaignData.processing_status) {
-          case 'completed':
-            campaignStatus = 'READY';
-            break;
-          case 'pending':
-            campaignStatus = 'PROCESSING';
-            break;
-          case 'failed':
-            campaignStatus = 'FAILED';
-            break;
-          default:
-            campaignStatus = 'NOT_SETUP';
-        }
+        // New format: if campaign exists in array, it's completed/ready
+        campaignStatus = 'READY';
       }
 
       return {

@@ -50,6 +50,17 @@ export async function GET(request: NextRequest) {
       campaignsData = { contractors: {} };
     }
     
+    // Load pending nombre changes
+    let nombreChanges = {};
+    try {
+      const changesPath = path.join(process.cwd(), 'public', 'data', 'nombre_changes.json');
+      const changesContent = await fs.readFile(changesPath, 'utf-8');
+      const changesData = JSON.parse(changesContent);
+      nombreChanges = changesData.changes || {};
+    } catch (error) {
+      console.log('No nombre changes found, using defaults');
+    }
+    
     // Process each contractor directly with proper completion score
     const contractors = parsed.data.map((row: any) => {
       const id = String(row['business_id']).replace(/^0+/, '').trim();
@@ -120,7 +131,7 @@ export async function GET(request: NextRequest) {
         emailQuality: row['L2_email_quality'] || 'UNKNOWN',
         name: '',
         lastName: '',
-        nombre: row['nombre'] || '',
+        nombre: nombreChanges[id] || nombreChanges[originalId] || nombreChanges[paddedId] || row['nombre'] || '',
         hasCampaign,
         hasFocusGroup: !!campaignData?.focus_group_generated,
         campaignData: campaignData || null,

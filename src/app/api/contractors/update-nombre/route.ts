@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import fs from 'fs/promises';
 import path from 'path';
-
-const execAsync = promisify(exec);
+import Papa from 'papaparse';
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -13,21 +11,58 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    // Call the sync system to update the nombre field
-    const syncScriptPath = path.join(process.cwd(), 'scripts', 'sync_system.py');
-    const command = `python3 "${syncScriptPath}" --update-nombre "${id}" "${nombre || ''}"`;
+    console.log(`Updating nombre for contractor ${id} to: "${nombre || ''}"`);
+
+    // Read the current CSV
+    const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_original.csv');
+    const csvContent = await fs.readFile(csvPath, 'utf-8');
     
-    console.log('Executing sync command:', command);
-    
-    const { stdout, stderr } = await execAsync(command);
-    
-    if (stderr) {
-      console.error('Sync script stderr:', stderr);
-      // Don't fail on stderr as it might just be warnings
+    // Parse CSV
+    const parsed = Papa.parse(csvContent, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (header) => header.trim(),
+    });
+
+    if (parsed.errors.length > 0) {
+      console.error('CSV parsing errors:', parsed.errors);
+      return NextResponse.json({ error: 'Failed to parse CSV' }, { status: 500 });
     }
+
+    // Find and update the contractor
+    const contractors = parsed.data as any[];
+    let contractorFound = false;
     
-    console.log('Sync script output:', stdout);
-    
+    for (let i = 0; i < contractors.length; i++) {
+      const contractor = contractors[i];
+      const contractorId = String(contractor.business_id).trim();
+      
+      // Match both with and without leading zeros
+      if (contractorId === id || contractorId === id.padStart(5, '0') || contractorId.replace(/^0+/, '') === id.replace(/^0+/, '')) {
+        contractor.nombre = nombre || '';
+        contractorFound = true;
+        console.log(`Found and updated contractor ${contractorId}: nombre = "${contractor.nombre}"`);
+        break;
+      }
+    }
+
+    if (!contractorFound) {
+      return NextResponse.json({ 
+        error: `Contractor with ID ${id} not found`,
+        details: `Searched ${contractors.length} contractors`
+      }, { status: 404 });
+    }
+
+    // Convert back to CSV
+    const updatedCsv = Papa.unparse(contractors, {
+      header: true,
+      skipEmptyLines: true
+    });
+
+    // Write back to file
+    await fs.writeFile(csvPath, updatedCsv, 'utf-8');
+    console.log('CSV file updated successfully');
+
     return NextResponse.json({ 
       success: true, 
       message: 'Nombre updated successfully',

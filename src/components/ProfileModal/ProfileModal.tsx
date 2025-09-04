@@ -2954,7 +2954,7 @@ export function ProfileModal() {
                   }}>
                     <Star size={14} style={{ color: 'rgba(255, 255, 255, 0.3)' }} />
                     <a 
-                      href={`https://maps.google.com/?cid=${currentProfile.rawData?.L1_google_place_id || ''}`}
+                      href={currentProfile.rawData?.L1_google_maps_reviews_url || `https://maps.google.com/?cid=${currentProfile.rawData?.L1_google_place_id || ''}`}
                       target="_blank" 
                       rel="noopener noreferrer"
                       style={{

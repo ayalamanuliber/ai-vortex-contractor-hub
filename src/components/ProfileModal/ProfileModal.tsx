@@ -1176,9 +1176,9 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       'Eastern': -5, 'Central': -6, 'Mountain': -7, 'Pacific': -8
     };
     
-    // Convert contractor time to UTC, then to Argentina time (GMT-3)
-    const contractorUTC = contractorHour - utcOffsets[timezone];
-    const argentinaHour = contractorUTC - 3; // Argentina is GMT-3
+    // Convert contractor time to UTC, then to Argentina time (UTC-3)
+    const contractorUTC = contractorHour + Math.abs(utcOffsets[timezone]); // Mountain time + 7 hours = UTC
+    const argentinaHour = contractorUTC - 3; // UTC - 3 hours = Argentina time
     
     // Handle day transitions
     let finalHour = argentinaHour;

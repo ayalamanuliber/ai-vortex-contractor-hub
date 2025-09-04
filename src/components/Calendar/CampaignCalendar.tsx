@@ -174,7 +174,8 @@ const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: Cam
   for (let i = 0; i < 7; i++) {
     const day = new Date(startOfWeek);
     day.setDate(startOfWeek.getDate() + i);
-    const dateKey = day.toISOString().split('T')[0];
+    // Fix timezone issue: use local date formatting
+    const dateKey = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
     const dayData = campaignData[dateKey] || { ready: 0, scheduled: 0, sent: 0 };
     
     weekData.push({

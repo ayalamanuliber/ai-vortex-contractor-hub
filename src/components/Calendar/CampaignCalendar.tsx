@@ -303,6 +303,9 @@ export function CampaignCalendar() {
   const [executionMode, setExecutionMode] = useState<'optimal' | 'next'>('optimal');
   const [viewMode, setViewMode] = useState<'campaigns' | 'pipeline'>('campaigns');
   
+  // Separate state for all campaign contractors (not limited by frontend pagination)
+  const [allCampaignContractors, setAllCampaignContractors] = useState<any[]>([]);
+  
   // Load contractors data if empty
   useEffect(() => {
     if (!contractors || contractors.length === 0) {
@@ -318,8 +321,23 @@ export function CampaignCalendar() {
       loadContractors();
     }
   }, [contractors, setContractors]);
+
+  // Load ALL campaign contractors for calendar (not limited by pagination)
+  useEffect(() => {
+    const loadAllCampaignContractors = async () => {
+      try {
+        // Load ALL contractors (increase limit to get all campaign data)
+        const response = await fetch('/api/simple-contractors?start=0&limit=5000');
+        const result = await response.json();
+        setAllCampaignContractors(result.contractors || []);
+      } catch (error) {
+        console.error('Calendar failed to load all campaign contractors:', error);
+      }
+    };
+    loadAllCampaignContractors();
+  }, []);
   
-  const campaignData = useMemo(() => generateRealCampaignData(contractors, executionMode, viewMode), [contractors, executionMode, viewMode]);
+  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode, viewMode), [allCampaignContractors, executionMode, viewMode]);
   
   const pipelineStats = useMemo(() => calculatePipelineStats(contractors), [contractors]);
   
@@ -358,12 +376,14 @@ export function CampaignCalendar() {
   );
 
   const handleDayClick = (day: number) => {
-    const dateKey = new Date(year, month, day).toISOString().split('T')[0];
+    // Create date in local timezone to avoid UTC conversion issues
+    const date = new Date(year, month, day);
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     setSelectedDay(dateKey);
   };
 
   const selectedDayData = selectedDay ? campaignData[selectedDay] : null;
-  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, contractors, executionMode) : null;
+  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, allCampaignContractors, executionMode) : null;
   
   // Generate week data if a day is selected
   const weekData = selectedDay ? generateWeekData(new Date(selectedDay), campaignData) : null;
@@ -539,7 +559,8 @@ export function CampaignCalendar() {
                 {/* Days of the month */}
                 {Array.from({ length: daysInMonth }, (_, index) => {
                   const day = index + 1;
-                  const dateKey = new Date(year, month, day).toISOString().split('T')[0];
+                  const dateObj = new Date(year, month, day);
+                  const dateKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
                   const isToday = day === today.getDate() && 
                                  month === today.getMonth() && 
                                  year === today.getFullYear();

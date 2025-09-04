@@ -1498,7 +1498,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
                     fontWeight: '600',
                     color: '#ffffff'
                   }}>
-                    {contactTiming.window_a_time || '6:30 AM'}, 8:30 PM
+                    {contactTiming.window_a_time || '6:30 AM'}, {contactTiming.window_b_time || '8:30 PM'}
                   </span>
                 </div>
 

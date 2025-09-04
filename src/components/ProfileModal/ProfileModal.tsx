@@ -1174,7 +1174,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     
     // Offset from UTC for each US timezone (Daylight Saving Time - September)
     const utcOffsets: { [key: string]: number } = {
-      'Eastern': -4, 'Central': -5, 'Mountain': -6, 'Pacific': -7
+      'Eastern': -4, 'Central': -5, 'Mountain': -7, 'Pacific': -8
     };
     
     // Convert to total minutes for accurate calculation

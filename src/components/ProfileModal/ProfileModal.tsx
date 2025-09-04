@@ -1233,6 +1233,13 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
         contactTiming.window_b_time
       ].filter(time => time);
       
+      console.log('DEBUG SCHEDULE DATA:', { 
+        contractorState, 
+        availableDays, 
+        availableTimes, 
+        contactTiming 
+      });
+      
       // Check if today is an available day
       const canSendToday = availableDays.includes(todayName);
       

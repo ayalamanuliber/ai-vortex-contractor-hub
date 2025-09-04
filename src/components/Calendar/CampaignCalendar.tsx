@@ -52,66 +52,76 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
   // Get contractors with campaigns
   const contractorsWithCampaigns = contractors.filter(c => c.hasCampaign && c.campaignData);
   
-  
   // Day name mapping
   const dayMap: { [key: string]: number } = {
     'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 
     'thursday': 4, 'friday': 5, 'saturday': 6
   };
-  
-  // Generate data for current month's days
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(currentYear, currentMonth, day);
-    const dateKey = date.toISOString().split('T')[0];
-    const dayOfWeek = date.getDay();
+
+  // Helper function to get next occurrence of a specific day
+  const getNextDayOccurrence = (dayName: string, fromDate: Date = today): Date => {
+    const targetDay = dayMap[dayName.toLowerCase()];
+    if (targetDay === undefined) return new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000); // fallback: next week
     
-    // Count contractors ready for this day based on execution strategy
-    let ready = 0;
+    const result = new Date(fromDate);
+    const currentDay = fromDate.getDay();
+    let daysToAdd = targetDay - currentDay;
     
-    if (viewMode === 'campaigns') {
-      contractorsWithCampaigns.forEach(contractor => {
-        const campaignData = contractor.campaignData;
-        if (campaignData?.campaign_data?.contact_timing) {
-          const timing = campaignData.campaign_data.contact_timing;
-          
-          if (executionMode === 'optimal') {
-            // Use best_day_email_1 (existing logic)
-            if (timing.best_day_email_1) {
-              const bestDay = timing.best_day_email_1.toLowerCase();
-              if (dayMap[bestDay] === dayOfWeek) {
-                ready++;
-              }
-            }
-          } else if (executionMode === 'next') {
-            // Next available: use any of the 3 available days (spreads campaigns differently)
-            const availableDays = [
-              timing.best_day_email_1?.toLowerCase(),
-              timing.best_day_email_2?.toLowerCase(), 
-              timing.best_day_email_3?.toLowerCase()
-            ].filter(Boolean);
-            
-            // Check if this day matches any available day
-            const currentDayName = Object.keys(dayMap)[dayOfWeek];
-            if (availableDays.includes(currentDayName)) {
-              ready++;
-            }
-          }
-        }
-      });
-    } else {
-      // Pipeline mode: don't show campaigns, just show completion stats differently
-      ready = 0;
+    // If target day is today or already passed, get next week's occurrence
+    if (daysToAdd <= 0) {
+      daysToAdd += 7;
     }
     
-    // Real scheduled and sent data (0 for now - will be populated from real campaign status)
-    const scheduled = 0; // TODO: Get from real campaign status when available
-    const sent = 0; // TODO: Get from real campaign status when available
-    
-    data[dateKey] = { ready, scheduled, sent };
+    result.setDate(result.getDate() + daysToAdd);
+    return result;
+  };
+
+  if (viewMode === 'campaigns') {
+    // Calculate optimal/next date for each contractor and group by dates
+    contractorsWithCampaigns.forEach(contractor => {
+      const campaignData = contractor.campaignData;
+      if (campaignData?.campaign_data?.contact_timing) {
+        const timing = campaignData.campaign_data.contact_timing;
+        let targetDate: Date;
+
+        if (executionMode === 'optimal') {
+          // Get next occurrence of best_day_email_1
+          if (timing.best_day_email_1) {
+            targetDate = getNextDayOccurrence(timing.best_day_email_1);
+          } else {
+            return; // Skip if no best day
+          }
+        } else if (executionMode === 'next') {
+          // Get earliest available day from all 3 options
+          const availableDays = [
+            timing.best_day_email_1,
+            timing.best_day_email_2, 
+            timing.best_day_email_3
+          ].filter(Boolean);
+
+          if (availableDays.length === 0) return; // Skip if no available days
+
+          // Find the soonest available day
+          let soonestDate = getNextDayOccurrence(availableDays[0]);
+          for (let i = 1; i < availableDays.length; i++) {
+            const candidateDate = getNextDayOccurrence(availableDays[i]);
+            if (candidateDate < soonestDate) {
+              soonestDate = candidateDate;
+            }
+          }
+          targetDate = soonestDate;
+        } else {
+          return;
+        }
+
+        // Add to data structure
+        const dateKey = targetDate.toISOString().split('T')[0];
+        if (!data[dateKey]) {
+          data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
+        }
+        data[dateKey].ready++;
+      }
+    });
   }
   
   return data;
@@ -179,25 +189,73 @@ const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: Cam
   return weekData;
 };
 
-// Real detailed day data based on contractors
-const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contractors: any[]): DayDetail => {
+// Real detailed day data based on contractors  
+const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contractors: any[], executionMode: 'optimal' | 'next' = 'optimal'): DayDetail => {
   const date = new Date(dateKey);
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const dayOfWeek = date.getDay();
+  const today = new Date();
   
   // Day name mapping
   const dayMap: { [key: string]: number } = {
     'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 
     'thursday': 4, 'friday': 5, 'saturday': 6
   };
+
+  // Helper function to get next occurrence of a specific day (same as in generateRealCampaignData)
+  const getNextDayOccurrence = (dayName: string, fromDate: Date = today): Date => {
+    const targetDay = dayMap[dayName.toLowerCase()];
+    if (targetDay === undefined) return new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    const result = new Date(fromDate);
+    const currentDay = fromDate.getDay();
+    let daysToAdd = targetDay - currentDay;
+    
+    if (daysToAdd <= 0) {
+      daysToAdd += 7;
+    }
+    
+    result.setDate(result.getDate() + daysToAdd);
+    return result;
+  };
   
-  // Get contractors with campaigns ready for this day
+  // Get contractors with campaigns and filter for this specific date
   const contractorsWithCampaigns = contractors.filter(c => c.hasCampaign && c.campaignData);
   const readyContractors = contractorsWithCampaigns.filter(contractor => {
     const campaignData = contractor.campaignData;
-    if (campaignData?.contact_timing?.best_day_email_1) {
-      const bestDay = campaignData.contact_timing.best_day_email_1.toLowerCase();
-      return dayMap[bestDay] === dayOfWeek;
+    if (campaignData?.campaign_data?.contact_timing) {
+      const timing = campaignData.campaign_data.contact_timing;
+      let targetDate: Date;
+
+      if (executionMode === 'optimal') {
+        if (timing.best_day_email_1) {
+          targetDate = getNextDayOccurrence(timing.best_day_email_1);
+        } else {
+          return false;
+        }
+      } else if (executionMode === 'next') {
+        const availableDays = [
+          timing.best_day_email_1,
+          timing.best_day_email_2, 
+          timing.best_day_email_3
+        ].filter(Boolean);
+
+        if (availableDays.length === 0) return false;
+
+        let soonestDate = getNextDayOccurrence(availableDays[0]);
+        for (let i = 1; i < availableDays.length; i++) {
+          const candidateDate = getNextDayOccurrence(availableDays[i]);
+          if (candidateDate < soonestDate) {
+            soonestDate = candidateDate;
+          }
+        }
+        targetDate = soonestDate;
+      } else {
+        return false;
+      }
+
+      // Check if target date matches the selected day
+      const targetDateKey = targetDate.toISOString().split('T')[0];
+      return targetDateKey === dateKey;
     }
     return false;
   });
@@ -305,7 +363,7 @@ export function CampaignCalendar() {
   };
 
   const selectedDayData = selectedDay ? campaignData[selectedDay] : null;
-  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, contractors) : null;
+  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, contractors, executionMode) : null;
   
   // Generate week data if a day is selected
   const weekData = selectedDay ? generateWeekData(new Date(selectedDay), campaignData) : null;

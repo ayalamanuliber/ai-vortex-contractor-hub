@@ -87,21 +87,17 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
               }
             }
           } else if (executionMode === 'next') {
-            // Next available: consider all 3 days + current time constraints
+            // Next available: use any of the 3 available days (spreads campaigns differently)
             const availableDays = [
               timing.best_day_email_1?.toLowerCase(),
-              timing.best_day_email_2?.toLowerCase(),
+              timing.best_day_email_2?.toLowerCase(), 
               timing.best_day_email_3?.toLowerCase()
             ].filter(Boolean);
             
             // Check if this day matches any available day
             const currentDayName = Object.keys(dayMap)[dayOfWeek];
             if (availableDays.includes(currentDayName)) {
-              // Additional logic: prioritize sooner dates
-              const dayDiff = (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
-              if (dayDiff >= 0 && dayDiff <= 7) { // Within next week
-                ready++;
-              }
+              ready++;
             }
           }
         }
@@ -111,10 +107,9 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
       ready = 0;
     }
     
-    // Mock scheduled and sent for now (will be real when we connect dossier)
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-    const scheduled = isWeekend ? 0 : Math.floor(Math.random() * 8) + 2;
-    const sent = isWeekend ? 0 : Math.floor(Math.random() * 6);
+    // Real scheduled and sent data (0 for now - will be populated from real campaign status)
+    const scheduled = 0; // TODO: Get from real campaign status when available
+    const sent = 0; // TODO: Get from real campaign status when available
     
     data[dateKey] = { ready, scheduled, sent };
   }
@@ -514,8 +509,8 @@ export function CampaignCalendar() {
                       <div className="flex-1 flex flex-col justify-center gap-1">
                         {dayData.ready > 0 && (
                           <div className="flex items-center gap-1.5">
-                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 flex-shrink-0"></div>
-                            <span className="text-white/30 text-[9px] uppercase tracking-wider font-medium">RDY</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#facc15] flex-shrink-0"></div>
+                            <span className="px-1.5 py-0.5 bg-[#facc15] text-black text-[9px] uppercase tracking-wider font-semibold rounded">READY</span>
                             <span className="text-white/70 font-semibold ml-auto text-[11px]">{dayData.ready}</span>
                           </div>
                         )}

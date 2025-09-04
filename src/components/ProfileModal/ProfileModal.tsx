@@ -1172,9 +1172,9 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     
     const { hour: contractorHour, minutes } = parseTime(targetTime);
     
-    // Offset from UTC for each US timezone
+    // Offset from UTC for each US timezone (Daylight Saving Time - September)
     const utcOffsets: { [key: string]: number } = {
-      'Eastern': -5, 'Central': -6, 'Mountain': -7, 'Pacific': -8
+      'Eastern': -4, 'Central': -5, 'Mountain': -6, 'Pacific': -7
     };
     
     // Convert to total minutes for accurate calculation

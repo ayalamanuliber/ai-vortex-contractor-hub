@@ -1158,7 +1158,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     };
     
     const timezone = timezoneMap[state] || 'Central';
-    const offsetMap = { 'Eastern': -1, 'Central': 0, 'Mountain': 1, 'Pacific': 2 };
+    const offsetMap: { [key: string]: number } = { 'Eastern': -1, 'Central': 0, 'Mountain': 1, 'Pacific': 2 };
     
     // Convert target time to your timezone (assuming you're Central)
     const targetHour = parseInt(targetTime.split(':')[0]);

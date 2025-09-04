@@ -1158,15 +1158,43 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     };
     
     const timezone = timezoneMap[state] || 'Central';
-    const offsetMap: { [key: string]: number } = { 'Eastern': -1, 'Central': 0, 'Mountain': 1, 'Pacific': 2 };
     
-    // Convert target time to your timezone (assuming you're Central)
-    const targetHour = parseInt(targetTime.split(':')[0]);
-    const targetMinutes = targetTime.split(':')[1]?.split(' ')[0] || '00';
-    const isPM = targetTime.includes('PM') || targetHour >= 12;
-    const adjustedHour = targetHour + (offsetMap[timezone] || 0);
+    // Calculate time conversion to Argentina (GMT-3)
+    const parseTime = (timeStr: string) => {
+      const [time, period] = timeStr.split(' ');
+      const [hours, minutes] = time.split(':');
+      let hour = parseInt(hours);
+      if (period === 'PM' && hour !== 12) hour += 12;
+      if (period === 'AM' && hour === 12) hour = 0;
+      return { hour, minutes: parseInt(minutes || '0') };
+    };
     
-    const yourTime = `${adjustedHour}:${targetMinutes} ${isPM ? 'PM' : 'AM'}`;
+    const { hour: contractorHour, minutes } = parseTime(targetTime);
+    
+    // Offset from UTC for each US timezone
+    const utcOffsets: { [key: string]: number } = {
+      'Eastern': -5, 'Central': -6, 'Mountain': -7, 'Pacific': -8
+    };
+    
+    // Convert contractor time to UTC, then to Argentina time (GMT-3)
+    const contractorUTC = contractorHour - utcOffsets[timezone];
+    const argentinaHour = contractorUTC - 3; // Argentina is GMT-3
+    
+    // Handle day transitions
+    let finalHour = argentinaHour;
+    let dayOffset = '';
+    
+    if (finalHour < 0) {
+      finalHour += 24;
+      dayOffset = ' (next day)';
+    } else if (finalHour >= 24) {
+      finalHour -= 24;
+      dayOffset = ' (previous day)';
+    }
+    
+    const period = finalHour >= 12 ? 'PM' : 'AM';
+    const displayHour = finalHour === 0 ? 12 : finalHour > 12 ? finalHour - 12 : finalHour;
+    const yourTime = `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}${dayOffset}`;
     
     return { timezone, yourTime };
   };
@@ -1185,13 +1213,27 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     const contractorState = currentProfile.state || 'KS';
     const { timezone, yourTime } = getTimezoneInfo(contractorState, targetTime);
     
+    // Calculate next occurrence of the best day
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const today = new Date();
+    const targetDayIndex = daysOfWeek.indexOf(bestDay);
+    const todayIndex = today.getDay();
+    
+    let daysUntilTarget = targetDayIndex - todayIndex;
+    if (daysUntilTarget <= 0) daysUntilTarget += 7;
+    
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + daysUntilTarget);
+    const formattedDate = targetDate.toISOString().split('T')[0];
+    
     // Add scheduling instructions to body
     const schedulingInstructions = `\n\n📅 SCHEDULING PRESET:\n` +
       `• Send on: ${bestDay} at ${targetTime} (${timezone} Time)\n` +
-      `• Your time: ${yourTime}\n` +
+      `• Your Argentina time: ${yourTime}\n` +
+      `• Target date: ${formattedDate}\n` +
       `• Contractor timezone: ${timezone}\n` +
       `• Location: ${currentProfile.city}, ${contractorState}\n\n` +
-      `[Use Gmail's Schedule Send feature with the time above]`;
+      `[CLICK "Schedule send" in Gmail and set: ${formattedDate} at ${yourTime.replace(' (next day)', '').replace(' (previous day)', '')}]`;
     
     const fullBody = body + schedulingInstructions;
     

@@ -44,8 +44,8 @@ interface DayDetail {
   };
 }
 
-// Real data generator based on contractors with campaigns
-const generateRealCampaignData = (contractors: any[]): { [key: string]: CampaignDay } => {
+// Enhanced data generator with execution strategies and pipeline calculation
+const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' | 'next', viewMode: 'campaigns' | 'pipeline'): { [key: string]: CampaignDay } => {
   const data: { [key: string]: CampaignDay } = {};
   const today = new Date();
   
@@ -69,17 +69,47 @@ const generateRealCampaignData = (contractors: any[]): { [key: string]: Campaign
     const dateKey = date.toISOString().split('T')[0];
     const dayOfWeek = date.getDay();
     
-    // Count contractors ready for this day
+    // Count contractors ready for this day based on execution strategy
     let ready = 0;
-    contractorsWithCampaigns.forEach(contractor => {
-      const campaignData = contractor.campaignData;
-      if (campaignData?.contact_timing?.best_day_email_1) {
-        const bestDay = campaignData.contact_timing.best_day_email_1.toLowerCase();
-        if (dayMap[bestDay] === dayOfWeek) {
-          ready++;
+    
+    if (viewMode === 'campaigns') {
+      contractorsWithCampaigns.forEach(contractor => {
+        const campaignData = contractor.campaignData;
+        if (campaignData?.campaign_data?.contact_timing) {
+          const timing = campaignData.campaign_data.contact_timing;
+          
+          if (executionMode === 'optimal') {
+            // Use best_day_email_1 (existing logic)
+            if (timing.best_day_email_1) {
+              const bestDay = timing.best_day_email_1.toLowerCase();
+              if (dayMap[bestDay] === dayOfWeek) {
+                ready++;
+              }
+            }
+          } else if (executionMode === 'next') {
+            // Next available: consider all 3 days + current time constraints
+            const availableDays = [
+              timing.best_day_email_1?.toLowerCase(),
+              timing.best_day_email_2?.toLowerCase(),
+              timing.best_day_email_3?.toLowerCase()
+            ].filter(Boolean);
+            
+            // Check if this day matches any available day
+            const currentDayName = Object.keys(dayMap)[dayOfWeek];
+            if (availableDays.includes(currentDayName)) {
+              // Additional logic: prioritize sooner dates
+              const dayDiff = (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+              if (dayDiff >= 0 && dayDiff <= 7) { // Within next week
+                ready++;
+              }
+            }
+          }
         }
-      }
-    });
+      });
+    } else {
+      // Pipeline mode: don't show campaigns, just show completion stats differently
+      ready = 0;
+    }
     
     // Mock scheduled and sent for now (will be real when we connect dossier)
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
@@ -90,6 +120,41 @@ const generateRealCampaignData = (contractors: any[]): { [key: string]: Campaign
   }
   
   return data;
+};
+
+// Calculate pipeline statistics
+const calculatePipelineStats = (contractors: any[]) => {
+  return contractors.reduce((acc, contractor) => {
+    const score = contractor.completionScore || 0;
+    
+    if (score === 100) {
+      acc.ready++;
+    } else if (score >= 80) {
+      acc.almostReady++;
+    } else if (score >= 25) {
+      acc.needsWork++;
+    } else {
+      acc.incomplete++;
+    }
+    
+    // Check for specific missing data
+    const rawData = contractor.rawData || {};
+    if (!rawData.L1_whois_domain_age_years) acc.missingWhois++;
+    if (!rawData.L1_psi_avg_performance) acc.missingPSI++;
+    if (!rawData.L1_google_reviews_count) acc.missingReviews++;
+    if (!contractor.email) acc.missingEmails++;
+    
+    return acc;
+  }, {
+    ready: 0,
+    almostReady: 0,
+    needsWork: 0,
+    incomplete: 0,
+    missingWhois: 0,
+    missingPSI: 0,
+    missingReviews: 0,
+    missingEmails: 0
+  });
 };
 
 // Generate week data for WeekView
@@ -201,7 +266,9 @@ export function CampaignCalendar() {
     }
   }, [contractors, setContractors]);
   
-  const campaignData = useMemo(() => generateRealCampaignData(contractors), [contractors]);
+  const campaignData = useMemo(() => generateRealCampaignData(contractors, executionMode, viewMode), [contractors, executionMode, viewMode]);
+  
+  const pipelineStats = useMemo(() => calculatePipelineStats(contractors), [contractors]);
   
   const today = new Date();
   const year = currentDate.getFullYear();

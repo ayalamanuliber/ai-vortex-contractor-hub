@@ -27,6 +27,7 @@ export default function HomePage() {
   const [isSearching, setIsSearching] = useState(false);
   const [showSyncPanel, setShowSyncPanel] = useState(false);
   const syncPanelRef = useRef<HTMLDivElement>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Global search function that searches ALL contractors
   const performGlobalSearch = useCallback(async (query: string) => {
@@ -61,6 +62,15 @@ export default function HomePage() {
     
     return () => clearTimeout(timer);
   }, [searchQuery, performGlobalSearch]);
+
+  // Update current time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
 
   // Close sync panel on click outside
   useEffect(() => {
@@ -121,8 +131,21 @@ export default function HomePage() {
         {/* Header */}
         <header className="bg-[#0a0a0b] border-b border-white/[0.06] px-6 py-4 flex justify-between items-center sticky top-0 z-20">
           <div className="flex items-center gap-6">
-            <div className="text-[16px] font-bold text-white tracking-tight">
-              AI VORTEX
+            <div className="flex flex-col">
+              <div className="text-[16px] font-bold text-white tracking-tight">
+                AI VORTEX
+              </div>
+              <div className="text-[11px] text-white/50 font-medium">
+                {currentTime.toLocaleString('en-US', {
+                  weekday: 'short',
+                  month: 'short', 
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                  timeZoneName: 'short'
+                })}
+              </div>
             </div>
           </div>
 

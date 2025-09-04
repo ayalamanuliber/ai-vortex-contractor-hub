@@ -58,8 +58,8 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
     'thursday': 4, 'friday': 5, 'saturday': 6
   };
 
-  // Helper function to get next occurrence of a specific day
-  const getNextDayOccurrence = (dayName: string, fromDate: Date = today): Date => {
+  // Helper function to get next occurrence of a specific day, considering time windows
+  const getNextDayOccurrence = (dayName: string, timing: any, fromDate: Date = today): Date => {
     const targetDay = dayMap[dayName.toLowerCase()];
     if (targetDay === undefined) return new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000); // fallback: next week
     
@@ -67,9 +67,39 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
     const currentDay = fromDate.getDay();
     let daysToAdd = targetDay - currentDay;
     
-    // If target day is today or already passed, get next week's occurrence
-    if (daysToAdd <= 0) {
-      daysToAdd += 7;
+    // If target day is today, check if time window is still available
+    if (daysToAdd === 0) {
+      // Today - check if we're still in time window
+      const timeWindows = [timing.window_a_time, timing.window_b_time].filter(Boolean);
+      const currentHour = fromDate.getHours();
+      const currentMinutes = fromDate.getMinutes();
+      const currentTotalMinutes = currentHour * 60 + currentMinutes;
+      
+      let canExecuteToday = false;
+      for (const timeWindow of timeWindows) {
+        if (timeWindow) {
+          // Parse time like "8:30 PM"
+          const [time, period] = timeWindow.split(' ');
+          const [hours, minutes = 0] = time.split(':').map(Number);
+          let windowHour = hours;
+          if (period === 'PM' && hours !== 12) windowHour += 12;
+          if (period === 'AM' && hours === 12) windowHour = 0;
+          
+          const windowTotalMinutes = windowHour * 60 + minutes;
+          
+          // Add 2 hour buffer - can still execute up to 2 hours after window
+          if (currentTotalMinutes <= windowTotalMinutes + 120) {
+            canExecuteToday = true;
+            break;
+          }
+        }
+      }
+      
+      if (!canExecuteToday) {
+        daysToAdd = 7; // Go to next week
+      }
+    } else if (daysToAdd < 0) {
+      daysToAdd += 7; // Already passed this week
     }
     
     result.setDate(result.getDate() + daysToAdd);
@@ -87,7 +117,7 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
         if (executionMode === 'optimal') {
           // Get next occurrence of best_day_email_1
           if (timing.best_day_email_1) {
-            targetDate = getNextDayOccurrence(timing.best_day_email_1);
+            targetDate = getNextDayOccurrence(timing.best_day_email_1, timing);
           } else {
             return; // Skip if no best day
           }
@@ -102,9 +132,9 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
           if (availableDays.length === 0) return; // Skip if no available days
 
           // Find the soonest available day
-          let soonestDate = getNextDayOccurrence(availableDays[0]);
+          let soonestDate = getNextDayOccurrence(availableDays[0], timing);
           for (let i = 1; i < availableDays.length; i++) {
-            const candidateDate = getNextDayOccurrence(availableDays[i]);
+            const candidateDate = getNextDayOccurrence(availableDays[i], timing);
             if (candidateDate < soonestDate) {
               soonestDate = candidateDate;
             }
@@ -205,7 +235,7 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
   };
 
   // Helper function to get next occurrence of a specific day (same as in generateRealCampaignData)
-  const getNextDayOccurrence = (dayName: string, fromDate: Date = today): Date => {
+  const getNextDayOccurrence = (dayName: string, timing: any, fromDate: Date = today): Date => {
     const targetDay = dayMap[dayName.toLowerCase()];
     if (targetDay === undefined) return new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000);
     
@@ -213,7 +243,34 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
     const currentDay = fromDate.getDay();
     let daysToAdd = targetDay - currentDay;
     
-    if (daysToAdd <= 0) {
+    // If target day is today, check if time window is still available
+    if (daysToAdd === 0) {
+      const timeWindows = [timing.window_a_time, timing.window_b_time].filter(Boolean);
+      const currentHour = fromDate.getHours();
+      const currentMinutes = fromDate.getMinutes();
+      const currentTotalMinutes = currentHour * 60 + currentMinutes;
+      
+      let canExecuteToday = false;
+      for (const timeWindow of timeWindows) {
+        if (timeWindow) {
+          const [time, period] = timeWindow.split(' ');
+          const [hours, minutes = 0] = time.split(':').map(Number);
+          let windowHour = hours;
+          if (period === 'PM' && hours !== 12) windowHour += 12;
+          if (period === 'AM' && hours === 12) windowHour = 0;
+          
+          const windowTotalMinutes = windowHour * 60 + minutes;
+          if (currentTotalMinutes <= windowTotalMinutes + 120) {
+            canExecuteToday = true;
+            break;
+          }
+        }
+      }
+      
+      if (!canExecuteToday) {
+        daysToAdd = 7;
+      }
+    } else if (daysToAdd < 0) {
       daysToAdd += 7;
     }
     
@@ -231,7 +288,7 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
 
       if (executionMode === 'optimal') {
         if (timing.best_day_email_1) {
-          targetDate = getNextDayOccurrence(timing.best_day_email_1);
+          targetDate = getNextDayOccurrence(timing.best_day_email_1, timing);
         } else {
           return false;
         }
@@ -244,9 +301,9 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
 
         if (availableDays.length === 0) return false;
 
-        let soonestDate = getNextDayOccurrence(availableDays[0]);
+        let soonestDate = getNextDayOccurrence(availableDays[0], timing);
         for (let i = 1; i < availableDays.length; i++) {
-          const candidateDate = getNextDayOccurrence(availableDays[i]);
+          const candidateDate = getNextDayOccurrence(availableDays[i], timing);
           if (candidateDate < soonestDate) {
             soonestDate = candidateDate;
           }

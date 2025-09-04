@@ -1207,33 +1207,68 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       return;
     }
     
-    // Get scheduling info
-    const targetTime = contactTiming.window_a_time || '7:00 AM';
-    const bestDay = contactTiming.best_day_email_1 || 'Tuesday';
     const contractorState = currentProfile.state || 'KS';
-    const { timezone, yourTime } = getTimezoneInfo(contractorState, targetTime);
-    
-    // Calculate next occurrence of the best day
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const today = new Date();
-    const targetDayIndex = daysOfWeek.indexOf(bestDay);
     const todayIndex = today.getDay();
+    const todayName = daysOfWeek[todayIndex];
     
-    let daysUntilTarget = targetDayIndex - todayIndex;
-    if (daysUntilTarget <= 0) daysUntilTarget += 7;
+    // Generate all available sending options
+    const generateOptions = () => {
+      const options: string[] = [];
+      
+      // Available days
+      const availableDays = [
+        contactTiming.best_day_email_1,
+        contactTiming.best_day_email_2,
+        contactTiming.best_day_email_3
+      ].filter(day => day);
+      
+      // Available times
+      const availableTimes = [
+        contactTiming.window_a_time,
+        contactTiming.window_b_time
+      ].filter(time => time);
+      
+      // Check if today is an available day
+      const canSendToday = availableDays.includes(todayName);
+      
+      availableDays.forEach((day, dayIndex) => {
+        availableTimes.forEach((time, timeIndex) => {
+          const { timezone, yourTime } = getTimezoneInfo(contractorState, time);
+          
+          if (day === todayName) {
+            // Today option
+            const todayDate = today.toISOString().split('T')[0];
+            const priority = dayIndex === 0 && timeIndex === 0 ? '🎯 BEST OPTION' : '⚡ TODAY';
+            options.push(`${priority}: Today (${day}) at ${time} (${timezone}) = ${yourTime} Argentina [${todayDate}]`);
+          } else {
+            // Future days
+            const targetDayIndex = daysOfWeek.indexOf(day);
+            let daysUntilTarget = targetDayIndex - todayIndex;
+            if (daysUntilTarget <= 0) daysUntilTarget += 7;
+            
+            const targetDate = new Date(today);
+            targetDate.setDate(today.getDate() + daysUntilTarget);
+            const formattedDate = targetDate.toISOString().split('T')[0];
+            
+            const priority = dayIndex === 0 && timeIndex === 0 ? '🎯 OPTIMAL' : '✅ GOOD';
+            options.push(`${priority}: ${day} at ${time} (${timezone}) = ${yourTime} Argentina [${formattedDate}]`);
+          }
+        });
+      });
+      
+      return options;
+    };
     
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() + daysUntilTarget);
-    const formattedDate = targetDate.toISOString().split('T')[0];
+    const sendingOptions = generateOptions();
+    const { timezone } = getTimezoneInfo(contractorState, contactTiming.window_a_time || '7:00 AM');
     
     // Add scheduling instructions to body
-    const schedulingInstructions = `\n\n📅 SCHEDULING PRESET:\n` +
-      `• Send on: ${bestDay} at ${targetTime} (${timezone} Time)\n` +
-      `• Your Argentina time: ${yourTime}\n` +
-      `• Target date: ${formattedDate}\n` +
-      `• Contractor timezone: ${timezone}\n` +
-      `• Location: ${currentProfile.city}, ${contractorState}\n\n` +
-      `[CLICK "Schedule send" in Gmail and set: ${formattedDate} at ${yourTime.replace(' (next day)', '').replace(' (previous day)', '')}]`;
+    const schedulingInstructions = `\n\n📅 MULTIPLE SCHEDULING OPTIONS:\n\n` +
+      sendingOptions.map(option => `• ${option}`).join('\n') +
+      `\n\n📍 Contractor: ${currentProfile.city}, ${contractorState} (${timezone} Time)\n` +
+      `📧 [CLICK "Schedule send" in Gmail and pick any option above]`;
     
     const fullBody = body + schedulingInstructions;
     
@@ -1244,7 +1279,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contractorEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
     
     window.open(gmailCompose, '_blank');
-    logQuickAction(`Gmail opened for ${contractorEmail} with scheduling preset: ${bestDay} ${targetTime} ${timezone}`);
+    logQuickAction(`Gmail opened for ${contractorEmail} with ${sendingOptions.length} scheduling options (${timezone})`);
   };
 
   return (

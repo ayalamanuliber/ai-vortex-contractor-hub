@@ -191,7 +191,9 @@ const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: Cam
 
 // Real detailed day data based on contractors  
 const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contractors: any[], executionMode: 'optimal' | 'next' = 'optimal'): DayDetail => {
-  const date = new Date(dateKey);
+  // Parse dateKey correctly to avoid timezone issues
+  const [year, month, day] = dateKey.split('-').map(Number);
+  const date = new Date(year, month - 1, day); // month is 0-indexed
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const today = new Date();
   
@@ -688,7 +690,7 @@ export function CampaignCalendar() {
                     </span>
                   </div>
                   <div className="max-h-60 overflow-y-auto">
-                    {selectedDayDetail.campaigns.ready.slice(0, 8).map((campaign: any, index: number) => (
+                    {selectedDayDetail.campaigns.ready.slice(0, 15).map((campaign: any, index: number) => (
                       <div key={index} className="px-5 py-2.5 border-b border-white/[0.06] flex justify-between items-center hover:bg-[#111113] transition-all cursor-pointer">
                         <div className="flex flex-col gap-0.5 flex-1">
                           <div className="text-[13px] font-medium text-white/95">{campaign.name}</div>
@@ -707,6 +709,13 @@ export function CampaignCalendar() {
                         </div>
                       </div>
                     ))}
+                    {selectedDayDetail.campaigns.ready.length > 15 && (
+                      <div className="px-5 py-2 text-center border-t border-white/[0.06]">
+                        <span className="text-[11px] text-white/40">
+                          +{selectedDayDetail.campaigns.ready.length - 15} more campaigns
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

@@ -1149,7 +1149,29 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     await copyToClipboard(combined, buttonElement);
   };
 
-  // Open Gmail with pre-filled email
+  // Get timezone info based on contractor state
+  const getTimezoneInfo = (state: string, targetTime: string) => {
+    const timezoneMap: { [key: string]: string } = {
+      'AL': 'Central', 'AR': 'Central', 'ID': 'Mountain', 'KS': 'Central',
+      'KY': 'Eastern', 'MS': 'Central', 'MT': 'Mountain', 'NM': 'Mountain',
+      'OK': 'Central', 'SD': 'Central', 'UT': 'Mountain', 'WV': 'Eastern'
+    };
+    
+    const timezone = timezoneMap[state] || 'Central';
+    const offsetMap = { 'Eastern': -1, 'Central': 0, 'Mountain': 1, 'Pacific': 2 };
+    
+    // Convert target time to your timezone (assuming you're Central)
+    const targetHour = parseInt(targetTime.split(':')[0]);
+    const targetMinutes = targetTime.split(':')[1]?.split(' ')[0] || '00';
+    const isPM = targetTime.includes('PM') || targetHour >= 12;
+    const adjustedHour = targetHour + (offsetMap[timezone] || 0);
+    
+    const yourTime = `${adjustedHour}:${targetMinutes} ${isPM ? 'PM' : 'AM'}`;
+    
+    return { timezone, yourTime };
+  };
+
+  // Open Gmail with pre-filled email and scheduling instructions
   const openGmail = (subject: string, body: string) => {
     const contractorEmail = currentProfile.email;
     if (!contractorEmail) {
@@ -1157,14 +1179,30 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       return;
     }
     
+    // Get scheduling info
+    const targetTime = contactTiming.window_a_time || '7:00 AM';
+    const bestDay = contactTiming.best_day_email_1 || 'Tuesday';
+    const contractorState = currentProfile.state || 'KS';
+    const { timezone, yourTime } = getTimezoneInfo(contractorState, targetTime);
+    
+    // Add scheduling instructions to body
+    const schedulingInstructions = `\n\n📅 SCHEDULING PRESET:\n` +
+      `• Send on: ${bestDay} at ${targetTime} (${timezone} Time)\n` +
+      `• Your time: ${yourTime}\n` +
+      `• Contractor timezone: ${timezone}\n` +
+      `• Location: ${currentProfile.city}, ${contractorState}\n\n` +
+      `[Use Gmail's Schedule Send feature with the time above]`;
+    
+    const fullBody = body + schedulingInstructions;
+    
     // Create mailto link with pre-filled content
-    const mailtoLink = `mailto:${contractorEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:${contractorEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
     
     // Try to open Gmail compose in a new tab/window
-    const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contractorEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contractorEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
     
     window.open(gmailCompose, '_blank');
-    logQuickAction(`Gmail opened for ${contractorEmail}`);
+    logQuickAction(`Gmail opened for ${contractorEmail} with scheduling preset: ${bestDay} ${targetTime} ${timezone}`);
   };
 
   return (

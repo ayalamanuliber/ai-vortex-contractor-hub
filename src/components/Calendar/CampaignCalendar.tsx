@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { ChevronDown, Calendar, X } from 'lucide-react';
+import { ChevronDown, Calendar, X, Target, Clock, BarChart3, Users } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 import { WeekView } from './WeekView';
 
@@ -181,6 +181,10 @@ export function CampaignCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   
+  // Toggle states for Step 1
+  const [executionMode, setExecutionMode] = useState<'optimal' | 'next'>('optimal');
+  const [viewMode, setViewMode] = useState<'campaigns' | 'pipeline'>('campaigns');
+  
   // Load contractors data if empty
   useEffect(() => {
     if (!contractors || contractors.length === 0) {
@@ -316,6 +320,62 @@ export function CampaignCalendar() {
                 </div>
                 <span className="text-[13px] text-white/50">{monthNames[month]} {year}</span>
               </div>
+              
+              {/* Toggle Controls */}
+              <div className="flex gap-3">
+                {/* Execution Strategy Toggle */}
+                <div className="flex bg-[#050505] border border-white/[0.06] rounded-md p-0.5">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setExecutionMode('optimal'); }}
+                    className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
+                      executionMode === 'optimal' 
+                        ? 'bg-[#0a0a0b] text-white' 
+                        : 'text-white/50 hover:text-white/70'
+                    }`}
+                  >
+                    <Target className="w-[12px] h-[12px]" />
+                    Optimal
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setExecutionMode('next'); }}
+                    className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
+                      executionMode === 'next' 
+                        ? 'bg-[#0a0a0b] text-white' 
+                        : 'text-white/50 hover:text-white/70'
+                    }`}
+                  >
+                    <Clock className="w-[12px] h-[12px]" />
+                    Next
+                  </button>
+                </div>
+
+                {/* View Mode Toggle */}
+                <div className="flex bg-[#050505] border border-white/[0.06] rounded-md p-0.5">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setViewMode('campaigns'); }}
+                    className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
+                      viewMode === 'campaigns' 
+                        ? 'bg-[#0a0a0b] text-white' 
+                        : 'text-white/50 hover:text-white/70'
+                    }`}
+                  >
+                    <Users className="w-[12px] h-[12px]" />
+                    Campaigns
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setViewMode('pipeline'); }}
+                    className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
+                      viewMode === 'pipeline' 
+                        ? 'bg-[#0a0a0b] text-white' 
+                        : 'text-white/50 hover:text-white/70'
+                    }`}
+                  >
+                    <BarChart3 className="w-[12px] h-[12px]" />
+                    Pipeline
+                  </button>
+                </div>
+              </div>
+              
               <div className="flex gap-5 text-[12px]">
                 <div className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#facc15] opacity-80"></div>

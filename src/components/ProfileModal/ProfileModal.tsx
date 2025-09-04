@@ -1177,27 +1177,34 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       'Eastern': -5, 'Central': -6, 'Mountain': -7, 'Pacific': -8
     };
     
-    // Convert contractor time to UTC, then to Argentina time (UTC-3)
-    const contractorUTC = contractorHour - utcOffsets[timezone]; // Mountain time (UTC-7) + 7 hours = UTC
-    const argentinaHour = contractorUTC - 3; // UTC - 3 hours = Argentina time
+    // Convert to total minutes for accurate calculation
+    const contractorTotalMinutes = contractorHour * 60 + minutes;
+    
+    // Convert to UTC minutes, then to Argentina minutes
+    const utcTotalMinutes = contractorTotalMinutes - (utcOffsets[timezone] * 60);
+    const argentinaTotalMinutes = utcTotalMinutes - (3 * 60);
     
     // Handle day transitions
-    let finalHour = argentinaHour;
+    let finalTotalMinutes = argentinaTotalMinutes;
     let dayOffset = '';
     
-    if (finalHour < 0) {
-      finalHour += 24;
-      dayOffset = ' (next day)';
-    } else if (finalHour >= 24) {
-      finalHour -= 24;
+    if (finalTotalMinutes < 0) {
+      finalTotalMinutes += 24 * 60;
       dayOffset = ' (previous day)';
+    } else if (finalTotalMinutes >= 24 * 60) {
+      finalTotalMinutes -= 24 * 60;
+      dayOffset = ' (next day)';
     }
+    
+    // Convert back to hours and minutes
+    const finalHour = Math.floor(finalTotalMinutes / 60);
+    const finalMinutes = finalTotalMinutes % 60;
     
     const period = finalHour >= 12 ? 'PM' : 'AM';
     const displayHour = finalHour === 0 ? 12 : finalHour > 12 ? finalHour - 12 : finalHour;
-    const yourTime = `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}${dayOffset}`;
+    const yourTime = `${displayHour}:${finalMinutes.toString().padStart(2, '0')} ${period}${dayOffset}`;
     
-    console.log('DEBUG TIMEZONE - Output:', { timezone, yourTime, contractorHour, contractorUTC, argentinaHour, finalHour });
+    console.log('DEBUG TIMEZONE - Output:', { timezone, yourTime, contractorTotalMinutes, argentinaTotalMinutes, finalTotalMinutes, finalHour, finalMinutes });
     
     return { timezone, yourTime };
   };

@@ -1151,6 +1151,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
 
   // Get timezone info based on contractor state
   const getTimezoneInfo = (state: string, targetTime: string) => {
+    console.log('DEBUG TIMEZONE - Input:', { state, targetTime });
     const timezoneMap: { [key: string]: string } = {
       'AL': 'Central', 'AR': 'Central', 'ID': 'Mountain', 'KS': 'Central',
       'KY': 'Eastern', 'MS': 'Central', 'MT': 'Mountain', 'NM': 'Mountain',
@@ -1177,7 +1178,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     };
     
     // Convert contractor time to UTC, then to Argentina time (UTC-3)
-    const contractorUTC = contractorHour + Math.abs(utcOffsets[timezone]); // Mountain time + 7 hours = UTC
+    const contractorUTC = contractorHour - utcOffsets[timezone]; // Mountain time (UTC-7) + 7 hours = UTC
     const argentinaHour = contractorUTC - 3; // UTC - 3 hours = Argentina time
     
     // Handle day transitions
@@ -1195,6 +1196,8 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     const period = finalHour >= 12 ? 'PM' : 'AM';
     const displayHour = finalHour === 0 ? 12 : finalHour > 12 ? finalHour - 12 : finalHour;
     const yourTime = `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}${dayOffset}`;
+    
+    console.log('DEBUG TIMEZONE - Output:', { timezone, yourTime, contractorHour, contractorUTC, argentinaHour, finalHour });
     
     return { timezone, yourTime };
   };

@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import { withAuth } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
@@ -18,6 +16,10 @@ export async function OPTIONS(request: NextRequest) {
     headers: corsHeaders,
   });
 }
+
+// In-memory storage for campaign statuses (temporary solution for Vercel)
+// NOTE: This will reset on each deployment, but it's a quick patch until we have a DB
+let campaignStatuses: any = { contractors: {} };
 
 export const POST = withAuth(async (request: NextRequest) => {
   try {
@@ -40,18 +42,6 @@ export const POST = withAuth(async (request: NextRequest) => {
       );
     }
 
-    // Load existing campaign statuses
-    let campaignStatuses: any = {};
-    const statusPath = path.join(process.cwd(), 'public', 'data', 'campaign_statuses.json');
-    
-    try {
-      const statusContent = await fs.readFile(statusPath, 'utf-8');
-      campaignStatuses = JSON.parse(statusContent);
-    } catch (error) {
-      // File doesn't exist yet, create empty structure
-      campaignStatuses = { contractors: {} };
-    }
-
     // Initialize contractor data if it doesn't exist
     if (!campaignStatuses.contractors) {
       campaignStatuses.contractors = {};
@@ -72,16 +62,13 @@ export const POST = withAuth(async (request: NextRequest) => {
     };
     
     campaignStatuses.contractors[contractorId].lastUpdated = new Date().toISOString();
-
-    // Save updated statuses
-    await fs.writeFile(statusPath, JSON.stringify(campaignStatuses, null, 2));
     
-    console.log('✅ Campaign status saved successfully:', {
+    console.log('✅ Campaign status saved in memory:', {
       contractorId,
       emailIndex,
       status,
       scheduledDate,
-      filePath: statusPath
+      totalContractors: Object.keys(campaignStatuses.contractors).length
     });
 
     const response = NextResponse.json({
@@ -123,48 +110,33 @@ export const GET = withAuth(async (request: NextRequest) => {
     const searchParams = request.nextUrl.searchParams;
     const contractorId = searchParams.get('contractorId');
 
-    const statusPath = path.join(process.cwd(), 'public', 'data', 'campaign_statuses.json');
-    
-    try {
-      const statusContent = await fs.readFile(statusPath, 'utf-8');
-      const campaignStatuses = JSON.parse(statusContent);
+    console.log('📤 Campaign Status GET - Request for:', { 
+      contractorId, 
+      totalContractors: Object.keys(campaignStatuses.contractors || {}).length 
+    });
+
+    if (contractorId) {
+      // Return specific contractor's status
+      const contractorStatus = campaignStatuses.contractors?.[contractorId] || { 
+        emailStatuses: {}, 
+        lastUpdated: null 
+      };
       
-      if (contractorId) {
-        // Return specific contractor's status
-        const contractorStatus = campaignStatuses.contractors?.[contractorId] || { 
-          emailStatuses: {}, 
-          lastUpdated: null 
-        };
-        
-        const response = NextResponse.json({
-          success: true,
-          data: contractorStatus
-        });
-
-        Object.entries(corsHeaders).forEach(([key, value]) => {
-          response.headers.set(key, value);
-        });
-
-        return response;
-      } else {
-        // Return all statuses
-        const response = NextResponse.json({
-          success: true,
-          data: campaignStatuses
-        });
-
-        Object.entries(corsHeaders).forEach(([key, value]) => {
-          response.headers.set(key, value);
-        });
-
-        return response;
-      }
-      
-    } catch (error) {
-      // File doesn't exist, return empty data
       const response = NextResponse.json({
         success: true,
-        data: contractorId ? { emailStatuses: {}, lastUpdated: null } : { contractors: {} }
+        data: contractorStatus
+      });
+
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        response.headers.set(key, value);
+      });
+
+      return response;
+    } else {
+      // Return all statuses
+      const response = NextResponse.json({
+        success: true,
+        data: campaignStatuses
       });
 
       Object.entries(corsHeaders).forEach(([key, value]) => {

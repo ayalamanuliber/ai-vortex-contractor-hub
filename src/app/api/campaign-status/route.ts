@@ -24,7 +24,16 @@ export const POST = withAuth(async (request: NextRequest) => {
     const body = await request.json();
     const { contractorId, emailIndex, status, scheduledDate, sentDate } = body;
     
+    console.log('📥 Campaign Status API - Request received:', {
+      contractorId,
+      emailIndex,
+      status,
+      scheduledDate,
+      sentDate
+    });
+    
     if (!contractorId || emailIndex === undefined || !status) {
+      console.error('❌ Missing required fields:', { contractorId, emailIndex, status });
       return NextResponse.json(
         { error: 'Missing required fields: contractorId, emailIndex, status' },
         { status: 400 }
@@ -66,6 +75,14 @@ export const POST = withAuth(async (request: NextRequest) => {
 
     // Save updated statuses
     await fs.writeFile(statusPath, JSON.stringify(campaignStatuses, null, 2));
+    
+    console.log('✅ Campaign status saved successfully:', {
+      contractorId,
+      emailIndex,
+      status,
+      scheduledDate,
+      filePath: statusPath
+    });
 
     const response = NextResponse.json({
       success: true,
@@ -74,6 +91,7 @@ export const POST = withAuth(async (request: NextRequest) => {
         contractorId,
         emailIndex,
         status,
+        scheduledDate,
         timestamp: new Date().toISOString()
       }
     });

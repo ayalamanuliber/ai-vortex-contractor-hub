@@ -1058,7 +1058,14 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     });
     
     try {
-      // Update campaign status via API for calendar synchronization
+      // Update campaign status via API for calendar synchronization  
+      console.log('🚀 Sending schedule request:', {
+        contractorId: currentProfile.id,
+        emailIndex,
+        status,
+        scheduledDate: scheduledDate.toISOString()
+      });
+      
       const response = await fetch('/api/campaign-status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1073,13 +1080,18 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       });
       
       const result = await response.json();
+      console.log('📡 API Response:', result);
+      
       if (!result.success) {
-        console.error('Failed to update campaign status:', result.error);
+        console.error('❌ Failed to update campaign status:', result.error);
+        alert(`Error saving schedule: ${result.error}`);
       } else {
         console.log('✅ Campaign status synced to calendar:', result.data);
+        alert(`✅ Email ${emailIndex + 1} scheduled successfully for ${scheduledDate.toLocaleDateString()}`);
       }
     } catch (error) {
-      console.error('Error updating campaign status:', error);
+      console.error('💥 Network error updating campaign status:', error);
+      alert(`Network error: ${error}`);
     }
     
     // Update global state so changes persist and appear in calendar

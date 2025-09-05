@@ -1,9 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Simple auth check
+// Simple auth check with debug logging
 function isAuthorized(req: NextRequest): boolean {
   const authHeader = req.headers.get('authorization')
-  return authHeader === 'authorized'
+  
+  // Emergency debugging for production
+  console.log('🚨 AUTH DEBUG:', {
+    authHeader,
+    authHeaderType: typeof authHeader,
+    authHeaderLength: authHeader?.length,
+    allHeaders: Object.fromEntries(req.headers.entries()),
+    url: req.url,
+    timestamp: new Date().toISOString()
+  })
+  
+  // More robust checking
+  if (!authHeader) {
+    console.log('❌ No authorization header found')
+    return false
+  }
+  
+  const isAuth = authHeader === 'authorized'
+  console.log(isAuth ? '✅ Auth successful' : `❌ Auth failed: "${authHeader}" !== "authorized"`)
+  return isAuth
 }
 
 // Middleware wrapper for protected API routes

@@ -1018,6 +1018,10 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     return {};
   });
 
+  // Estado para el modal de programación
+  const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
+  const [schedulingEmailIndex, setSchedulingEmailIndex] = useState<number | null>(null);
+
   const [activities, setActivities] = useState<Array<{time: string, action: string}>>(() => {
     const saved = localStorage.getItem(`campaign_${currentProfile.id}`);
     if (saved) {
@@ -1033,12 +1037,19 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
     localStorage.setItem(`campaign_${currentProfile.id}`, JSON.stringify(state));
   };
 
-  // Actualizar status de email
-  const setEmailStatus = (emailIndex: number, status: string) => {
+  // Función para abrir modal de programación
+  const openSchedulingModal = (emailIndex: number) => {
+    setSchedulingEmailIndex(emailIndex);
+    setIsSchedulingModalOpen(true);
+  };
+
+  // Función para programar con fecha específica
+  const scheduleWithDate = async (emailIndex: number, scheduledDate: Date) => {
+    const status = 'scheduled';
+    
     // Update local state for immediate UI feedback
     setEmailStatuses(prev => {
       const updated = { ...prev, [emailIndex]: status };
-      // Usar setTimeout para que el estado se actualice antes de guardar
       setTimeout(() => {
         const state = { emailStatuses: updated, activities };
         localStorage.setItem(`campaign_${currentProfile.id}`, JSON.stringify(state));
@@ -1046,8 +1057,95 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       return updated;
     });
     
+    try {
+      // Update campaign status via API for calendar synchronization
+      const response = await fetch('/api/campaign-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          contractorId: currentProfile.id,
+          emailIndex,
+          status,
+          scheduledDate: scheduledDate.toISOString(),
+          sentDate: null
+        })
+      });
+      
+      const result = await response.json();
+      if (!result.success) {
+        console.error('Failed to update campaign status:', result.error);
+      } else {
+        console.log('✅ Campaign status synced to calendar:', result.data);
+      }
+    } catch (error) {
+      console.error('Error updating campaign status:', error);
+    }
+    
     // Update global state so changes persist and appear in calendar
-    // Email index + 1 because the store expects email numbers starting from 1
+    updateCampaignStatus(currentProfile.id, emailIndex + 1, status);
+    
+    const dateStr = scheduledDate.toLocaleDateString();
+    const timeStr = scheduledDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    logQuickAction(`Email ${emailIndex + 1} scheduled for ${dateStr} at ${timeStr}`);
+    
+    // Close modal
+    setIsSchedulingModalOpen(false);
+    setSchedulingEmailIndex(null);
+  };
+
+  // Actualizar status de email (modificado para manejar scheduled)
+  const setEmailStatus = async (emailIndex: number, status: string) => {
+    // Si es 'scheduled', abrir modal en vez de marcar directamente
+    if (status === 'scheduled') {
+      openSchedulingModal(emailIndex);
+      return;
+    }
+
+    // Para otros estados, proceder normalmente
+    setEmailStatuses(prev => {
+      const updated = { ...prev, [emailIndex]: status };
+      setTimeout(() => {
+        const state = { emailStatuses: updated, activities };
+        localStorage.setItem(`campaign_${currentProfile.id}`, JSON.stringify(state));
+      }, 0);
+      return updated;
+    });
+    
+    // Prepare dates based on status
+    let scheduledDate = null;
+    let sentDate = null;
+    
+    if (status === 'sent') {
+      sentDate = new Date().toISOString();
+    }
+    
+    try {
+      // Update campaign status via API for calendar synchronization
+      const response = await fetch('/api/campaign-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          contractorId: currentProfile.id,
+          emailIndex,
+          status,
+          scheduledDate,
+          sentDate
+        })
+      });
+      
+      const result = await response.json();
+      if (!result.success) {
+        console.error('Failed to update campaign status:', result.error);
+      } else {
+        console.log('✅ Campaign status synced to calendar:', result.data);
+      }
+    } catch (error) {
+      console.error('Error updating campaign status:', error);
+    }
+    
+    // Update global state so changes persist and appear in calendar
     updateCampaignStatus(currentProfile.id, emailIndex + 1, status);
     
     logQuickAction(`Email ${emailIndex + 1} marked as ${status}`);
@@ -1067,6 +1165,122 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       return updated;
     });
   };
+
+  // Funciones para calcular fechas de programación
+  const getOptimalScheduleDate = (): Date => {
+    const today = new Date();
+    const targetDay = contactTiming.best_day_email_1 || 'Tuesday';
+    const targetTime = contactTiming.window_a_time || '7:00 AM';
+    
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const targetDayIndex = daysOfWeek.indexOf(targetDay);
+    
+    let daysToAdd = targetDayIndex - today.getDay();
+    if (daysToAdd <= 0) daysToAdd += 7; // Next week if today or past
+    
+    const scheduleDate = new Date(today);
+    scheduleDate.setDate(today.getDate() + daysToAdd);
+    
+    // Parse time
+    const [time, period] = targetTime.split(' ');
+    const [hours, minutes = 0] = time.split(':').map(Number);
+    let hour = hours;
+    if (period === 'PM' && hours !== 12) hour += 12;
+    if (period === 'AM' && hours === 12) hour = 0;
+    
+    scheduleDate.setHours(hour, minutes, 0, 0);
+    return scheduleDate;
+  };
+
+  const getNextAvailableDate = (): Date => {
+    const today = new Date();
+    const availableDays = [
+      contactTiming.best_day_email_1,
+      contactTiming.best_day_email_2,
+      contactTiming.best_day_email_3
+    ].filter(Boolean);
+    
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let soonestDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000); // Default to next week
+    
+    availableDays.forEach(day => {
+      const targetDayIndex = daysOfWeek.indexOf(day);
+      let daysToAdd = targetDayIndex - today.getDay();
+      if (daysToAdd <= 0) daysToAdd += 7;
+      
+      const candidateDate = new Date(today);
+      candidateDate.setDate(today.getDate() + daysToAdd);
+      
+      if (candidateDate < soonestDate) {
+        soonestDate = candidateDate;
+      }
+    });
+    
+    // Set time to first available window
+    const targetTime = contactTiming.window_a_time || '7:00 AM';
+    const [time, period] = targetTime.split(' ');
+    const [hours, minutes = 0] = time.split(':').map(Number);
+    let hour = hours;
+    if (period === 'PM' && hours !== 12) hour += 12;
+    if (period === 'AM' && hours === 12) hour = 0;
+    
+    soonestDate.setHours(hour, minutes, 0, 0);
+    return soonestDate;
+  };
+
+  const getNextAvailableText = (): string => {
+    const nextDate = getNextAvailableDate();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayName = dayNames[nextDate.getDay()];
+    const time = contactTiming.window_a_time || '7:00 AM';
+    return `${dayName} at ${time}`;
+  };
+
+  // Componente para las opciones de programación
+  const ScheduleOption = ({ icon, title, subtitle, description, onClick }: {
+    icon: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    onClick: () => void;
+  }) => (
+    <button
+      onClick={onClick}
+      style={{
+        background: '#050505',
+        border: '1px solid rgba(255, 255, 255, 0.06)',
+        borderRadius: '8px',
+        padding: '16px',
+        textAlign: 'left',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+        width: '100%'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = '#111113';
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = '#050505';
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+        <span style={{ fontSize: '18px' }}>{icon}</span>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>
+            {title}
+          </div>
+          <div style={{ fontSize: '12px', color: 'rgba(59, 130, 246, 1)' }}>
+            {subtitle}
+          </div>
+        </div>
+      </div>
+      <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.5)', marginLeft: '30px' }}>
+        {description}
+      </div>
+    </button>
+  );
 
   if (!currentProfile.hasCampaign || !currentProfile.campaignData?.campaign_data?.email_sequences) {
     return (
@@ -2041,6 +2255,116 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
           </div>
         </div>
       </div>
+
+      {/* Scheduling Modal */}
+      {isSchedulingModalOpen && schedulingEmailIndex !== null && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000,
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            background: '#0a0a0b',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '12px',
+            padding: '24px',
+            minWidth: '400px',
+            maxWidth: '500px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '20px'
+            }}>
+              <h3 style={{
+                fontSize: '16px',
+                fontWeight: '600',
+                color: '#ffffff',
+                margin: 0
+              }}>
+                📅 Schedule Email {(schedulingEmailIndex || 0) + 1}
+              </h3>
+              <button
+                onClick={() => setIsSchedulingModalOpen(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{
+              fontSize: '12px',
+              color: 'rgba(255, 255, 255, 0.6)',
+              marginBottom: '20px',
+              lineHeight: '1.5'
+            }}>
+              Choose when to schedule this email based on AI-optimized timing for{' '}
+              <strong style={{ color: '#ffffff' }}>
+                {currentProfile.businessName}
+              </strong>{' '}
+              in {currentProfile.city}, {currentProfile.state}
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* Optimal Time Option */}
+              <ScheduleOption
+                icon="🎯"
+                title="Optimal Time"
+                subtitle={`${contactTiming.best_day_email_1 || 'Tuesday'} at ${contactTiming.window_a_time || '7:00 AM'}`}
+                description="Best day and time based on AI analysis"
+                onClick={() => {
+                  if (schedulingEmailIndex !== null) {
+                    const optimalDate = getOptimalScheduleDate();
+                    scheduleWithDate(schedulingEmailIndex, optimalDate);
+                  }
+                }}
+              />
+
+              {/* Next Available Option */}
+              <ScheduleOption
+                icon="⚡"
+                title="Next Available"
+                subtitle={getNextAvailableText()}
+                description="Soonest available time from all options"
+                onClick={() => {
+                  if (schedulingEmailIndex !== null) {
+                    const nextDate = getNextAvailableDate();
+                    scheduleWithDate(schedulingEmailIndex, nextDate);
+                  }
+                }}
+              />
+
+              {/* Custom Date Option */}
+              <ScheduleOption
+                icon="📅"
+                title="Custom Date & Time"
+                subtitle="Pick specific date and time"
+                description="Full control over scheduling"
+                onClick={() => {
+                  // TODO: Implementar date/time picker
+                  alert('Custom date picker coming soon!');
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

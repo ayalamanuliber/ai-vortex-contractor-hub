@@ -45,7 +45,7 @@ interface DayDetail {
 }
 
 // Enhanced data generator with execution strategies
-const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' | 'next'): { [key: string]: CampaignDay } => {
+const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' | 'next', campaignStatuses: any = {}): { [key: string]: CampaignDay } => {
   const data: { [key: string]: CampaignDay } = {};
   const today = new Date();
   
@@ -149,11 +149,44 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
         data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
       }
 
-      // Check if any email in sequence is scheduled or sent
+      // Check campaign status from external status tracking (dossier updates)
+      const contractorStatus = campaignStatuses.contractors?.[contractor.id];
       let isScheduled = false;
       let isSent = false;
+      let hasScheduledForFuture = false;
+      let hasPastScheduled = false;
       
-      if (campaignData.emailSequences && Array.isArray(campaignData.emailSequences)) {
+      if (contractorStatus?.emailStatuses) {
+        // Check all email statuses for this contractor
+        for (const [emailIndex, emailStatus] of Object.entries(contractorStatus.emailStatuses)) {
+          const status = emailStatus as any;
+          
+          if (status.status === 'scheduled' && status.scheduledDate) {
+            const scheduledDate = new Date(status.scheduledDate);
+            const scheduledDateKey = scheduledDate.toISOString().split('T')[0];
+            
+            if (scheduledDateKey === dateKey) {
+              // This email is scheduled for this specific date
+              if (scheduledDate > today) {
+                hasScheduledForFuture = true;
+              } else if (scheduledDate <= today) {
+                // Past scheduled should become sent automatically
+                hasPastScheduled = true;
+              }
+            }
+          } else if (status.status === 'sent' && status.sentDate) {
+            const sentDate = new Date(status.sentDate);
+            const sentDateKey = sentDate.toISOString().split('T')[0];
+            
+            if (sentDateKey === dateKey) {
+              isSent = true;
+            }
+          }
+        }
+      }
+      
+      // Fall back to campaign data sequences if no external status
+      if (!contractorStatus && campaignData.emailSequences && Array.isArray(campaignData.emailSequences)) {
         for (const email of campaignData.emailSequences) {
           if (email.status === 'scheduled') {
             isScheduled = true;
@@ -165,13 +198,25 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
         }
       }
 
-      // Categorize appropriately
-      if (isSent) {
-        data[dateKey].sent++;
-      } else if (isScheduled) {
-        data[dateKey].scheduled++;
+      // Categorize based on date logic and status
+      if (isSent || hasPastScheduled) {
+        // Only show sent in the past
+        const isInPast = new Date(dateKey) < today;
+        if (isInPast) {
+          data[dateKey].sent++;
+        }
+      } else if (hasScheduledForFuture || isScheduled) {
+        // Only show scheduled in the future 
+        const isInFuture = new Date(dateKey) >= today;
+        if (isInFuture) {
+          data[dateKey].scheduled++;
+        }
       } else {
-        data[dateKey].ready++;
+        // Only show ready in the future (campaigns not yet scheduled/sent)
+        const isInFuture = new Date(dateKey) >= today;
+        if (isInFuture) {
+          data[dateKey].ready++;
+        }
       }
     }
   });
@@ -209,7 +254,7 @@ const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: Cam
 };
 
 // Real detailed day data based on contractors  
-const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contractors: any[], executionMode: 'optimal' | 'next' = 'optimal'): DayDetail => {
+const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contractors: any[], executionMode: 'optimal' | 'next' = 'optimal', campaignStatuses: any = {}): DayDetail => {
   // Parse dateKey correctly to avoid timezone issues
   const [year, month, day] = dateKey.split('-').map(Number);
   const date = new Date(year, month - 1, day); // month is 0-indexed
@@ -353,6 +398,9 @@ export function CampaignCalendar() {
   // Separate state for all campaign contractors (not limited by frontend pagination)
   const [allCampaignContractors, setAllCampaignContractors] = useState<any[]>([]);
   
+  // State for campaign statuses from dossier updates
+  const [campaignStatuses, setCampaignStatuses] = useState<any>({});
+  
   // Load contractors data if empty
   useEffect(() => {
     if (!contractors || contractors.length === 0) {
@@ -384,6 +432,29 @@ export function CampaignCalendar() {
     loadAllCampaignContractors();
   }, []);
 
+  // Load campaign statuses from dossier updates
+  useEffect(() => {
+    const loadCampaignStatuses = async () => {
+      try {
+        const response = await fetch('/api/campaign-status', {
+          credentials: 'include'
+        });
+        const result = await response.json();
+        if (result.success) {
+          setCampaignStatuses(result.data);
+          console.log('✅ Calendar loaded campaign statuses:', Object.keys(result.data.contractors || {}).length, 'contractors');
+        }
+      } catch (error) {
+        console.error('Calendar failed to load campaign statuses:', error);
+      }
+    };
+    loadCampaignStatuses();
+    
+    // Reload every 30 seconds to catch updates from dossier
+    const interval = setInterval(loadCampaignStatuses, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Sync changes from main contractors store to allCampaignContractors
   useEffect(() => {
     if (contractors.length > 0) {
@@ -397,7 +468,7 @@ export function CampaignCalendar() {
     }
   }, [contractors]);
   
-  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode), [allCampaignContractors, executionMode]);
+  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode, campaignStatuses), [allCampaignContractors, executionMode, campaignStatuses]);
   
   const today = new Date();
   const year = currentDate.getFullYear();
@@ -449,7 +520,7 @@ export function CampaignCalendar() {
   };
 
   const selectedDayData = selectedDay ? campaignData[selectedDay] : null;
-  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, allCampaignContractors, executionMode) : null;
+  const selectedDayDetail = selectedDay && selectedDayData ? generateRealDayDetail(selectedDay, selectedDayData, allCampaignContractors, executionMode, campaignStatuses) : null;
   
   // Generate week data if a day is selected
   const weekData = selectedDay ? generateWeekData(new Date(selectedDay), campaignData) : null;

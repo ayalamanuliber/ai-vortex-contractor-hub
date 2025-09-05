@@ -8,8 +8,10 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   }
 
   // Set auth cookies for secure authentication (Vercel Edge Network compatible)
-  document.cookie = 'manuel-auth-token=manuel-aivortex-2025-verified; path=/; secure; samesite=strict'
-  document.cookie = 'manuel-session=authenticated; path=/; secure; samesite=strict'
+  // Expire in 8 hours for security
+  const expires = new Date(Date.now() + 8 * 60 * 60 * 1000).toUTCString()
+  document.cookie = `manuel-auth-token=manuel-aivortex-2025-verified; path=/; secure; samesite=strict; expires=${expires}; httponly=false`
+  document.cookie = `manuel-session=authenticated; path=/; secure; samesite=strict; expires=${expires}; httponly=false`
 
   // Keep headers and URL params as fallback for testing
   const urlObj = new URL(url, window.location.origin)

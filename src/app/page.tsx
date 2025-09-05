@@ -23,8 +23,12 @@ export default function HomePage() {
     setSearchMode
   } = useContractorStore();
 
+  const [isClient, setIsClient] = useState(false);
+  
   // Check auth on mount and load user info
   useEffect(() => {
+    setIsClient(true);
+    
     const isAuthorized = localStorage.getItem('authorized') === 'true'
     if (!isAuthorized) {
       window.location.href = '/simple-login'
@@ -124,6 +128,15 @@ export default function HomePage() {
     scheduled: 12, // Mock data
     sent: 8 // Mock data
   };
+
+  // Prevent hydration mismatch by not rendering until client-side
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex bg-[#050505] items-center justify-center">
+        <div className="text-white/50 text-sm">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-[#050505]">

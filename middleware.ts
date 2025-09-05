@@ -1,41 +1,45 @@
-import { withAuth } from "next-auth/middleware"
-import { NextResponse } from "next/server"
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
-export default withAuth(
-  function middleware(req) {
-    // Additional custom middleware logic can go here
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Allow access to auth pages and API auth routes
+  if (
+    pathname.startsWith('/auth/') ||
+    pathname.startsWith('/api/auth/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.includes('favicon.ico') ||
+    pathname.startsWith('/public/')
+  ) {
     return NextResponse.next()
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Allow access to auth pages without token
-        if (req.nextUrl.pathname.startsWith('/auth/')) {
-          return true
-        }
-        
-        // For all other pages, require valid token
-        return !!token
-      },
-    },
-    pages: {
-      signIn: '/auth/signin',
-      error: '/auth/error'
-    }
   }
-)
 
-// Protect all routes except auth pages and public assets
+  // Get the token
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  })
+
+  // If no token, redirect to sign in
+  if (!token) {
+    const signInUrl = new URL('/auth/signin', request.url)
+    return NextResponse.redirect(signInUrl)
+  }
+
+  // Check if user is authorized (email whitelist)
+  const authorizedEmails = (process.env.AUTHORIZED_EMAILS || '').split(',').map(email => email.trim())
+  if (!token.email || !authorizedEmails.includes(token.email)) {
+    const errorUrl = new URL('/auth/error', request.url)
+    return NextResponse.redirect(errorUrl)
+  }
+
+  return NextResponse.next()
+}
+
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (NextAuth.js routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
   ]
 }

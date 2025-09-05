@@ -1,11 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Simple auth check - SIMPLIFIED FOR PRODUCTION STABILITY
+// Secure auth check using multiple methods that work in Vercel
 function isAuthorized(req: NextRequest): boolean {
-  // TEMPORARY PRODUCTION FIX: Always allow access
-  // TODO: Fix header processing issue properly later
-  console.log('🔧 PRODUCTION BYPASS: Auth disabled for stability')
-  return true
+  const url = new URL(req.url)
+  
+  // Method 1: Check for auth token in query params (always works in Vercel)
+  const authToken = url.searchParams.get('auth')
+  if (authToken === 'manuel-aivortex-2025') {
+    console.log('✅ Auth successful via query param')
+    return true
+  }
+  
+  // Method 2: Check headers (try all variations for Vercel compatibility)
+  const authHeader = req.headers.get('authorization') || 
+                    req.headers.get('Authorization') ||
+                    req.headers.get('x-auth') ||
+                    req.headers.get('x-authorization')
+  
+  if (authHeader === 'authorized' || authHeader === 'manuel-authenticated') {
+    console.log('✅ Auth successful via headers')
+    return true
+  }
+  
+  console.log('❌ Auth failed - no valid credentials found')
+  return false
 }
 
 // Middleware wrapper for protected API routes

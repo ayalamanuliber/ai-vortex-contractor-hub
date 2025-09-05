@@ -1,4 +1,4 @@
-// Helper to make authenticated requests with debug logging
+// Helper to make authenticated requests with multiple auth methods
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   const isAuthorized = localStorage.getItem('authorized') === 'true'
   
@@ -7,21 +7,21 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
     return
   }
 
+  // Add auth token to URL (guaranteed to work in Vercel)
+  const urlObj = new URL(url, window.location.origin)
+  urlObj.searchParams.set('auth', 'manuel-aivortex-2025')
+  const secureUrl = urlObj.toString()
+
+  // Also send in headers as backup
   const headers = {
     ...options.headers,
-    'authorization': 'authorized'
+    'authorization': 'manuel-authenticated',
+    'x-auth': 'manuel-authenticated'
   }
 
-  // Emergency debugging for production
-  console.log('🚨 CLIENT AUTH DEBUG:', {
-    url,
-    isAuthorized,
-    localStorage_authorized: localStorage.getItem('authorized'),
-    headers,
-    timestamp: new Date().toISOString()
-  })
+  console.log('🔒 Secure auth request:', { url: secureUrl })
 
-  return fetch(url, {
+  return fetch(secureUrl, {
     ...options,
     headers
   })

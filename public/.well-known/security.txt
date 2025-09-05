@@ -1,0 +1,15 @@
+Contact: manuel@aivortex.io
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://keybase.io/manuayala
+Preferred-Languages: en, es
+Canonical: https://ai-vortex-contractor-hub.vercel.app/.well-known/security.txt
+Policy: https://ai-vortex-contractor-hub.vercel.app/security-policy
+Hiring: https://aivortex.io/careers
+
+# Security Policy for AI Vortex Contractor Hub
+# 
+# Please report security vulnerabilities responsibly.
+# Include: steps to reproduce, impact assessment, and suggested fixes.
+# We respond within 24 hours and provide updates every 72 hours.
+#
+# Thank you for helping keep our users safe.

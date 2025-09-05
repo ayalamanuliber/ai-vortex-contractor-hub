@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Papa from 'papaparse';
 import fs from 'fs/promises';
 import path from 'path';
+import { withAuth } from '@/lib/auth';
 
 // Cache for better performance
 let statsCache: any = null;
@@ -33,7 +34,7 @@ function getMegaCategory(category: string): string {
   return 'Other';
 }
 
-export async function GET() {
+export const GET = withAuth(async (request: NextRequest) => {
   try {
     // Check cache first
     const now = Date.now();
@@ -240,4 +241,4 @@ export async function GET() {
       stats: null 
     }, { status: 500 });
   }
-}
+});

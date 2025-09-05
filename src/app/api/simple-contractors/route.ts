@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Papa from 'papaparse';
 import fs from 'fs/promises';
 import path from 'path';
+import { withAuth } from '@/lib/auth';
 
 // Function to categorize contractors based on exact mapping
 function getMegaCategory(category: string): string {
@@ -28,7 +29,7 @@ function getMegaCategory(category: string): string {
   return 'Other';
 }
 
-export async function GET(request: NextRequest) {
+export const GET = withAuth(async (request: NextRequest) => {
   try {
     const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_original.csv');
     const csvContent = await fs.readFile(csvPath, 'utf-8');
@@ -330,4 +331,4 @@ export async function GET(request: NextRequest) {
       total: 0 
     }, { status: 500 });
   }
-}
+});

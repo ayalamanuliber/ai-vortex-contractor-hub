@@ -1005,6 +1005,9 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
 };
 
 const CampaignTab = ({ currentProfile }: TabContentProps) => {
+  // Get the updateCampaignStatus function from the store
+  const { updateCampaignStatus } = useContractorStore();
+  
   // Estado para tracking de emails y quick actions
   const [emailStatuses, setEmailStatuses] = useState<{[key: number]: string}>(() => {
     const saved = localStorage.getItem(`campaign_${currentProfile.id}`);
@@ -1032,6 +1035,7 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
 
   // Actualizar status de email
   const setEmailStatus = (emailIndex: number, status: string) => {
+    // Update local state for immediate UI feedback
     setEmailStatuses(prev => {
       const updated = { ...prev, [emailIndex]: status };
       // Usar setTimeout para que el estado se actualice antes de guardar
@@ -1041,6 +1045,10 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
       }, 0);
       return updated;
     });
+    
+    // Update global state so changes persist and appear in calendar
+    // Email index + 1 because the store expects email numbers starting from 1
+    updateCampaignStatus(currentProfile.id, emailIndex + 1, status);
     
     logQuickAction(`Email ${emailIndex + 1} marked as ${status}`);
   };

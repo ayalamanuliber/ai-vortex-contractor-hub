@@ -143,12 +143,36 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
         return;
       }
 
-      // Add to data structure
+      // Add to data structure based on campaign status
       const dateKey = targetDate.toISOString().split('T')[0];
       if (!data[dateKey]) {
         data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
       }
-      data[dateKey].ready++;
+
+      // Check if any email in sequence is scheduled or sent
+      let isScheduled = false;
+      let isSent = false;
+      
+      if (campaignData.emailSequences && Array.isArray(campaignData.emailSequences)) {
+        for (const email of campaignData.emailSequences) {
+          if (email.status === 'scheduled') {
+            isScheduled = true;
+            break;
+          } else if (email.status === 'sent') {
+            isSent = true;
+            break;
+          }
+        }
+      }
+
+      // Categorize appropriately
+      if (isSent) {
+        data[dateKey].sent++;
+      } else if (isScheduled) {
+        data[dateKey].scheduled++;
+      } else {
+        data[dateKey].ready++;
+      }
     }
   });
   
@@ -319,7 +343,7 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
 };
 
 export function CampaignCalendar() {
-  const { isCalendarMinimized, toggleCalendar, contractors, filteredContractors, setContractors } = useContractorStore();
+  const { isCalendarMinimized, toggleCalendar, contractors, filteredContractors, setContractors, setCurrentProfile } = useContractorStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   
@@ -359,6 +383,19 @@ export function CampaignCalendar() {
     };
     loadAllCampaignContractors();
   }, []);
+
+  // Sync changes from main contractors store to allCampaignContractors
+  useEffect(() => {
+    if (contractors.length > 0) {
+      setAllCampaignContractors(prevAll => {
+        return prevAll.map(campaignContractor => {
+          // Find updated version in main contractors store
+          const updated = contractors.find(c => c.id === campaignContractor.id);
+          return updated || campaignContractor;
+        });
+      });
+    }
+  }, [contractors]);
   
   const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode), [allCampaignContractors, executionMode]);
   
@@ -401,6 +438,14 @@ export function CampaignCalendar() {
     const date = new Date(year, month, day);
     const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     setSelectedDay(dateKey);
+  };
+
+  const handleViewContractor = (contractorId: string) => {
+    // Find contractor in allCampaignContractors and open ProfileModal
+    const contractor = allCampaignContractors.find(c => c.id === contractorId);
+    if (contractor) {
+      setCurrentProfile(contractor);
+    }
   };
 
   const selectedDayData = selectedDay ? campaignData[selectedDay] : null;
@@ -697,7 +742,10 @@ export function CampaignCalendar() {
                           <button className="px-2.5 py-1.5 rounded bg-[#3b82f6] text-white text-[10px] font-medium hover:opacity-90 transition-opacity">
                             Schedule
                           </button>
-                          <button className="px-2.5 py-1.5 rounded bg-[#050505] border border-white/[0.06] text-white/50 text-[10px] font-medium hover:bg-[#111113] hover:border-white/10 hover:text-white/95 transition-all">
+                          <button 
+                            onClick={() => handleViewContractor(campaign.id)}
+                            className="px-2.5 py-1.5 rounded bg-[#050505] border border-white/[0.06] text-white/50 text-[10px] font-medium hover:bg-[#111113] hover:border-white/10 hover:text-white/95 transition-all"
+                          >
                             View
                           </button>
                         </div>

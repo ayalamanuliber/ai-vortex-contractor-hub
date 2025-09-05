@@ -249,7 +249,7 @@ export default function HomePage() {
                     onClick={handleLogout}
                     className="px-2 py-1 bg-[#050505] border border-white/[0.06] text-white/70 text-[11px] font-medium rounded hover:bg-[#111113] hover:border-white/10 transition-colors"
                   >
-                    Salir
+                    Logout
                   </button>
                 </div>
               )}

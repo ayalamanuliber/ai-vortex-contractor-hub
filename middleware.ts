@@ -4,6 +4,11 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Allow all API routes to pass through - auth will be handled by the API themselves
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next()
+  }
+
   // Allow access to login page and static assets
   if (
     pathname.startsWith('/simple-login') ||
@@ -14,15 +19,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Check for simple auth token in headers (from localStorage)
-  const authToken = request.headers.get('authorization')
-  
-  // If no auth, redirect to simple login
-  if (!authToken || authToken !== 'authorized') {
-    const loginUrl = new URL('/simple-login', request.url)
-    return NextResponse.redirect(loginUrl)
-  }
-
+  // For page routes, we'll let the client-side check handle redirects
   return NextResponse.next()
 }
 

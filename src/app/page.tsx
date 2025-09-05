@@ -6,6 +6,7 @@ import { CampaignCalendar } from '@/components/Calendar/CampaignCalendar';
 import { ProfileModal } from '@/components/ProfileModal/ProfileModal';
 import { SyncPanel } from '@/components/SyncPanel';
 import { useContractorStore } from '@/stores/contractorStore';
+import { fetchWithAuth } from '@/lib/fetch-with-auth';
 import { 
   Search, Download, Plus, Filter, LayoutGrid, List, 
   ChevronDown, ArrowUp, RefreshCw
@@ -21,6 +22,15 @@ export default function HomePage() {
     setContractors,
     setSearchMode
   } = useContractorStore();
+
+  // Check auth on mount
+  useEffect(() => {
+    const isAuthorized = localStorage.getItem('authorized') === 'true'
+    if (!isAuthorized) {
+      window.location.href = '/simple-login'
+      return
+    }
+  }, []);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('score-high-low');
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,7 +44,8 @@ export default function HomePage() {
     if (!query.trim()) {
       // Clear search - reload initial data
       setSearchMode(false);
-      const response = await fetch('/api/simple-contractors?start=0&limit=200');
+      const response = await fetchWithAuth('/api/simple-contractors?start=0&limit=200');
+      if (!response) return;
       const result = await response.json();
       setContractors(result.contractors || []);
       return;
@@ -44,7 +55,8 @@ export default function HomePage() {
     setSearchMode(true);
     try {
       // Search across ALL contractors but limit to reasonable amount for display
-      const response = await fetch(`/api/simple-contractors?search=${encodeURIComponent(query)}&start=0&limit=1000`);
+      const response = await fetchWithAuth(`/api/simple-contractors?search=${encodeURIComponent(query)}&start=0&limit=1000`);
+      if (!response) return;
       const result = await response.json();
       setContractors(result.contractors || []);
     } catch (error) {

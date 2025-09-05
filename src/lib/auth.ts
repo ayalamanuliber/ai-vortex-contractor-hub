@@ -1,25 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Simple auth check with debug logging
+// Simple auth check with robust header handling
 function isAuthorized(req: NextRequest): boolean {
-  const authHeader = req.headers.get('authorization')
+  // Try multiple ways to get the authorization header (Vercel compatibility)
+  const authHeader1 = req.headers.get('authorization')
+  const authHeader2 = req.headers.get('Authorization')
+  const allHeaders = Object.fromEntries(req.headers.entries())
+  const authHeader3 = allHeaders['authorization']
+  const authHeader4 = allHeaders['Authorization']
   
-  // Emergency debugging for production
-  console.log('🚨 AUTH DEBUG:', {
-    authHeader,
-    authHeaderType: typeof authHeader,
-    authHeaderLength: authHeader?.length,
-    allHeaders: Object.fromEntries(req.headers.entries()),
+  const authHeader = authHeader1 || authHeader2 || authHeader3 || authHeader4
+  
+  // Debug logging
+  console.log('🔍 AUTH DEBUG:', {
+    authHeader1,
+    authHeader2, 
+    authHeader3,
+    authHeader4,
+    finalAuth: authHeader,
+    allHeaders,
     url: req.url,
     timestamp: new Date().toISOString()
   })
   
-  // 🔥 TEMPORARY: DISABLE AUTH TO TEST IF THIS IS THE ISSUE
-  console.log('🔥 TEMP AUTH BYPASS: Always returning true for debugging')
-  return true
-  
-  // Original auth logic (will re-enable after test):
-  /*
   if (!authHeader) {
     console.log('❌ No authorization header found')
     return false
@@ -28,7 +31,6 @@ function isAuthorized(req: NextRequest): boolean {
   const isAuth = authHeader === 'authorized'
   console.log(isAuth ? '✅ Auth successful' : `❌ Auth failed: "${authHeader}" !== "authorized"`)
   return isAuth
-  */
 }
 
 // Middleware wrapper for protected API routes

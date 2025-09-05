@@ -9,7 +9,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
 
   const headers = {
     ...options.headers,
-    'Authorization': 'authorized'
+    'authorization': 'authorized'
   }
 
   return fetch(url, {

@@ -33,7 +33,10 @@ function isAuthorized(req: NextRequest): boolean {
     fallbackToken,
     authHeader,
     url: req.url,
-    searchParams: Object.fromEntries(req.nextUrl.searchParams.entries())
+    method: req.method,
+    searchParams: Object.fromEntries(req.nextUrl.searchParams.entries()),
+    allSearchParams: req.nextUrl.search,
+    rawUrl: req.nextUrl.toString()
   })
   return false
 }

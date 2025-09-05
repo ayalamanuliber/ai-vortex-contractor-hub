@@ -19,7 +19,12 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
     'x-auth': 'manuel-authenticated'
   }
 
-  console.log('🔒 Secure auth request:', { url: secureUrl })
+  console.log('🔒 Secure auth request:', { 
+    originalUrl: url,
+    secureUrl,
+    hasAuthParam: secureUrl.includes('auth=manuel-aivortex-2025'),
+    headers 
+  })
 
   return fetch(secureUrl, {
     ...options,

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { MergedContractor } from '@/lib/types';
+import { fetchWithAuth } from '@/lib/fetch-with-auth';
 
 interface ContractorStore {
   // State
@@ -155,7 +156,8 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
         url += `&search=${encodeURIComponent(searchQuery)}`;
       }
       
-      const response = await fetch(url);
+      const response = await fetchWithAuth(url);
+      if (!response) return;
       const result = await response.json();
       
       set({ 
@@ -182,7 +184,8 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
         url += `&search=${encodeURIComponent(searchQuery)}`;
       }
       
-      const response = await fetch(url);
+      const response = await fetchWithAuth(url);
+      if (!response) return;
       const result = await response.json();
       
       set({ 
@@ -263,7 +266,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     
     // Call API to persist changes
     try {
-      await fetch('/api/campaigns/update', {
+      await fetchWithAuth('/api/campaigns/update', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -4,6 +4,22 @@ import fs from 'fs/promises';
 import path from 'path';
 import { withAuth } from '@/lib/auth';
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, authorization',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Handle preflight requests
+export async function OPTIONS(request: NextRequest) {
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 // Function to categorize contractors based on exact mapping
 function getMegaCategory(category: string): string {
   if (!category) return 'Other';
@@ -312,7 +328,7 @@ export const GET = withAuth(async (request: NextRequest) => {
     // Pagination
     const paginatedContractors = filteredContractors.slice(start, start + limit);
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       contractors: paginatedContractors,
       total: filteredContractors.length,
       totalAll: contractors.length,
@@ -322,13 +338,27 @@ export const GET = withAuth(async (request: NextRequest) => {
       start,
       limit
     });
+
+    // Add CORS headers
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
     
   } catch (error) {
     console.error('Simple API Error:', error);
-    return NextResponse.json({ 
+    const errorResponse = NextResponse.json({ 
       error: 'Failed to load contractors',
       contractors: [],
       total: 0 
     }, { status: 500 });
+
+    // Add CORS headers to error response
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      errorResponse.headers.set(key, value);
+    });
+
+    return errorResponse;
   }
 });

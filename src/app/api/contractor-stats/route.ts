@@ -4,6 +4,22 @@ import fs from 'fs/promises';
 import path from 'path';
 import { withAuth } from '@/lib/auth';
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, authorization',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Handle preflight requests
+export async function OPTIONS(request: NextRequest) {
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders,
+  });
+}
+
 // Cache for better performance
 let statsCache: any = null;
 let cacheTimestamp = 0;
@@ -39,11 +55,18 @@ export const GET = withAuth(async (request: NextRequest) => {
     // Check cache first
     const now = Date.now();
     if (statsCache && now - cacheTimestamp < CACHE_DURATION) {
-      return NextResponse.json({
+      const cacheResponse = NextResponse.json({
         stats: statsCache,
         timestamp: new Date(cacheTimestamp).toISOString(),
         cached: true
       });
+
+      // Add CORS headers to cache response
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        cacheResponse.headers.set(key, value);
+      });
+
+      return cacheResponse;
     }
 
     const csvPath = path.join(process.cwd(), 'public', 'data', 'contractors_original.csv');
@@ -228,17 +251,31 @@ export const GET = withAuth(async (request: NextRequest) => {
     statsCache = stats;
     cacheTimestamp = now;
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       stats,
       timestamp: new Date().toISOString(),
       cached: false
     });
+
+    // Add CORS headers
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
     
   } catch (error) {
     console.error('Stats API Error:', error);
-    return NextResponse.json({ 
+    const errorResponse = NextResponse.json({ 
       error: 'Failed to calculate stats',
       stats: null 
     }, { status: 500 });
+
+    // Add CORS headers to error response
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      errorResponse.headers.set(key, value);
+    });
+
+    return errorResponse;
   }
 });

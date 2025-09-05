@@ -1,4 +1,4 @@
-// Helper to make authenticated requests with multiple auth methods
+// Helper to make authenticated requests using cookies (Vercel-safe method)
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   const isAuthorized = localStorage.getItem('authorized') === 'true'
   
@@ -7,27 +7,31 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
     return
   }
 
-  // Add auth token to URL (guaranteed to work in Vercel)
+  // Set auth cookies for secure authentication (Vercel Edge Network compatible)
+  document.cookie = 'manuel-auth-token=manuel-aivortex-2025-verified; path=/; secure; samesite=strict'
+  document.cookie = 'manuel-session=authenticated; path=/; secure; samesite=strict'
+
+  // Keep headers and URL params as fallback for testing
   const urlObj = new URL(url, window.location.origin)
   urlObj.searchParams.set('auth', 'manuel-aivortex-2025')
   const secureUrl = urlObj.toString()
 
-  // Also send in headers as backup
   const headers = {
     ...options.headers,
     'authorization': 'manuel-authenticated',
     'x-auth': 'manuel-authenticated'
   }
 
-  console.log('🔒 Secure auth request:', { 
+  console.log('🔒 Cookie-based auth request:', { 
     originalUrl: url,
     secureUrl,
-    hasAuthParam: secureUrl.includes('auth=manuel-aivortex-2025'),
+    cookiesSet: document.cookie.includes('manuel-auth-token'),
     headers 
   })
 
   return fetch(secureUrl, {
     ...options,
-    headers
+    headers,
+    credentials: 'include' // Essential for cookies to be sent
   })
 }

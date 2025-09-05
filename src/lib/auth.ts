@@ -1,42 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// Secure auth check using multiple methods that work in Vercel
+// Secure auth check using cookies - most reliable method for Vercel Edge Network
 function isAuthorized(req: NextRequest): boolean {
-  // Method 1: Use NextRequest.nextUrl.searchParams (recommended way)
+  // Method 1: Check secure auth cookie (most reliable in Vercel)
+  const authCookie = req.cookies.get('manuel-auth-token')
+  if (authCookie?.value === 'manuel-aivortex-2025-verified') {
+    console.log('✅ Auth successful via secure cookie')
+    return true
+  }
+  
+  // Method 2: Check session cookie
+  const sessionCookie = req.cookies.get('manuel-session')  
+  if (sessionCookie?.value === 'authenticated') {
+    console.log('✅ Auth successful via session cookie')
+    return true
+  }
+  
+  // Method 3: Fallback to query params (for curl testing)
   const authToken = req.nextUrl.searchParams.get('auth')
   if (authToken === 'manuel-aivortex-2025') {
-    console.log('✅ Auth successful via nextUrl.searchParams')
+    console.log('✅ Auth successful via query params fallback')
     return true
   }
   
-  // Method 2: Fallback to URL constructor
-  const url = new URL(req.url)
-  const fallbackToken = url.searchParams.get('auth')
-  if (fallbackToken === 'manuel-aivortex-2025') {
-    console.log('✅ Auth successful via URL fallback')
-    return true
-  }
-  
-  // Method 3: Check headers (try all variations for Vercel compatibility)
+  // Method 4: Check headers as final fallback
   const authHeader = req.headers.get('authorization') || 
-                    req.headers.get('Authorization') ||
-                    req.headers.get('x-auth') ||
-                    req.headers.get('x-authorization')
+                    req.headers.get('x-auth')
   
-  if (authHeader === 'authorized' || authHeader === 'manuel-authenticated') {
-    console.log('✅ Auth successful via headers')
+  if (authHeader === 'manuel-authenticated') {
+    console.log('✅ Auth successful via headers fallback')
     return true
   }
   
   console.log('❌ Auth failed - no valid credentials found', {
+    cookies: {
+      authToken: !!authCookie,
+      session: !!sessionCookie,
+      all: req.cookies.getAll()
+    },
     authToken,
-    fallbackToken,
     authHeader,
     url: req.url,
-    method: req.method,
-    searchParams: Object.fromEntries(req.nextUrl.searchParams.entries()),
-    allSearchParams: req.nextUrl.search,
-    rawUrl: req.nextUrl.toString()
+    method: req.method
   })
   return false
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { ChevronDown, Calendar, X, Target, Clock, BarChart3, Users } from 'lucide-react';
+import { ChevronDown, Calendar, X, Target, Clock } from 'lucide-react';
 import { useContractorStore } from '@/stores/contractorStore';
 import { WeekView } from './WeekView';
 
@@ -44,8 +44,8 @@ interface DayDetail {
   };
 }
 
-// Enhanced data generator with execution strategies and pipeline calculation
-const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' | 'next', viewMode: 'campaigns' | 'pipeline'): { [key: string]: CampaignDay } => {
+// Enhanced data generator with execution strategies
+const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' | 'next'): { [key: string]: CampaignDay } => {
   const data: { [key: string]: CampaignDay } = {};
   const today = new Date();
   
@@ -106,91 +106,55 @@ const generateRealCampaignData = (contractors: any[], executionMode: 'optimal' |
     return result;
   };
 
-  if (viewMode === 'campaigns') {
-    // Calculate optimal/next date for each contractor and group by dates
-    contractorsWithCampaigns.forEach(contractor => {
-      const campaignData = contractor.campaignData;
-      if (campaignData?.campaign_data?.contact_timing) {
-        const timing = campaignData.campaign_data.contact_timing;
-        let targetDate: Date;
+  // Calculate optimal/next date for each contractor and group by dates
+  contractorsWithCampaigns.forEach(contractor => {
+    const campaignData = contractor.campaignData;
+    if (campaignData?.campaign_data?.contact_timing) {
+      const timing = campaignData.campaign_data.contact_timing;
+      let targetDate: Date;
 
-        if (executionMode === 'optimal') {
-          // Get next occurrence of best_day_email_1
-          if (timing.best_day_email_1) {
-            targetDate = getNextDayOccurrence(timing.best_day_email_1, timing);
-          } else {
-            return; // Skip if no best day
-          }
-        } else if (executionMode === 'next') {
-          // Get earliest available day from all 3 options
-          const availableDays = [
-            timing.best_day_email_1,
-            timing.best_day_email_2, 
-            timing.best_day_email_3
-          ].filter(Boolean);
-
-          if (availableDays.length === 0) return; // Skip if no available days
-
-          // Find the soonest available day
-          let soonestDate = getNextDayOccurrence(availableDays[0], timing);
-          for (let i = 1; i < availableDays.length; i++) {
-            const candidateDate = getNextDayOccurrence(availableDays[i], timing);
-            if (candidateDate < soonestDate) {
-              soonestDate = candidateDate;
-            }
-          }
-          targetDate = soonestDate;
+      if (executionMode === 'optimal') {
+        // Get next occurrence of best_day_email_1
+        if (timing.best_day_email_1) {
+          targetDate = getNextDayOccurrence(timing.best_day_email_1, timing);
         } else {
-          return;
+          return; // Skip if no best day
         }
+      } else if (executionMode === 'next') {
+        // Get earliest available day from all 3 options
+        const availableDays = [
+          timing.best_day_email_1,
+          timing.best_day_email_2, 
+          timing.best_day_email_3
+        ].filter(Boolean);
 
-        // Add to data structure
-        const dateKey = targetDate.toISOString().split('T')[0];
-        if (!data[dateKey]) {
-          data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
+        if (availableDays.length === 0) return; // Skip if no available days
+
+        // Find the soonest available day
+        let soonestDate = getNextDayOccurrence(availableDays[0], timing);
+        for (let i = 1; i < availableDays.length; i++) {
+          const candidateDate = getNextDayOccurrence(availableDays[i], timing);
+          if (candidateDate < soonestDate) {
+            soonestDate = candidateDate;
+          }
         }
-        data[dateKey].ready++;
+        targetDate = soonestDate;
+      } else {
+        return;
       }
-    });
-  }
+
+      // Add to data structure
+      const dateKey = targetDate.toISOString().split('T')[0];
+      if (!data[dateKey]) {
+        data[dateKey] = { ready: 0, scheduled: 0, sent: 0 };
+      }
+      data[dateKey].ready++;
+    }
+  });
   
   return data;
 };
 
-// Calculate pipeline statistics
-const calculatePipelineStats = (contractors: any[]) => {
-  return contractors.reduce((acc, contractor) => {
-    const score = contractor.completionScore || 0;
-    
-    if (score === 100) {
-      acc.ready++;
-    } else if (score >= 80) {
-      acc.almostReady++;
-    } else if (score >= 25) {
-      acc.needsWork++;
-    } else {
-      acc.incomplete++;
-    }
-    
-    // Check for specific missing data
-    const rawData = contractor.rawData || {};
-    if (!rawData.L1_whois_domain_age_years) acc.missingWhois++;
-    if (!rawData.L1_psi_avg_performance) acc.missingPSI++;
-    if (!rawData.L1_google_reviews_count) acc.missingReviews++;
-    if (!contractor.email) acc.missingEmails++;
-    
-    return acc;
-  }, {
-    ready: 0,
-    almostReady: 0,
-    needsWork: 0,
-    incomplete: 0,
-    missingWhois: 0,
-    missingPSI: 0,
-    missingReviews: 0,
-    missingEmails: 0
-  });
-};
 
 // Generate week data for WeekView
 const generateWeekData = (selectedDate: Date, campaignData: { [key: string]: CampaignDay }) => {
@@ -359,9 +323,8 @@ export function CampaignCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   
-  // Toggle states for Step 1
+  // Toggle state for execution strategy only
   const [executionMode, setExecutionMode] = useState<'optimal' | 'next'>('optimal');
-  const [viewMode, setViewMode] = useState<'campaigns' | 'pipeline'>('campaigns');
   
   // Separate state for all campaign contractors (not limited by frontend pagination)
   const [allCampaignContractors, setAllCampaignContractors] = useState<any[]>([]);
@@ -397,9 +360,7 @@ export function CampaignCalendar() {
     loadAllCampaignContractors();
   }, []);
   
-  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode, viewMode), [allCampaignContractors, executionMode, viewMode]);
-  
-  const pipelineStats = useMemo(() => calculatePipelineStats(contractors), [contractors]);
+  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode), [allCampaignContractors, executionMode]);
   
   const today = new Date();
   const year = currentDate.getFullYear();
@@ -549,31 +510,6 @@ export function CampaignCalendar() {
                   </button>
                 </div>
 
-                {/* View Mode Toggle */}
-                <div className="flex bg-[#050505] border border-white/[0.06] rounded-md p-0.5">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setViewMode('campaigns'); }}
-                    className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
-                      viewMode === 'campaigns' 
-                        ? 'bg-[#0a0a0b] text-white' 
-                        : 'text-white/50 hover:text-white/70'
-                    }`}
-                  >
-                    <Users className="w-[12px] h-[12px]" />
-                    Campaigns
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setViewMode('pipeline'); }}
-                    className={`px-2.5 py-1 text-[11px] font-medium rounded transition-all flex items-center gap-1 ${
-                      viewMode === 'pipeline' 
-                        ? 'bg-[#0a0a0b] text-white' 
-                        : 'text-white/50 hover:text-white/70'
-                    }`}
-                  >
-                    <BarChart3 className="w-[12px] h-[12px]" />
-                    Pipeline
-                  </button>
-                </div>
               </div>
               
               <div className="flex gap-5 text-[12px]">

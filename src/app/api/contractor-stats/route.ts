@@ -4,6 +4,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { withAuth } from '@/lib/auth';
 
+// Force dynamic rendering to prevent caching and receive query params in Vercel
+export const dynamic = 'force-dynamic';
+
 // CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',

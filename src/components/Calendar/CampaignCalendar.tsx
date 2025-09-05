@@ -389,6 +389,9 @@ const generateRealDayDetail = (dateKey: string, campaignDay: CampaignDay, contra
 
 export function CampaignCalendar() {
   const { isCalendarMinimized, toggleCalendar, contractors, filteredContractors, setContractors, setCurrentProfile } = useContractorStore();
+  
+  // Get lastRefresh to force calendar updates when scheduling happens
+  const lastRefresh = (useContractorStore as any)((state: any) => state.lastRefresh);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   
@@ -433,27 +436,36 @@ export function CampaignCalendar() {
   }, []);
 
   // Load campaign statuses from dossier updates
-  useEffect(() => {
-    const loadCampaignStatuses = async () => {
-      try {
-        const response = await fetch('/api/campaign-status', {
-          credentials: 'include'
-        });
-        const result = await response.json();
-        if (result.success) {
-          setCampaignStatuses(result.data);
-          console.log('✅ Calendar loaded campaign statuses:', Object.keys(result.data.contractors || {}).length, 'contractors');
-        }
-      } catch (error) {
-        console.error('Calendar failed to load campaign statuses:', error);
+  const loadCampaignStatuses = async () => {
+    try {
+      const response = await fetch('/api/campaign-status', {
+        credentials: 'include'
+      });
+      const result = await response.json();
+      if (result.success) {
+        setCampaignStatuses(result.data);
+        console.log('✅ Calendar loaded campaign statuses:', Object.keys(result.data.contractors || {}).length, 'contractors');
       }
-    };
+    } catch (error) {
+      console.error('Calendar failed to load campaign statuses:', error);
+    }
+  };
+
+  useEffect(() => {
     loadCampaignStatuses();
     
     // Reload every 30 seconds to catch updates from dossier
     const interval = setInterval(loadCampaignStatuses, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Force reload when lastRefresh changes (triggered by scheduling)
+  useEffect(() => {
+    if (lastRefresh) {
+      console.log('🔄 Calendar refreshing due to scheduling...');
+      loadCampaignStatuses();
+    }
+  }, [lastRefresh]);
 
   // Sync changes from main contractors store to allCampaignContractors
   useEffect(() => {
@@ -468,7 +480,7 @@ export function CampaignCalendar() {
     }
   }, [contractors]);
   
-  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode, campaignStatuses), [allCampaignContractors, executionMode, campaignStatuses]);
+  const campaignData = useMemo(() => generateRealCampaignData(allCampaignContractors, executionMode, campaignStatuses), [allCampaignContractors, executionMode, campaignStatuses, lastRefresh]);
   
   const today = new Date();
   const year = currentDate.getFullYear();

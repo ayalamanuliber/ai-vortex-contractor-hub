@@ -15,6 +15,7 @@ interface ContractorStore {
   hasMore: boolean;
   searchQuery: string;
   isSearchMode: boolean;
+  lastRefresh?: number;
   
   // Actions
   setContractors: (contractors: MergedContractor[]) => void;
@@ -33,6 +34,7 @@ interface ContractorStore {
     emailNumber: number, 
     status: string
   ) => void;
+  refreshCalendar: () => void;
   addNote: (businessId: string, note: any) => void;
 }
 
@@ -49,6 +51,7 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
   hasMore: true,
   searchQuery: '',
   isSearchMode: false,
+  lastRefresh: undefined,
   
   // Actions
   setContractors: (contractors) => {
@@ -226,8 +229,8 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
     set({ isSearchMode });
   },
   
-  updateCampaignStatus: async (businessId, emailNumber, status) => {
-    // Update local state
+  updateCampaignStatus: (businessId, emailNumber, status) => {
+    // Update local state only (no broken API call)
     set((state) => {
       const contractors = [...state.contractors];
       const contractor = contractors.find(c => c.id === businessId);
@@ -264,21 +267,17 @@ export const useContractorStore = create<ContractorStore>((set, get) => ({
       };
     });
     
-    // Call API to persist changes
-    try {
-      await fetchWithAuth('/api/campaigns/update', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          businessId,
-          emailNumber,
-          status,
-          date: new Date().toISOString().split('T')[0]
-        })
-      });
-    } catch (error) {
-      console.error('Failed to update campaign status:', error);
-    }
+    console.log('📝 Updated local campaign status:', { businessId, emailNumber, status });
+  },
+
+  refreshCalendar: () => {
+    // Force a re-render by updating a timestamp or similar
+    set((state) => ({ 
+      ...state,
+      // This will trigger calendar re-renders that depend on this timestamp
+      lastRefresh: Date.now()
+    }));
+    console.log('🔄 Calendar refresh triggered');
   },
   
   addNote: (businessId, note) => {

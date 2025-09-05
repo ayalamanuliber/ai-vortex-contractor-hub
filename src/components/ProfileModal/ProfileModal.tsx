@@ -1005,8 +1005,8 @@ const IntelligenceTab = ({ currentProfile }: TabContentProps) => {
 };
 
 const CampaignTab = ({ currentProfile }: TabContentProps) => {
-  // Get the updateCampaignStatus function from the store
-  const { updateCampaignStatus } = useContractorStore();
+  // Get the updateCampaignStatus and refreshCalendar functions from the store
+  const { updateCampaignStatus, refreshCalendar } = useContractorStore();
   
   // Estado para tracking de emails y quick actions
   const [emailStatuses, setEmailStatuses] = useState<{[key: number]: string}>(() => {
@@ -1087,6 +1087,11 @@ const CampaignTab = ({ currentProfile }: TabContentProps) => {
         alert(`Error saving schedule: ${result.error}`);
       } else {
         console.log('✅ Campaign status synced to calendar:', result.data);
+        
+        // Force calendar refresh immediately
+        refreshCalendar();
+        
+        // Show success message
         alert(`✅ Email ${emailIndex + 1} scheduled successfully for ${scheduledDate.toLocaleDateString()}`);
       }
     } catch (error) {
